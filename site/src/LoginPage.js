@@ -1,10 +1,10 @@
 import React from 'react';
-import SignInSide from './SignInSide';
+import MySignInSide from './mySinginside';
 
 function LoginPage() {
   return (
     <div>
-      <SignInSide />
+      <MySignInSide />
     </div>
   );
 }

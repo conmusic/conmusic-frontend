@@ -17,6 +17,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { useHistory } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
+import myImage from '../src/images/image.png';
+import myOtherImage from '../src/images/logo.png'
 
 const theme = createTheme();
 
@@ -35,34 +37,46 @@ export default function SignInSide() {
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
-          item
-          xs={false}
-          sm={4}
-          md={7}
-          sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random)',
-            backgroundRepeat: 'no-repeat',
-            backgroundColor: (t) =>
-              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        />
-        <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+      item
+      xs={false}
+      sm={5}
+      md={6.4}
+      sx={{
+        backgroundImage: `url(${myImage})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundColor: (t) =>
+          t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        position: 'relative', // Adiciona a propriedade de posição
+      }}
+    >
+      <img
+        src={myOtherImage} // Substitua "myOtherImage" pelo caminho da sua outra imagem
+        alt="Outra imagem"
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+        }}
+      />
+    </Grid>
+        <Grid item xs={12} sm={8} md={5.6} component={Paper} elevation={6} square>
           <Box
             sx={{
-              my: 8,
+              my: 10,
               mx: 4,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <Avatar sx={{ m: 1, bgcolor: 'red' }}>
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Sign in
+              Faça seu login
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
@@ -70,7 +84,7 @@ export default function SignInSide() {
                 required
                 fullWidth
                 id="email"
-                label="Email Address"
+                label="Email"
                 name="email"
                 autoComplete="email"
                 autoFocus
@@ -80,42 +94,60 @@ export default function SignInSide() {
                 required
                 fullWidth
                 name="password"
-                label="Password"
+                label="Senha"
                 type="password"
                 id="password"
                 autoComplete="current-password"
-              />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
               />
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
-                sx={{ mt: 3, mb: 2 }}
+                sx={{
+                  '&:hover': {
+                    backgroundColor: 'black', 
+                  },
+                  mt: 3,
+                  mb: 2,
+                  backgroundColor: 'red',
+                  border: '1px solid black',
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+                }}
               >
-                Sign In
+                Entrar
+              </Button>
+
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{
+                  '&:hover': {
+                    backgroundColor: 'black', 
+                    color: 'white'
+                  },
+                  mt: 3,
+                  mb: 2,
+                  backgroundColor: 'white',
+                  color: 'black',
+                  border: '1px solid black'
+                }}
+              >
+                Cadastrar
               </Button>
               <Grid container>
                 <Grid item xs>
                   <Link href="#" variant="body2">
-                    Forgot password?
+                    Esqueceu a senha?
                   </Link>
                 </Grid>
-                <Grid item>
-                  <Link href="#" variant="body2">
-                    {"Don't have an account? Sign Up"}
-                  </Link>
-                </Grid>
+
               </Grid>
               <Typography variant="body2" color="text.secondary" align="center">
                 {'© '}
-                <Link color="inherit" href="https://www.example.com/">
-                       Your Website
-                </Link>{' '}
-                  {new Date().getFullYear()}
-                  {'.'}
+
+                {new Date().getFullYear()}
+                {'.'}
               </Typography>
             </Box>
           </Box>

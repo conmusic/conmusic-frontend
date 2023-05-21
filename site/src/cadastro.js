@@ -21,9 +21,10 @@ import myImage from '../src/images/image.png';
 import myOtherImage from '../src/images/logo.png'
 import { useNavigate } from 'react-router-dom';
 
+
 const theme = createTheme();
 
-export default function SignInSide() {
+export default function Cadastro() {
   const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -31,8 +32,9 @@ export default function SignInSide() {
     console.log({
       email: data.get('email'),
       password: data.get('password'),
+      
     });
-    navigate('/cadastro');
+    navigate('/cadastroDois');
   };
 
   return (
@@ -75,11 +77,13 @@ export default function SignInSide() {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'red' }}>
-              <LockOutlinedIcon />
-            </Avatar>
+          <Typography
+           sx={{color: '#d3d3d3 '}}
+          component="h1" variant="h5">
+             Etapa 1 de 2
+            </Typography>
             <Typography component="h1" variant="h5">
-              Faça seu login
+              Crie sua conta
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
               <TextField
@@ -117,31 +121,13 @@ export default function SignInSide() {
                   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
                 }}
               >
-                Entrar
-              </Button>
-
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{
-                  '&:hover': {
-                    backgroundColor: 'black', 
-                    color: 'white'
-                  },
-                  mt: 3,
-                  mb: 2,
-                  backgroundColor: 'white',
-                  color: 'black',
-                  border: '1px solid black'
-                }}
-              >
-                Cadastrar
+                Continuar
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="cadastro" variant="body2">
-                    Esqueceu a senha?
+                 ja tem uma conta?⠀ 
+                  <Link href="/" variant="body2">
+                     Faça login
                   </Link>
                 </Grid>
 

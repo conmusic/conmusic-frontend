@@ -21,9 +21,10 @@ import myImage from '../src/images/image.png';
 import myOtherImage from '../src/images/logo.png'
 import { useNavigate } from 'react-router-dom';
 
+
 const theme = createTheme();
 
-export default function SignInSide() {
+export default function CadastroDois() {
   const navigate = useNavigate();
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -31,8 +32,9 @@ export default function SignInSide() {
     console.log({
       email: data.get('email'),
       password: data.get('password'),
+
     });
-    navigate('/cadastro');
+    navigate('/');
   };
 
   return (
@@ -40,31 +42,31 @@ export default function SignInSide() {
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
-      item
-      xs={false}
-      sm={5}
-      md={6.4}
-      sx={{
-        backgroundImage: `url(${myImage})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundColor: (t) =>
-          t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        position: 'relative', // Adiciona a propriedade de posição
-      }}
-    >
-      <img
-        src={myOtherImage} // Substitua "myOtherImage" pelo caminho da sua outra imagem
-        alt="Outra imagem"
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-        }}
-      />
-    </Grid>
+          item
+          xs={false}
+          sm={5}
+          md={6.4}
+          sx={{
+            backgroundImage: `url(${myImage})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: (t) =>
+              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            position: 'relative', // Adiciona a propriedade de posição
+          }}
+        >
+          <img
+            src={myOtherImage} // Substitua "myOtherImage" pelo caminho da sua outra imagem
+            alt="Outra imagem"
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+          />
+        </Grid>
         <Grid item xs={12} sm={8} md={5.6} component={Paper} elevation={6} square>
           <Box
             sx={{
@@ -75,32 +77,68 @@ export default function SignInSide() {
               alignItems: 'center',
             }}
           >
-            <Avatar sx={{ m: 1, bgcolor: 'red' }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Faça seu login
+            <Typography
+              sx={{ color: '#d3d3d3 ' }}
+              component="h1" variant="h5">
+              Etapa 2 de 2
             </Typography>
-            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Typography component="h1" variant="h5">
+              Crie sua conta
+            </Typography>
+            <Typography component="h1" variant="h5" style={{ marginRight: 'auto' }}>
+  profissão
+</Typography>
+
+
+            <Box  component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1}}>
+            <Grid container spacing={40}>
+    <Grid item>
+      <FormControlLabel
+        control={<Checkbox value="artita" color="primary" />}
+        label="Artista"
+      />
+    </Grid>
+    <Grid item>
+      <FormControlLabel
+        control={<Checkbox value="casa" color="primary" />}
+        label="Casa de show"
+      />
+    </Grid>
+  </Grid>
+
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
+                id="nome"
+                label="Nome"
+                name="nome"
+                autoComplete="nome"
                 autoFocus
               />
               <TextField
                 margin="normal"
                 required
                 fullWidth
-                name="password"
-                label="Senha"
-                type="password"
-                id="password"
-                autoComplete="current-password"
+                name="CPF"
+                label="CPF"
+                type="CPF"
+                id="CPF"
+                autoComplete="current-cpf"
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                name="dataNasci"
+                label="Data de nascimento"
+                // type="date"
+                id="date"
+                autoComplete="bday"
+              />
+              <FormControlLabel
+                control={<Checkbox value="termos" color="primary" />}
+                label="Aceito os termos de segurança"
               />
               <Button
                 type="submit"
@@ -108,7 +146,7 @@ export default function SignInSide() {
                 variant="contained"
                 sx={{
                   '&:hover': {
-                    backgroundColor: 'black', 
+                    backgroundColor: 'black',
                   },
                   mt: 3,
                   mb: 2,
@@ -117,35 +155,10 @@ export default function SignInSide() {
                   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
                 }}
               >
-                Entrar
+                Continuar
               </Button>
 
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{
-                  '&:hover': {
-                    backgroundColor: 'black', 
-                    color: 'white'
-                  },
-                  mt: 3,
-                  mb: 2,
-                  backgroundColor: 'white',
-                  color: 'black',
-                  border: '1px solid black'
-                }}
-              >
-                Cadastrar
-              </Button>
-              <Grid container>
-                <Grid item xs>
-                  <Link href="cadastro" variant="body2">
-                    Esqueceu a senha?
-                  </Link>
-                </Grid>
 
-              </Grid>
               <Typography variant="body2" color="text.secondary" align="center">
                 {'© '}
 

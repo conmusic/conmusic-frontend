@@ -3,8 +3,6 @@ import {
   Avatar,
   Box,
   Button,
-  Checkbox,
-  FormControlLabel,
   Grid,
   Link,
   Paper,
@@ -14,22 +12,35 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useHistory } from "react-router-dom";
-import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
-import myImage from '../src/images/image.png';
-import myOtherImage from '../src/images/logo.png'
+import myImage from '../assets/images/image.png';
+import myOtherImage from '../assets/images/logo.png'
+import api from '../services/api';
 
 const theme = createTheme();
 
 export default function SignInSide() {
+
+  function login(email, password){
+    const body = {
+      email: email,
+      password: password
+    }
+  
+    api.post('/users/authentication', body)
+      .then((response) => {
+        
+        localStorage.setItem('token', response.data.token);
+      }).catch((error) => {
+        
+        console.log(error);
+      });
+  }
+
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+
+    login(data.get('email'), data.get('password'));
   };
 
   return (

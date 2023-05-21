@@ -85,13 +85,13 @@ export default function CadastroDois() {
             <Typography component="h1" variant="h5">
               Crie sua conta
             </Typography>
-            <Typography component="h1" variant="h5" style={{ marginRight: 'auto' }}>
-  profissão
+            <Typography component="h1" variant="h5" style={{ marginRight: 'auto', marginTop: '5px' }}>
+  Profissão
 </Typography>
 
 
             <Box  component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1}}>
-            <Grid container spacing={40}>
+            <Grid container spacing={33}>
     <Grid item>
       <FormControlLabel
         control={<Checkbox value="artita" color="primary" />}
@@ -101,7 +101,7 @@ export default function CadastroDois() {
     <Grid item>
       <FormControlLabel
         control={<Checkbox value="casa" color="primary" />}
-        label="Casa de show"
+        label="Gerente de casa de show"
       />
     </Grid>
   </Grid>

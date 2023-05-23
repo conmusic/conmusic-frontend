@@ -17,8 +17,8 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { useHistory } from "react-router-dom";
 import PropTypes from 'prop-types';
 import { styled } from '@mui/material/styles';
-import myImage from '../src/images/image.png';
-import myOtherImage from '../src/images/logo.png'
+import myImage from '../assets/images/image.png';
+import myOtherImage from '../assets/images/logo.png'
 import { useNavigate } from 'react-router-dom';
 
 

@@ -4,8 +4,8 @@ import {
 } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
-import CadastroPage from './CadastroPage';
-import CadastroPageDois from './CadastroPageDois';
+import CadastroPage from './pages/CadastroPage';
+import CadastroPageDois from './pages/CadastroPageDois';
 
 export default function MainRoutes() {
   return (

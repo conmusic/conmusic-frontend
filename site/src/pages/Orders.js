@@ -6,7 +6,7 @@ import TableCell from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Title from './Title';
-
+import { TableContainer } from '@mui/material';
 // Generate Order Data
 function createData(id, date, name, shipTo, paymentMethod, amount) {
   return { id, date, name, shipTo, paymentMethod, amount };
@@ -18,7 +18,7 @@ const rows = [
     '16 Mar, 2019',
     'Elvis Presley',
     'Tupelo, MS',
-    'VISA ⠀•••• 3719',
+    'VISA •••• 3719',
     312.44,
   ),
   createData(
@@ -26,16 +26,16 @@ const rows = [
     '16 Mar, 2019',
     'Paul McCartney',
     'London, UK',
-    'VISA ⠀•••• 2574',
+    'VISA •••• 2574',
     866.99,
   ),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC ⠀•••• 1253', 100.81),
+  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC •••• 1253', 100.81),
   createData(
     3,
     '16 Mar, 2019',
     'Michael Jackson',
     'Gary, IN',
-    'AMEX ⠀•••• 2000',
+    'AMEX •••• 2000',
     654.39,
   ),
   createData(
@@ -43,7 +43,7 @@ const rows = [
     '15 Mar, 2019',
     'Bruce Springsteen',
     'Long Branch, NJ',
-    'VISA ⠀•••• 5919',
+    'VISA •••• 5919',
     212.79,
   ),
 ];
@@ -55,32 +55,29 @@ function preventDefault(event) {
 export default function Orders() {
   return (
     <React.Fragment>
-      <Title>Recent Orders</Title>
-      <Table size="small">
-        <TableHead>
-          <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Name</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Sale Amount</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.id}>
-              <TableCell>{row.date}</TableCell>
-              <TableCell>{row.name}</TableCell>
-              <TableCell>{row.shipTo}</TableCell>
-              <TableCell>{row.paymentMethod}</TableCell>
-              <TableCell align="right">{`$${row.amount}`}</TableCell>
+      <Title>Propostas em andamento</Title>
+      <TableContainer>
+        <Table size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ textAlign: 'left' }}>Nome do Artista</TableCell>
+              <TableCell style={{ textAlign: 'left' }}>Evento</TableCell>
+              <TableCell style={{ textAlign: 'left' }}>Data do Show</TableCell>
+              <TableCell style={{ textAlign: 'left' }}>Status de negociação</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <Link color="primary" href="#" onClick={preventDefault} sx={{ mt: 3 }}>
-        See more orders
-      </Link>
+          </TableHead>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow key={row.id}>
+                <TableCell style={{ textAlign: 'left' }}>{row.date}</TableCell>
+                <TableCell style={{ textAlign: 'left' }}>{row.name}</TableCell>
+                <TableCell style={{ textAlign: 'left' }}>{row.shipTo}</TableCell>
+                <TableCell style={{ textAlign: 'left' }}>{row.paymentMethod}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </React.Fragment>
   );
 }

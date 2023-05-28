@@ -1,40 +1,61 @@
 import React from 'react';
 import {
-  Avatar,
   Box,
   Button,
   Checkbox,
   FormControlLabel,
   Grid,
-  Link,
   Paper,
   TextField,
   Typography,
+  Radio,
+  RadioGroup
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useHistory } from "react-router-dom";
-import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
 import myImage from '../assets/images/image.png';
-import myOtherImage from '../assets/images/logo.png'
-import { useNavigate } from 'react-router-dom';
-
+import myOtherImage from '../assets/images/logo.png';
+import { Navigate, useLocation } from 'react-router';
+import api from '../services/api';
 
 const theme = createTheme();
 
 export default function CadastroDois() {
-  const navigate = useNavigate();
+
+  const [typeUser, setTypeUser] = React.useState();
+
+  const handleRadioChange = (event) => {
+    setTypeUser(event.target.value);
+  };
+
+  function register(body){
+
+    const baseURL = typeUser === 'artist' ? '/artists' : '/managers';
+
+    api.post(baseURL, body)
+      .then((response) => {
+        console.log("Registrado com sucesso!");
+        Navigate('/login');
+      }).catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const location = useLocation();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
 
-    });
-    navigate('/');
+    const body = {
+      name: data.get('nome'),
+      email: location.state.email,
+      password: location.state.password,
+      cpf: data.get('CPF'),
+      phoneNumber: data.get('PhoneNumber'),
+      birthDate: data.get('dataNasci')
+    }
+
+    register(body);
   };
 
   return (
@@ -86,25 +107,20 @@ export default function CadastroDois() {
               Crie sua conta
             </Typography>
             <Typography component="h1" variant="h5" style={{ marginRight: 'auto', marginTop: '5px' }}>
-  Profissão
-</Typography>
+              Profissão
+            </Typography>
 
 
-            <Box  component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1}}>
-            <Grid container spacing={33}>
-    <Grid item>
-      <FormControlLabel
-        control={<Checkbox value="artita" color="primary" />}
-        label="Artista"
-      />
-    </Grid>
-    <Grid item>
-      <FormControlLabel
-        control={<Checkbox value="casa" color="primary" />}
-        label="Gerente de casa de show"
-      />
-    </Grid>
-  </Grid>
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                  onChange={handleRadioChange}
+                >
+                  <FormControlLabel value="artist" control={<Radio color='error'/>} label="Artista"/>
+                  <FormControlLabel value="house" control={<Radio color='error'/>} label="Gerente de casa de show" />
+                </RadioGroup>
 
               <TextField
                 margin="normal"
@@ -130,6 +146,16 @@ export default function CadastroDois() {
                 margin="normal"
                 required
                 fullWidth
+                name="PhoneNumber"
+                label="Número de telefone"
+                type="PhoneNumber"
+                id="PhoneNumber"
+                autoComplete="current-PhoneNumber"
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
                 name="dataNasci"
                 label="Data de nascimento"
                 // type="date"
@@ -137,6 +163,7 @@ export default function CadastroDois() {
                 autoComplete="bday"
               />
               <FormControlLabel
+                required
                 control={<Checkbox value="termos" color="primary" />}
                 label="Aceito os termos de segurança"
               />
@@ -155,7 +182,7 @@ export default function CadastroDois() {
                   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
                 }}
               >
-                Continuar
+                Cadastrar
               </Button>
 
 

@@ -129,11 +129,11 @@ export default function SignInSide() {
               >
                 Entrar
               </Button>
-
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
+                href="/cadastro"
                 sx={{
                   '&:hover': {
                     backgroundColor: 'black', 
@@ -145,6 +145,7 @@ export default function SignInSide() {
                   color: 'black',
                   border: '1px solid black'
                 }}
+                
               >
                 Cadastrar
               </Button>

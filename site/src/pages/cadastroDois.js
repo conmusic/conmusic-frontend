@@ -86,26 +86,23 @@ export default function CadastroDois() {
               Crie sua conta
             </Typography>
             <Typography component="h1" variant="h5" style={{ marginRight: 'auto', marginTop: '5px' }}>
-  Profissão
-</Typography>
-
-
-            <Box  component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1}}>
-            <Grid container spacing={33}>
-    <Grid item>
-      <FormControlLabel
-        control={<Checkbox value="artita" color="primary" />}
-        label="Artista"
-      />
-    </Grid>
-    <Grid item>
-      <FormControlLabel
-        control={<Checkbox value="casa" color="primary" />}
-        label="Gerente de casa de show"
-      />
-    </Grid>
-  </Grid>
-
+              Profissão
+            </Typography>
+            <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+              <Grid container spacing={33}>
+                <Grid item>
+                  <FormControlLabel
+                    control={<Checkbox value="artita" color="primary" />}
+                    label="Artista"
+                  />
+                </Grid>
+                <Grid item>
+                  <FormControlLabel
+                    control={<Checkbox value="casa" color="primary" />}
+                    label="Gerente de casa de show"
+                  />
+                </Grid>
+              </Grid>
               <TextField
                 margin="normal"
                 required
@@ -122,9 +119,21 @@ export default function CadastroDois() {
                 fullWidth
                 name="CPF"
                 label="CPF"
-                type="CPF"
+                type="text"
                 id="CPF"
-                autoComplete="current-cpf"
+                autoComplete="off"
+                inputProps={{
+                  maxLength: 14,
+                  pattern: "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
+                }}
+                onChange={(event) => {
+                  const { value } = event.target;
+                  event.target.value = value
+                    .replace(/\D/g, "")
+                    .replace(/(\d{3})(\d)/, "$1.$2")
+                    .replace(/(\d{3})(\d)/, "$1.$2")
+                    .replace(/(\d{3})(\d{2})$/, "$1-$2");
+                }}
               />
               <TextField
                 margin="normal"
@@ -132,9 +141,20 @@ export default function CadastroDois() {
                 fullWidth
                 name="dataNasci"
                 label="Data de nascimento"
-                // type="date"
+                type="text"
                 id="date"
-                autoComplete="bday"
+                autoComplete="off"
+                inputProps={{
+                  maxLength: 10,
+                  pattern: "\\d{2}/\\d{2}/\\d{4}",
+                }}
+                onChange={(event) => {
+                  const { value } = event.target;
+                  event.target.value = value
+                    .replace(/\D/g, "")
+                    .replace(/(\d{2})(\d)/, "$1/$2")
+                    .replace(/(\d{2})(\d)/, "$1/$2");
+                }}
               />
               <FormControlLabel
                 control={<Checkbox value="termos" color="primary" />}
@@ -144,6 +164,7 @@ export default function CadastroDois() {
                 type="submit"
                 fullWidth
                 variant="contained"
+                href="/DashBoard"
                 sx={{
                   '&:hover': {
                     backgroundColor: 'black',

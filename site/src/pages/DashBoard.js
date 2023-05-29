@@ -17,6 +17,7 @@ import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import Button from '@mui/material/Button';
 import { mainListItems } from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
@@ -117,10 +118,10 @@ export default function Dashboard() {
                 ...(open && { display: 'none' }),
               }}
             >
-              <MenuIcon 
-              sx={{
-                color: "grey",
-              }}
+              <MenuIcon
+                sx={{
+                  color: "grey",
+                }}
               />
             </IconButton>
             <Typography
@@ -182,10 +183,16 @@ export default function Dashboard() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 310,
                   }}
                 >
-                  <Deposits />
+                  {/* Conteúdo da Card */}
+                  <Deposits
+                    estabelecimento="Casa de Show A"
+                    evento="Noite do Jazz"
+                    dataDoShow="01/05/2023"
+                    horarioMarcado="22:00"
+                  />
                 </Paper>
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
@@ -194,10 +201,16 @@ export default function Dashboard() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 310,
                   }}
                 >
-                  <Deposits />
+                  {/* Conteúdo da Card */}
+                  <Deposits
+                    estabelecimento="Casa de Show A"
+                    evento="Noite do Jazz"
+                    dataDoShow="01/05/2023"
+                    horarioMarcado="22:00"
+                  />
                 </Paper>
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
@@ -206,10 +219,16 @@ export default function Dashboard() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 310,
                   }}
                 >
-                  <Deposits />
+                  {/* Conteúdo da Card */}
+                  <Deposits
+                    estabelecimento="Casa de Show A"
+                    evento="Noite do Jazz"
+                    dataDoShow="01/05/2023"
+                    horarioMarcado="22:00"
+                  />
                 </Paper>
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
@@ -218,10 +237,16 @@ export default function Dashboard() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 310,
                   }}
                 >
-                  <Deposits />
+                  {/* Conteúdo da Card */}
+                  <Deposits
+                    estabelecimento="Casa de Show A"
+                    evento="Noite do Jazz"
+                    dataDoShow="01/05/2023"
+                    horarioMarcado="22:00"
+                  />
                 </Paper>
               </Grid>
               {/* Recent Orders */}

@@ -9,15 +9,18 @@ function createData(time, amount) {
 }
 
 const data = [
-  createData('00:00', 0),
-  createData('03:00', 300),
-  createData('06:00', 600),
-  createData('09:00', 800),
-  createData('12:00', 1500),
-  createData('15:00', 2000),
-  createData('18:00', 2400),
-  createData('21:00', 2400),
-  createData('24:00', undefined),
+  createData('Janeiro', 0),
+  createData('Fevereiro', 300),
+  createData('Março', 600),
+  createData('Abriu', 800),
+  createData('Maio', 1500),
+  createData('Junho', 2000),
+  createData('Julho', 2400),
+  createData('Agosto', 2400),
+  createData('Setembro', 2400),
+  createData('Outubro', 2400),
+  createData('Novembro', 2400),
+  createData('Dezembro', 2400),
 ];
 
 export default function Chart() {

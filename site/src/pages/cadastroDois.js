@@ -118,8 +118,6 @@ export default function CadastroDois() {
             <Typography component="h1" variant="h5" style={{ marginRight: 'auto', marginTop: '5px' }}>
               Profissão
             </Typography>
-
-
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                 <RadioGroup
                   row
@@ -130,7 +128,6 @@ export default function CadastroDois() {
                   <FormControlLabel value="artist" control={<Radio color='error'/>} label="Artista"/>
                   <FormControlLabel value="house" control={<Radio color='error'/>} label="Gerente de casa de show" />
                 </RadioGroup>
-
               <TextField
                 margin="normal"
                 required
@@ -214,6 +211,7 @@ export default function CadastroDois() {
                 type="submit"
                 fullWidth
                 variant="contained"
+                href="/DashBoard"
                 sx={{
                   '&:hover': {
                     backgroundColor: 'black',

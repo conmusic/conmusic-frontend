@@ -119,7 +119,7 @@ export default function Cadastro() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                 ja tem uma conta?⠀ 
+                 ja tem uma conta?
                   <Link href="/" variant="body2">
                      Faça login
                   </Link>

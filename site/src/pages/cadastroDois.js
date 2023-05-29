@@ -15,7 +15,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import myImage from '../assets/images/image.png';
 import myOtherImage from '../assets/images/logo.png';
-import { Navigate, useLocation } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import api from '../services/api';
 
 const theme = createTheme();
@@ -29,30 +29,39 @@ export default function CadastroDois() {
   };
 
   function register(body){
-
     const baseURL = typeUser === 'artist' ? '/artists' : '/managers';
 
     api.post(baseURL, body)
       .then((response) => {
-        console.log("Registrado com sucesso!");
-        Navigate('/login');
+        console.log("Registrado com sucesso!" + response.data);
+        navigateToLogin();
       }).catch((error) => {
         console.log(error);
       });
   }
+
+  const navigate = useNavigate();
+  const navigateToLogin = () => {
+    navigate('/login');
+  };
 
   const location = useLocation();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
 
+    var partes = data.get('dataNasci').split('/');
+    var date = partes[2] + '-' + partes[1] + '-' + partes[0];
+    var cpf = data.get('CPF').replace(/\D/g, "");
+    var phoneNumber = data.get('PhoneNumber').replace(/\D/g, "");
+
     const body = {
       name: data.get('nome'),
       email: location.state.email,
       password: location.state.password,
-      cpf: data.get('CPF'),
-      phoneNumber: data.get('PhoneNumber'),
-      birthDate: data.get('dataNasci')
+      cpf: cpf,
+      phoneNumber: phoneNumber,
+      birthDate: date
     }
 
     register(body);
@@ -138,9 +147,21 @@ export default function CadastroDois() {
                 fullWidth
                 name="CPF"
                 label="CPF"
-                type="CPF"
+                type="text"
                 id="CPF"
-                autoComplete="current-cpf"
+                autoComplete="off"
+                inputProps={{
+                  maxLength: 14,
+                  pattern: "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
+                }}
+                onChange={(event) => {
+                  const { value } = event.target;
+                  event.target.value = value
+                    .replace(/\D/g, "")
+                    .replace(/(\d{3})(\d)/, "$1.$2")
+                    .replace(/(\d{3})(\d)/, "$1.$2")
+                    .replace(/(\d{3})(\d{2})$/, "$1-$2");
+                }}
               />
               <TextField
                 margin="normal"
@@ -150,7 +171,18 @@ export default function CadastroDois() {
                 label="Número de telefone"
                 type="PhoneNumber"
                 id="PhoneNumber"
-                autoComplete="current-PhoneNumber"
+                autoComplete="off"
+                inputProps={{
+                  maxLength: 15,
+                  pattern: "\\d{2} \\d{5}-\\d{4}",
+                }}
+                onChange={(event) => {
+                  const { value } = event.target;
+                  event.target.value = value
+                    .replace(/\D/g, "")
+                    .replace(/(\d{2})(\d)/, "($1) $2")
+                    .replace(/(\d{5})(\d)/, "$1-$2");
+                }}
               />
               <TextField
                 margin="normal"
@@ -158,9 +190,20 @@ export default function CadastroDois() {
                 fullWidth
                 name="dataNasci"
                 label="Data de nascimento"
-                // type="date"
+                type="text"
                 id="date"
-                autoComplete="bday"
+                autoComplete="off"
+                inputProps={{
+                  maxLength: 10,
+                  pattern: "\\d{2}/\\d{2}/\\d{4}",
+                }}
+                onChange={(event) => {
+                  const { value } = event.target;
+                  event.target.value = value
+                    .replace(/\D/g, "")
+                    .replace(/(\d{2})(\d)/, "$1/$2")
+                    .replace(/(\d{2})(\d)/, "$1/$2");
+                }}
               />
               <FormControlLabel
                 required

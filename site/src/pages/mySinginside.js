@@ -15,11 +15,12 @@ import CssBaseline from '@mui/material/CssBaseline';
 import myImage from '../assets/images/image.png';
 import myOtherImage from '../assets/images/logo.png'
 import api from '../services/api';
+import { useNavigate } from 'react-router-dom';
 
 const theme = createTheme();
 
 export default function SignInSide() {
-
+  const navigate = useNavigate();
   function login(email, password){
     const body = {
       email: email,
@@ -34,6 +35,7 @@ export default function SignInSide() {
         
         console.log(error);
       });
+      navigate('/dashboard');
   }
 
   const handleSubmit = (event) => {
@@ -127,11 +129,11 @@ export default function SignInSide() {
               >
                 Entrar
               </Button>
-
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
+                href="/cadastro"
                 sx={{
                   '&:hover': {
                     backgroundColor: 'black', 
@@ -143,6 +145,7 @@ export default function SignInSide() {
                   color: 'black',
                   border: '1px solid black'
                 }}
+                
               >
                 Cadastrar
               </Button>

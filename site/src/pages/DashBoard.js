@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import Title from './Title';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
@@ -175,6 +176,7 @@ export default function Dashboard() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Title>Shows Confirmados</Title>
             <Grid container spacing={3}>
               {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>

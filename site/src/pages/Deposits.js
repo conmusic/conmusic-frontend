@@ -18,8 +18,8 @@ export default function Deposits(props) {
   } = props;
 
   return (
+    
     <React.Fragment>
-      <Title>Shows Confirmados</Title>
       <Typography component="p">
         Estabelecimento:
       </Typography>

@@ -8,8 +8,8 @@ import TableRow from '@mui/material/TableRow';
 import Title from './Title';
 import { TableContainer } from '@mui/material';
 // Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
+function createData(id, nome, evento, data, status) {
+  return { id, nome, evento, data, status };
 }
 
 const rows = [
@@ -42,6 +42,7 @@ const rows = [
     '25/05/2023',
     'Cancelado',
   ),
+  
 ];
 
 function preventDefault(event) {
@@ -52,28 +53,30 @@ export default function Orders() {
   return (
     <React.Fragment>
       <Title>Propostas em andamento</Title>
-      <TableContainer>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell style={{ textAlign: 'left' }}>Nome do Artista</TableCell>
-              <TableCell style={{ textAlign: 'left' }}>Evento</TableCell>
-              <TableCell style={{ textAlign: 'left' }}>Data do Show</TableCell>
-              <TableCell style={{ textAlign: 'left' }}>Status de negociação</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell style={{ textAlign: 'left' }}>{row.date}</TableCell>
-                <TableCell style={{ textAlign: 'left' }}>{row.name}</TableCell>
-                <TableCell style={{ textAlign: 'left' }}>{row.shipTo}</TableCell>
-                <TableCell style={{ textAlign: 'left' }}>{row.paymentMethod}</TableCell>
+      <div style={{ height: '300px', overflow: 'auto' }}>
+        <TableContainer>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ textAlign: 'left' }}>Nome do Artista</TableCell>
+                <TableCell style={{ textAlign: 'left' }}>Evento</TableCell>
+                <TableCell style={{ textAlign: 'left' }}>Data do Show</TableCell>
+                <TableCell style={{ textAlign: 'left' }}>Status de negociação</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell style={{ textAlign: 'left' }}>{row.nome}</TableCell>
+                  <TableCell style={{ textAlign: 'left' }}>{row.evento}</TableCell>
+                  <TableCell style={{ textAlign: 'left' }}>{row.data}</TableCell>
+                  <TableCell style={{ textAlign: 'left' }}>{row.status}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
     </React.Fragment>
   );
 }

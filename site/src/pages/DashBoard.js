@@ -105,7 +105,7 @@ export default function Dashboard() {
           <Toolbar
             sx={{
               backgroundColor: "white",
-              pr: '24px', // keep right padding when drawer closed
+              pr: '24px', 
             }}
           >
             <IconButton
@@ -262,7 +262,7 @@ export default function Dashboard() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 350,
                   }}
                 >
                   <Chart sx={{ height: '50%' }} />

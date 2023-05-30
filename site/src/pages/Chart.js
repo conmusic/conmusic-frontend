@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts';
 import Title from './Title';
 
 // Generate Sales Data
@@ -16,11 +16,11 @@ const data = [
   createData('Maio', 1500),
   createData('Junho', 2000),
   createData('Julho', 2400),
-  createData('Agosto', 2400),
-  createData('Setembro', 2400),
-  createData('Outubro', 2400),
+  createData('Agosto', 2100),
+  createData('Setembro', 1950),
+  createData('Outubro', 2000),
   createData('Novembro', 2400),
-  createData('Dezembro', 2400),
+  createData('Dezembro', 2350),
 ];
 
 export default function Chart() {
@@ -28,7 +28,7 @@ export default function Chart() {
 
   return (
     <React.Fragment>
-      <Title>Today</Title>
+      <Title>Shows Confirmados por Mês e Evolução</Title>
       <ResponsiveContainer>
         <LineChart
           data={data}
@@ -39,6 +39,7 @@ export default function Chart() {
             left: 24,
           }}
         >
+          <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="time"
             stroke={theme.palette.text.secondary}
@@ -57,15 +58,18 @@ export default function Chart() {
                 ...theme.typography.body1,
               }}
             >
-              Sales ($)
+              Qtd Shows Confirmados
             </Label>
           </YAxis>
+          <Tooltip />
           <Line
-            isAnimationActive={false}
+            isAnimationActive={true}
             type="monotone"
             dataKey="amount"
             stroke={theme.palette.primary.main}
-            dot={false}
+            strokeWidth={2}
+            dot={{ stroke: theme.palette.primary.main, strokeWidth: 2, r: 4 }}
+            activeDot={{ r: 8 }}
           />
         </LineChart>
       </ResponsiveContainer>

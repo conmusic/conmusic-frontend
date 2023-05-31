@@ -66,9 +66,9 @@ export default function Chart() {
             isAnimationActive={true}
             type="monotone"
             dataKey="amount"
-            stroke={theme.palette.primary.main}
+            stroke="red"
             strokeWidth={2}
-            dot={{ stroke: theme.palette.primary.main, strokeWidth: 2, r: 4 }}
+            dot={{ stroke: "red", strokeWidth: 2, r: 4 }}
             activeDot={{ r: 8 }}
           />
         </LineChart>

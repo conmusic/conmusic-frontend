@@ -61,6 +61,18 @@ const AppBar = styled(MuiAppBar, {
   borderBottom: '1px solid #ccc',
 }));
 
+const theme = createTheme({
+  components: {
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          color: '#fb2b57', // Defina a cor desejada para os ícones
+        },
+      },
+    },
+  },
+});
+
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     '& .MuiDrawer-paper': {
@@ -99,32 +111,16 @@ export default function Dashboard() {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex', }}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
           <Toolbar
             sx={{
               backgroundColor: "white",
-              pr: '24px', 
+              pr: '24px',
             }}
           >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
-              }}
-            >
-              <MenuIcon
-                sx={{
-                  color: "grey",
-                }}
-              />
-            </IconButton>
             <Typography
               component="h1"
               variant="h6"
@@ -176,7 +172,7 @@ export default function Dashboard() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-          <Title>Shows Confirmados</Title>
+            <Title>Shows Confirmados</Title>
             <Grid container spacing={3}>
               {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>

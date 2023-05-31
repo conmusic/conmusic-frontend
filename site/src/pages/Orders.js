@@ -42,6 +42,55 @@ const rows = [
     '25/05/2023',
     'Cancelado',
   ),
+  createData(
+    4,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
+  ),
+  createData(
+    4,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
+  ),
+  createData(
+    4,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
+  ),
+  createData(
+    4,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
+  ),
+  createData(
+    4,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
+  ),
+  createData(
+    4,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
+  ),
+  createData(
+    4,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
+  ),
   
 ];
 

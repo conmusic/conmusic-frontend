@@ -51,6 +51,8 @@ export default function Deposits(props) {
         sx={{
           marginTop: 'auto',
           borderColor: 'black',
+          backgroundColor: '#fb2b57',
+          color:"white"
         }}
       >
         Ir para conversa

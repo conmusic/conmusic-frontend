@@ -1,40 +1,70 @@
 import React from 'react';
 import {
-  Avatar,
   Box,
   Button,
   Checkbox,
   FormControlLabel,
   Grid,
-  Link,
   Paper,
   TextField,
   Typography,
+  Radio,
+  RadioGroup
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useHistory } from "react-router-dom";
-import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
 import myImage from '../assets/images/image.png';
-import myOtherImage from '../assets/images/logo.png'
-import { useNavigate } from 'react-router-dom';
-
+import myOtherImage from '../assets/images/logo.png';
+import { useNavigate, useLocation } from 'react-router';
+import api from '../services/api';
 
 const theme = createTheme();
 
 export default function CadastroDois() {
+
+  const [typeUser, setTypeUser] = React.useState();
+
+  const handleRadioChange = (event) => {
+    setTypeUser(event.target.value);
+  };
+
+  function register(body){
+    const baseURL = typeUser === 'artist' ? '/artists' : '/managers';
+
+    api.post(baseURL, body)
+      .then((response) => {
+        console.log("Registrado com sucesso!" + response.data);
+        navigateToLogin();
+      }).catch((error) => {
+        console.log(error);
+      });
+  }
+
   const navigate = useNavigate();
+  const navigateToLogin = () => {
+    navigate('/login');
+  };
+
+  const location = useLocation();
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
 
-    });
-    navigate('/');
+    var partes = data.get('dataNasci').split('/');
+    var date = partes[2] + '-' + partes[1] + '-' + partes[0];
+    var cpf = data.get('CPF').replace(/\D/g, "");
+    var phoneNumber = data.get('PhoneNumber').replace(/\D/g, "");
+
+    const body = {
+      name: data.get('nome'),
+      email: location.state.email,
+      password: location.state.password,
+      cpf: cpf,
+      phoneNumber: phoneNumber,
+      birthDate: date
+    }
+
+    register(body);
   };
 
   return (
@@ -89,20 +119,15 @@ export default function CadastroDois() {
               Profissão
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-              <Grid container spacing={33}>
-                <Grid item>
-                  <FormControlLabel
-                    control={<Checkbox value="artita" color="primary" />}
-                    label="Artista"
-                  />
-                </Grid>
-                <Grid item>
-                  <FormControlLabel
-                    control={<Checkbox value="casa" color="primary" />}
-                    label="Gerente de casa de show"
-                  />
-                </Grid>
-              </Grid>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                  onChange={handleRadioChange}
+                >
+                  <FormControlLabel value="artist" control={<Radio color='error'/>} label="Artista"/>
+                  <FormControlLabel value="house" control={<Radio color='error'/>} label="Gerente de casa de show" />
+                </RadioGroup>
               <TextField
                 margin="normal"
                 required
@@ -139,6 +164,27 @@ export default function CadastroDois() {
                 margin="normal"
                 required
                 fullWidth
+                name="PhoneNumber"
+                label="Número de telefone"
+                type="PhoneNumber"
+                id="PhoneNumber"
+                autoComplete="off"
+                inputProps={{
+                  maxLength: 15,
+                  pattern: "\\d{2} \\d{5}-\\d{4}",
+                }}
+                onChange={(event) => {
+                  const { value } = event.target;
+                  event.target.value = value
+                    .replace(/\D/g, "")
+                    .replace(/(\d{2})(\d)/, "($1) $2")
+                    .replace(/(\d{5})(\d)/, "$1-$2");
+                }}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
                 name="dataNasci"
                 label="Data de nascimento"
                 type="text"
@@ -157,6 +203,7 @@ export default function CadastroDois() {
                 }}
               />
               <FormControlLabel
+                required
                 control={<Checkbox value="termos" color="primary" />}
                 label="Aceito os termos de segurança"
               />
@@ -176,7 +223,7 @@ export default function CadastroDois() {
                   boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
                 }}
               >
-                Continuar
+                Cadastrar
               </Button>
 
 

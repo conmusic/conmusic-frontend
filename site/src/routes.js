@@ -13,8 +13,8 @@ export default function MainRoutes() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
-      <Route path="/cadastro" element={<CadastroPage />} />
-      <Route path="/cadastroDois" element={<CadastroPageDois />} />
+      <Route path="/register" element={<CadastroPage />} />
+        <Route path="/register-two-step" element={<CadastroPageDois />} />
       <Route path="/dashboard" element={<Dash />} />
       <Route path="*" element={<h1>Not Found</h1>} />
     </Routes>

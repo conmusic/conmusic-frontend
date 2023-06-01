@@ -1,10 +1,7 @@
 import React from 'react';
 import {
-  Avatar,
   Box,
   Button,
-  Checkbox,
-  FormControlLabel,
   Grid,
   Link,
   Paper,
@@ -12,11 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useHistory } from "react-router-dom";
-import PropTypes from 'prop-types';
-import { styled } from '@mui/material/styles';
 import myImage from '../assets/images/image.png';
 import myOtherImage from '../assets/images/logo.png'
 import { useNavigate } from 'react-router-dom';
@@ -29,12 +22,13 @@ export default function Cadastro() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    
+    const dados = {
       email: data.get('email'),
-      password: data.get('password'),
+      password: data.get('password')
+    }
 
-    });
-    navigate('/cadastroDois');
+    navigate('/register-two-step', { state: dados });
   };
 
   return (

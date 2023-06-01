@@ -8,44 +8,90 @@ import TableRow from '@mui/material/TableRow';
 import Title from './Title';
 import { TableContainer } from '@mui/material';
 // Generate Order Data
-function createData(id, date, name, shipTo, paymentMethod, amount) {
-  return { id, date, name, shipTo, paymentMethod, amount };
+function createData(id, nome, evento, data, status) {
+  return { id, nome, evento, data, status };
 }
 
 const rows = [
   createData(
     0,
-    '16 Mar, 2019',
-    'Elvis Presley',
-    'Tupelo, MS',
-    'VISA •••• 3719',
-    312.44,
+    'Bar do João',
+    'Música ao vivo do João',
+    '01/05/2023',
+    'Aceito',
   ),
   createData(
     1,
-    '16 Mar, 2019',
-    'Paul McCartney',
-    'London, UK',
-    'VISA •••• 2574',
-    866.99,
+    'Clube da Esquina',
+    'Noite da Musica Classica',
+    '10/05/2023',
+    'Esperando aprovação',
   ),
-  createData(2, '16 Mar, 2019', 'Tom Scholz', 'Boston, MA', 'MC •••• 1253', 100.81),
+  createData(2, 'Centro de Eventos', 'Noites de Blues', '15/05/2023', 'Proposta enviada'),
   createData(
     3,
-    '16 Mar, 2019',
-    'Michael Jackson',
-    'Gary, IN',
-    'AMEX •••• 2000',
-    654.39,
+    'Teatro Municipal',
+    'Serenata do Amor',
+    '20/05/2023',
+    'Negociando',
   ),
   createData(
     4,
-    '15 Mar, 2019',
-    'Bruce Springsteen',
-    'Long Branch, NJ',
-    'VISA •••• 5919',
-    212.79,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
   ),
+  createData(
+    4,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
+  ),
+  createData(
+    4,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
+  ),
+  createData(
+    4,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
+  ),
+  createData(
+    4,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
+  ),
+  createData(
+    4,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
+  ),
+  createData(
+    4,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
+  ),
+  createData(
+    4,
+    'Bar do Luiz',
+    'Sunset Sessions',
+    '25/05/2023',
+    'Cancelado',
+  ),
+  
 ];
 
 function preventDefault(event) {
@@ -56,28 +102,30 @@ export default function Orders() {
   return (
     <React.Fragment>
       <Title>Propostas em andamento</Title>
-      <TableContainer>
-        <Table size="small">
-          <TableHead>
-            <TableRow>
-              <TableCell style={{ textAlign: 'left' }}>Nome do Artista</TableCell>
-              <TableCell style={{ textAlign: 'left' }}>Evento</TableCell>
-              <TableCell style={{ textAlign: 'left' }}>Data do Show</TableCell>
-              <TableCell style={{ textAlign: 'left' }}>Status de negociação</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell style={{ textAlign: 'left' }}>{row.date}</TableCell>
-                <TableCell style={{ textAlign: 'left' }}>{row.name}</TableCell>
-                <TableCell style={{ textAlign: 'left' }}>{row.shipTo}</TableCell>
-                <TableCell style={{ textAlign: 'left' }}>{row.paymentMethod}</TableCell>
+      <div style={{ height: '300px', overflow: 'auto' }}>
+        <TableContainer>
+          <Table size="small">
+            <TableHead>
+              <TableRow>
+                <TableCell style={{ textAlign: 'left' }}>Nome do Artista</TableCell>
+                <TableCell style={{ textAlign: 'left' }}>Evento</TableCell>
+                <TableCell style={{ textAlign: 'left' }}>Data do Show</TableCell>
+                <TableCell style={{ textAlign: 'left' }}>Status de negociação</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {rows.map((row) => (
+                <TableRow key={row.id}>
+                  <TableCell style={{ textAlign: 'left' }}>{row.nome}</TableCell>
+                  <TableCell style={{ textAlign: 'left' }}>{row.evento}</TableCell>
+                  <TableCell style={{ textAlign: 'left' }}>{row.data}</TableCell>
+                  <TableCell style={{ textAlign: 'left' }}>{row.status}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
     </React.Fragment>
   );
 }

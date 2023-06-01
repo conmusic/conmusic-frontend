@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
+import Title from './Title';
 import CssBaseline from '@mui/material/CssBaseline';
 import MuiDrawer from '@mui/material/Drawer';
 import Box from '@mui/material/Box';
@@ -17,6 +18,7 @@ import Link from '@mui/material/Link';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import Button from '@mui/material/Button';
 import { mainListItems } from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
@@ -59,6 +61,18 @@ const AppBar = styled(MuiAppBar, {
   borderBottom: '1px solid #ccc',
 }));
 
+const theme = createTheme({
+  components: {
+    MuiSvgIcon: {
+      styleOverrides: {
+        root: {
+          color: '#fb2b57', // Defina a cor desejada para os ícones
+        },
+      },
+    },
+  },
+});
+
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ theme, open }) => ({
     '& .MuiDrawer-paper': {
@@ -97,32 +111,16 @@ export default function Dashboard() {
   };
 
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex', }}>
         <CssBaseline />
         <AppBar position="absolute" open={open}>
           <Toolbar
             sx={{
               backgroundColor: "white",
-              pr: '24px', // keep right padding when drawer closed
+              pr: '24px',
             }}
           >
-            <IconButton
-              edge="start"
-              color="inherit"
-              aria-label="open drawer"
-              onClick={toggleDrawer}
-              sx={{
-                marginRight: '36px',
-                ...(open && { display: 'none' }),
-              }}
-            >
-              <MenuIcon 
-              sx={{
-                color: "grey",
-              }}
-              />
-            </IconButton>
             <Typography
               component="h1"
               variant="h6"
@@ -174,6 +172,7 @@ export default function Dashboard() {
         >
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            <Title>Shows Confirmados</Title>
             <Grid container spacing={3}>
               {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>
@@ -182,10 +181,16 @@ export default function Dashboard() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 310,
                   }}
                 >
-                  <Deposits />
+                  {/* Conteúdo da Card */}
+                  <Deposits
+                    estabelecimento="Casa de Show A"
+                    evento="Noite do Jazz"
+                    dataDoShow="01/05/2023"
+                    horarioMarcado="22:00"
+                  />
                 </Paper>
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
@@ -194,10 +199,16 @@ export default function Dashboard() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 310,
                   }}
                 >
-                  <Deposits />
+                  {/* Conteúdo da Card */}
+                  <Deposits
+                    estabelecimento="Casa de Show A"
+                    evento="Noite do Jazz"
+                    dataDoShow="01/05/2023"
+                    horarioMarcado="22:00"
+                  />
                 </Paper>
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
@@ -206,10 +217,16 @@ export default function Dashboard() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 310,
                   }}
                 >
-                  <Deposits />
+                  {/* Conteúdo da Card */}
+                  <Deposits
+                    estabelecimento="Casa de Show A"
+                    evento="Noite do Jazz"
+                    dataDoShow="01/05/2023"
+                    horarioMarcado="22:00"
+                  />
                 </Paper>
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
@@ -218,10 +235,16 @@ export default function Dashboard() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 310,
                   }}
                 >
-                  <Deposits />
+                  {/* Conteúdo da Card */}
+                  <Deposits
+                    estabelecimento="Casa de Show A"
+                    evento="Noite do Jazz"
+                    dataDoShow="01/05/2023"
+                    horarioMarcado="22:00"
+                  />
                 </Paper>
               </Grid>
               {/* Recent Orders */}
@@ -237,7 +260,7 @@ export default function Dashboard() {
                     p: 2,
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 240,
+                    height: 350,
                   }}
                 >
                   <Chart sx={{ height: '50%' }} />

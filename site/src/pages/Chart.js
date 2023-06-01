@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useTheme } from '@mui/material/styles';
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts';
 import Title from './Title';
 
 // Generate Sales Data
@@ -9,15 +9,18 @@ function createData(time, amount) {
 }
 
 const data = [
-  createData('00:00', 0),
-  createData('03:00', 300),
-  createData('06:00', 600),
-  createData('09:00', 800),
-  createData('12:00', 1500),
-  createData('15:00', 2000),
-  createData('18:00', 2400),
-  createData('21:00', 2400),
-  createData('24:00', undefined),
+  createData('Janeiro', 0),
+  createData('Fevereiro', 300),
+  createData('Março', 600),
+  createData('Abriu', 800),
+  createData('Maio', 1500),
+  createData('Junho', 2000),
+  createData('Julho', 2400),
+  createData('Agosto', 2100),
+  createData('Setembro', 1950),
+  createData('Outubro', 2000),
+  createData('Novembro', 2400),
+  createData('Dezembro', 2350),
 ];
 
 export default function Chart() {
@@ -25,7 +28,7 @@ export default function Chart() {
 
   return (
     <React.Fragment>
-      <Title>Today</Title>
+      <Title>Shows Confirmados por Mês e Evolução</Title>
       <ResponsiveContainer>
         <LineChart
           data={data}
@@ -36,6 +39,7 @@ export default function Chart() {
             left: 24,
           }}
         >
+          <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="time"
             stroke={theme.palette.text.secondary}
@@ -54,15 +58,18 @@ export default function Chart() {
                 ...theme.typography.body1,
               }}
             >
-              Sales ($)
+              Qtd Shows Confirmados
             </Label>
           </YAxis>
+          <Tooltip />
           <Line
-            isAnimationActive={false}
+            isAnimationActive={true}
             type="monotone"
             dataKey="amount"
-            stroke={theme.palette.primary.main}
-            dot={false}
+            stroke="red"
+            strokeWidth={2}
+            dot={{ stroke: "red", strokeWidth: 2, r: 4 }}
+            activeDot={{ r: 8 }}
           />
         </LineChart>
       </ResponsiveContainer>

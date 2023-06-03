@@ -31,7 +31,7 @@ export default function CadastroDois() {
   };
 
   function register(body) {
-    const baseURL = typeUser === 'artist' ? '/artists' : '/managers';
+    const baseURL = typeUser === 'artist' ? '/artist' : '/managers';
 
     api.post(baseURL, body)
       .then((response) => {
@@ -242,7 +242,6 @@ export default function CadastroDois() {
                 type="submit"
                 fullWidth
                 variant="contained"
-                href="/DashBoard"
                 sx={{
                   '&:hover': {
                     backgroundColor: 'black',

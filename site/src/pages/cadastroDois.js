@@ -18,19 +18,18 @@ import myOtherImage from '../assets/images/logo.png';
 import { useNavigate, useLocation } from 'react-router';
 import api from '../services/api';
 
+
 const theme = createTheme();
 
 export default function CadastroDois() {
-  const [typeUser, setTypeUser] = useState('');
-  const [cpfError, setCpfError] = useState(false);
-  const [phoneError, setPhoneError] = useState(false);
-  const [dateError, setDateError] = useState(false);
+
+  const [typeUser, setTypeUser] = React.useState();
 
   const handleRadioChange = (event) => {
     setTypeUser(event.target.value);
   };
 
-  function register(body) {
+  function register(body){
     const baseURL = typeUser === 'artist' ? '/artists' : '/managers';
 
     api.post(baseURL, body)
@@ -69,27 +68,6 @@ export default function CadastroDois() {
     register(body);
   };
 
-  const validateCPF = (event) => {
-    const cpf = event.target.value.replace(/\D/g, "");
-    const isValidCPF = /^[0-9]{11}$/.test(cpf);
-
-    setCpfError(!isValidCPF);
-  };
-
-  const validatePhoneNumber = (event) => {
-    const phoneNumber = event.target.value.replace(/\D/g, "");
-    const isValidPhoneNumber = /^[0-9]{10,11}$/.test(phoneNumber);
-
-    setPhoneError(!isValidPhoneNumber);
-  };
-
-  const validateDate = (event) => {
-    const date = event.target.value;
-    const isValidDate = /^\d{2}\/\d{2}\/\d{4}$/.test(date);
-
-    setDateError(!isValidDate);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: '100vh' }}>
@@ -107,7 +85,8 @@ export default function CadastroDois() {
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             position: 'relative', // Adiciona a propriedade de posição
-          }}        >
+          }}
+        >
           <img
             src={myOtherImage} // Substitua "myOtherImage" pelo caminho da sua outra imagem
             alt="Outra imagem"
@@ -141,15 +120,15 @@ export default function CadastroDois() {
               Profissão
             </Typography>
             <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-              <RadioGroup
-                row
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
-                onChange={handleRadioChange}
-              >
-                <FormControlLabel value="artist" control={<Radio color='error' />} label="Artista" />
-                <FormControlLabel value="house" control={<Radio color='error' />} label="Gerente de casa de show" />
-              </RadioGroup>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                  onChange={handleRadioChange}
+                >
+                  <FormControlLabel value="artist" control={<Radio color='error'/>} label="Artista"/>
+                  <FormControlLabel value="house" control={<Radio color='error'/>} label="Gerente de casa de show" />
+                </RadioGroup>
               <TextField
                 margin="normal"
                 required
@@ -171,7 +150,7 @@ export default function CadastroDois() {
                 autoComplete="off"
                 inputProps={{
                   maxLength: 14,
-                  pattern: "\d{3}\.\d{3}\.\d{3}-\d{2}",
+                  pattern: "\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}",
                 }}
                 onChange={(event) => {
                   const { value } = event.target;
@@ -181,9 +160,6 @@ export default function CadastroDois() {
                     .replace(/(\d{3})(\d)/, "$1.$2")
                     .replace(/(\d{3})(\d{2})$/, "$1-$2");
                 }}
-                onBlur={validateCPF}
-                error={cpfError}
-                helperText={cpfError ? "CPF inválido" : ""}
               />
               <TextField
                 margin="normal"
@@ -196,7 +172,7 @@ export default function CadastroDois() {
                 autoComplete="off"
                 inputProps={{
                   maxLength: 15,
-                  pattern: "\d{2} \d{5}-\d{4}",
+                  pattern: "\\d{2} \\d{5}-\\d{4}",
                 }}
                 onChange={(event) => {
                   const { value } = event.target;
@@ -205,9 +181,6 @@ export default function CadastroDois() {
                     .replace(/(\d{2})(\d)/, "($1) $2")
                     .replace(/(\d{5})(\d)/, "$1-$2");
                 }}
-                onBlur={validatePhoneNumber}
-                error={phoneError}
-                helperText={phoneError ? "Número de telefone inválido" : ""}
               />
               <TextField
                 margin="normal"
@@ -220,7 +193,7 @@ export default function CadastroDois() {
                 autoComplete="off"
                 inputProps={{
                   maxLength: 10,
-                  pattern: "\d{2}/\d{2}/\d{4}",
+                  pattern: "\\d{2}/\\d{2}/\\d{4}",
                 }}
                 onChange={(event) => {
                   const { value } = event.target;
@@ -229,9 +202,6 @@ export default function CadastroDois() {
                     .replace(/(\d{2})(\d)/, "$1/$2")
                     .replace(/(\d{2})(\d)/, "$1/$2");
                 }}
-                onBlur={validateDate}
-                error={dateError}
-                helperText={dateError ? "Data de nascimento inválida" : ""}
               />
               <FormControlLabel
                 required
@@ -256,8 +226,11 @@ export default function CadastroDois() {
               >
                 Cadastrar
               </Button>
+
+
               <Typography variant="body2" color="text.secondary" align="center">
                 {'© '}
+
                 {new Date().getFullYear()}
                 {'.'}
               </Typography>
@@ -268,5 +241,3 @@ export default function CadastroDois() {
     </ThemeProvider>
   );
 }
-
-

@@ -213,7 +213,7 @@ function HomePage() {
                 e casas de show, facilitando o processo de encontrar e trabalhar juntos.
                 <br />
                 <br />
-                <button onClick={() => { navigate('/register') }} className="button" style={{ marginRight: '20px' }}>Cadastrar-se</button>
+                <button onClick={() => { navigate('/register') }} className="button">Cadastrar-se</button
                 <button onClick={() => { navigate('/login') }} className="buttonLogin">Login</button>
               </p>
             </div>

@@ -25,13 +25,9 @@ export default function SignInSide() {
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleLogin = () => {
-    // Lógica de validação e autenticação aqui
     if (email === 'user@example.com' && password === 'password') {
-      // Sucesso no login
       setErrorMessage('');
-      // Redirecionar ou realizar outras ações
     } else {
-      // Falha no login
       setErrorMessage('Credenciais inválidas. Por favor, tente novamente.');
     }
   };
@@ -94,11 +90,11 @@ export default function SignInSide() {
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            position: 'relative', // Adiciona a propriedade de posição
+            position: 'relative', 
           }}
         >
           <img
-            src={myOtherImage} // Substitua "myOtherImage" pelo caminho da sua outra imagem
+            src={myOtherImage} 
             alt="Outra imagem"
             style={{
               position: 'absolute',
@@ -136,7 +132,7 @@ export default function SignInSide() {
                 autoFocus
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                onBlur={validateEmail} // Adiciona a função de validação no evento onBlur
+                onBlur={validateEmail}
                 error={errorMessage !== ''}
               />
               <TextField
@@ -150,7 +146,7 @@ export default function SignInSide() {
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                onBlur={validatePassword} // Adiciona a função de validação no evento onBlur
+                onBlur={validatePassword} 
                 error={errorMessage !== ''}
               />
               {errorMessage && (

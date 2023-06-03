@@ -44,7 +44,6 @@ export default function Cadastro() {
   };
 
   const validateEmail = (email) => {
-    // Regex para verificar o formato de email válido
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };

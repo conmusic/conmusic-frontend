@@ -52,7 +52,11 @@ export default function Deposits(props) {
           marginTop: 'auto',
           borderColor: 'black',
           backgroundColor: '#fb2b57',
-          color:"white"
+          color:"white",
+          '&:hover': {
+            backgroundColor: 'white',
+            color:"black",
+          },
         }}
       >
         Ir para conversa

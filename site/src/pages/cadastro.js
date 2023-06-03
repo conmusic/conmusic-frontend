@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -11,24 +11,41 @@ import {
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import myImage from '../assets/images/image.png';
-import myOtherImage from '../assets/images/logo.png'
+import myOtherImage from '../assets/images/logo.png';
 import { useNavigate } from 'react-router-dom';
-
 
 const theme = createTheme();
 
 export default function Cadastro() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+
   const handleSubmit = (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    
-    const dados = {
-      email: data.get('email'),
-      password: data.get('password')
-    }
+    if (email && password) {
+      if (!validateEmail(email)) {
+        setErrorMessage('Email inválido. Por favor, insira um email válido.');
+        return;
+      }
 
-    navigate('/register-two-step', { state: dados });
+      const data = new FormData(event.currentTarget);
+
+      const dados = {
+        email: data.get('email'),
+        password: data.get('password'),
+      };
+
+      navigate('/register-two-step', { state: dados });
+    } else {
+      setErrorMessage('Por favor, preencha todos os campos.');
+    }
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   };
 
   return (
@@ -36,31 +53,31 @@ export default function Cadastro() {
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
-      item
-      xs={false}
-      sm={5}
-      md={6.4}
-      sx={{
-        backgroundImage: `url(${myImage})`,
-        backgroundRepeat: 'no-repeat',
-        backgroundColor: (t) =>
-          t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        position: 'relative', // Adiciona a propriedade de posição
-      }}
-    >
-      <img
-        src={myOtherImage} // Substitua "myOtherImage" pelo caminho da sua outra imagem
-        alt="Outra imagem"
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-        }}
-      />
-    </Grid>
+          item
+          xs={false}
+          sm={5}
+          md={6.4}
+          sx={{
+            backgroundImage: `url(${myImage})`,
+            backgroundRepeat: 'no-repeat',
+            backgroundColor: (t) =>
+              t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            position: 'relative',
+          }}
+        >
+          <img
+            src={myOtherImage}
+            alt="Outra imagem"
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+          />
+        </Grid>
         <Grid item xs={12} sm={8} md={5.6} component={Paper} elevation={6} square>
           <Box
             sx={{
@@ -71,10 +88,8 @@ export default function Cadastro() {
               alignItems: 'center',
             }}
           >
-          <Typography
-           sx={{color: '#d3d3d3 '}}
-          component="h1" variant="h5">
-             Etapa 1 de 2
+            <Typography sx={{ color: '#d3d3d3 ' }} component="h1" variant="h5">
+              Etapa 1 de 2
             </Typography>
             <Typography component="h1" variant="h5">
               Crie sua conta
@@ -89,6 +104,9 @@ export default function Cadastro() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                error={errorMessage.includes('Email')}
               />
               <TextField
                 margin="normal"
@@ -99,36 +117,42 @@ export default function Cadastro() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                error={errorMessage.includes('Senha')}
               />
+              {errorMessage && (
+                <Typography variant="body2" color="error">
+                  {errorMessage}
+                </Typography>
+              )}
               <Button
                 type="submit"
                 fullWidth
                 variant="contained"
                 sx={{
                   '&:hover': {
-                    backgroundColor: 'black', 
+                    backgroundColor: 'black',
                   },
                   mt: 3,
                   mb: 2,
                   backgroundColor: 'red',
                   border: '1px solid black',
-                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+                  boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
                 }}
               >
                 Continuar
               </Button>
               <Grid container>
                 <Grid item xs>
-                 ja tem uma conta?
+                  Já tem uma conta?
                   <Link href="/" variant="body2">
-                     Faça login
+                    Faça login
                   </Link>
                 </Grid>
-
               </Grid>
               <Typography variant="body2" color="text.secondary" align="center">
                 {'© '}
-
                 {new Date().getFullYear()}
                 {'.'}
               </Typography>

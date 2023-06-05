@@ -242,6 +242,7 @@ export default function CadastroDois() {
                 type="submit"
                 fullWidth
                 variant="contained"
+                onClick={() => { navigate('/dashboard') }}
                 sx={{
                   '&:hover': {
                     backgroundColor: 'black',

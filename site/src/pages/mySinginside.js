@@ -42,7 +42,7 @@ export default function SignInSide() {
     api
       .post('/users/authentication', body)
       .then((response) => {
-        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('@conmusic:token', response.data.token);
         navigate('/dashboard');
       })
       .catch((error) => {
@@ -90,11 +90,11 @@ export default function SignInSide() {
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
             backgroundSize: 'cover',
             backgroundPosition: 'center',
-            position: 'relative', 
+            position: 'relative',
           }}
         >
           <img
-            src={myOtherImage} 
+            src={myOtherImage}
             alt="Outra imagem"
             style={{
               position: 'absolute',
@@ -146,7 +146,7 @@ export default function SignInSide() {
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                onBlur={validatePassword} 
+                onBlur={validatePassword}
                 error={errorMessage !== ''}
               />
               {errorMessage && (
@@ -175,7 +175,7 @@ export default function SignInSide() {
               <Button
                 fullWidth
                 variant="contained"
-                href="/cadastro"
+                onClick={() => { navigate('/register') }}
                 sx={{
                   '&:hover': {
                     backgroundColor: 'black',

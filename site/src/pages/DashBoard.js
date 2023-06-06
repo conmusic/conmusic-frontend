@@ -187,84 +187,84 @@ export default function Dashboard() {
             <Grid container spacing={3}>
               {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 310,
-                  }}
-                >
-                  {cardData.length > 0 && (
+                {cardData.length > 0 && (
+                  <Paper
+                    sx={{
+                      p: 2,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: 310,
+                    }}
+                  >
                     <Deposits
                       estabelecimento={cardData[0].establishment}
                       evento={cardData[0].event}
                       dataDoShow={cardData[0].date}
                       horarioMarcado={cardData[0].time}
                     />
-                  )}
-                </Paper>
+                  </Paper>
+                )}
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 310,
-                  }}
-                >
-                  {/* Conteúdo da Card */}
-                  {cardData.length > 1 && (
+                {/* Conteúdo da Card */}
+                {cardData.length > 1 && (
+                  <Paper
+                    sx={{
+                      p: 2,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: 310,
+                    }}
+                  >
                     <Deposits
                       estabelecimento={cardData[1].establishment}
                       evento={cardData[1].event}
                       dataDoShow={cardData[1].date}
                       horarioMarcado={cardData[1].time}
                     />
-                  )}
-                </Paper>
+                  </Paper>
+                )}
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 310,
-                  }}
-                >
-                  {/* Conteúdo da Card */}
-                  {cardData.length > 2 && (
+                {/* Conteúdo da Card */}
+                {cardData.length > 2 && (
+                  <Paper
+                    sx={{
+                      p: 2,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: 310,
+                    }}
+                  >
                     <Deposits
                       estabelecimento={cardData[2].establishment}
                       evento={cardData[2].event}
                       dataDoShow={cardData[2].date}
                       horarioMarcado={cardData[2].time}
                     />
-                  )}
-                </Paper>
+                  </Paper>
+                )}
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
-                  {/* Conteúdo da Card */}
-                  {cardData.length > 3 && (
-                    <Paper
-                      sx={{
-                        p: 2,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        height: 310,
-                      }}
-                    >
-                      <Deposits
-                        estabelecimento={cardData[3].establishment}
-                        evento={cardData[3].event}
-                        dataDoShow={cardData[3].date}
-                        horarioMarcado={cardData[3].time}
-                      />
-                    </Paper>
-                  )}
-                
+                {/* Conteúdo da Card */}
+                {cardData.length > 3 && (
+                  <Paper
+                    sx={{
+                      p: 2,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: 310,
+                    }}
+                  >
+                    <Deposits
+                      estabelecimento={cardData[3].establishment}
+                      evento={cardData[3].event}
+                      dataDoShow={cardData[3].date}
+                      horarioMarcado={cardData[3].time}
+                    />
+                  </Paper>
+                )}
+
               </Grid>
               {/* Recent Orders */}
               <Grid item xs={12}>

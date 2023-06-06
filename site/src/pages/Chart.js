@@ -1,37 +1,50 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts';
 import Title from './Title';
-
-// Generate Sales Data
-function createData(time, amount) {
-  return { time, amount };
-}
-
-const data = [
-  createData('Janeiro', 0),
-  createData('Fevereiro', 300),
-  createData('Março', 600),
-  createData('Abriu', 800),
-  createData('Maio', 1500),
-  createData('Junho', 2000),
-  createData('Julho', 2400),
-  createData('Agosto', 2100),
-  createData('Setembro', 1950),
-  createData('Outubro', 2000),
-  createData('Novembro', 2400),
-  createData('Dezembro', 2350),
-];
+import api from '../services/api';
+import { format, getYear, setMonth } from 'date-fns';
 
 export default function Chart() {
   const theme = useTheme();
+  const [ChartData, setChartData] = useState([]);
+
+  useEffect(() => {
+    const fetchChartData = async () => {
+      try {
+        var token = localStorage.getItem('@conmusic:token');
+        let endDate = new Date()
+        let startDate = new Date(getYear(endDate), 0, 1)
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+          params: {
+            startDate: startDate,
+            endDate: endDate,
+          }
+        };
+
+        const response = await api.get('/shows/statistics/count-confirmed-by-month', config);
+        var graphData = response.data.map(obj => {
+          return {
+            time: obj.mounth,
+            amount: obj.count
+          }
+        })
+        setChartData(graphData)
+      } catch (error) {
+        console.error('Erro ao buscar os dados do gráfico:', error);
+      }
+    };
+
+    fetchChartData();
+  }, []);
 
   return (
     <React.Fragment>
       <Title>Shows Confirmados por Mês e Evolução</Title>
       <ResponsiveContainer>
         <LineChart
-          data={data}
+          data={ChartData}
           margin={{
             top: 16,
             right: 16,

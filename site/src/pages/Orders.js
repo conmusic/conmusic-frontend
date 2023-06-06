@@ -8,6 +8,8 @@ import TableRow from '@mui/material/TableRow';
 import Title from './Title';
 import { TableContainer } from '@mui/material';
 import api from '../services/api';
+import { format } from 'date-fns';
+import showStatusHelper from '../helpers/showStatusHelper';
 
 function preventDefault(event) {
   event.preventDefault();
@@ -24,7 +26,19 @@ export default function Orders() {
           headers: { Authorization: `Bearer ${token}` }
         };
         const response = await api.get('/shows/negotiations', config);
-        setTableData(response.data);
+       
+
+        var TableData = response.data.map(row => {
+          let showDate = format(new Date(row.schedule.startDateTime), "dd/MM/yyyy - HH:mm");
+          return {
+            id: row.id,
+            establishment: row.event.establishment.establishmentName,
+            event: row.event.name,
+            dateShow: showDate,
+            status: showStatusHelper.getDisplayName(row.status)
+          }
+        })
+        setTableData(TableData);
       } catch (error) {
         console.error('Erro ao buscar os dados da tabela:', error);
       }
@@ -41,7 +55,7 @@ export default function Orders() {
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell style={{ textAlign: 'left' }}>Nome do Artista</TableCell>
+                <TableCell style={{ textAlign: 'left' }}>Nome do Estabelecimento</TableCell>
                 <TableCell style={{ textAlign: 'left' }}>Evento</TableCell>
                 <TableCell style={{ textAlign: 'left' }}>Data do Show</TableCell>
                 <TableCell style={{ textAlign: 'left' }}>Status de negociação</TableCell>
@@ -50,9 +64,9 @@ export default function Orders() {
             <TableBody>
               {tableData.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell style={{ textAlign: 'left' }}>{row.fk_artista}</TableCell>
-                  <TableCell style={{ textAlign: 'left' }}>{row.fk_evento}</TableCell>
-                  <TableCell style={{ textAlign: 'left' }}>{row.fk_agenda}</TableCell>
+                  <TableCell style={{ textAlign: 'left' }}>{row.establishment}</TableCell>
+                  <TableCell style={{ textAlign: 'left' }}>{row.event}</TableCell>
+                  <TableCell style={{ textAlign: 'left' }}>{row.dateShow}</TableCell>
                   <TableCell style={{ textAlign: 'left' }}>{row.status}</TableCell>
                 </TableRow>
               ))}

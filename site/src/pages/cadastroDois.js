@@ -31,7 +31,7 @@ export default function CadastroDois() {
   };
 
   function register(body) {
-    const baseURL = typeUser === 'artist' ? '/artist' : '/managers';
+    const baseURL = typeUser === 'artists' ? '/artists' : '/managers';
 
     api.post(baseURL, body)
       .then((response) => {
@@ -147,7 +147,7 @@ export default function CadastroDois() {
                 name="row-radio-buttons-group"
                 onChange={handleRadioChange}
               >
-                <FormControlLabel value="artist" control={<Radio color='error' />} label="Artista" />
+                <FormControlLabel value="artists" control={<Radio color='error' />} label="Artista" />
                 <FormControlLabel value="house" control={<Radio color='error' />} label="Gerente de casa de show" />
               </RadioGroup>
               <TextField
@@ -242,6 +242,7 @@ export default function CadastroDois() {
                 type="submit"
                 fullWidth
                 variant="contained"
+                onClick={() => { navigate('/dashboard') }}
                 sx={{
                   '&:hover': {
                     backgroundColor: 'black',

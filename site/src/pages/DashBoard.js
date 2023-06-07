@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { styled, createTheme, ThemeProvider } from '@mui/material/styles';
 import Title from './Title';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -15,28 +15,15 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import Link from '@mui/material/Link';
-import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import Button from '@mui/material/Button';
 import { mainListItems } from './listItems';
 import Chart from './Chart';
 import Deposits from './Deposits';
 import Orders from './Orders';
 import logo from '../assets/images/logoConMusic-removebg-preview.png';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import api from '../services/api';
+import { format } from 'date-fns';
 
 const drawerWidth = 240;
 
@@ -101,14 +88,43 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function Dashboard() {
   const [open, setOpen] = React.useState(true);
+  const [cardData, setCardData] = React.useState([]);
   const toggleDrawer = () => {
     setOpen(!open);
   };
+
+  useEffect(() => {
+    const fetchCardData = async () => {
+      try {
+        var token = localStorage.getItem('@conmusic:token');
+        const config = {
+          headers: { Authorization: `Bearer ${token}` }
+        };
+        const response = await api.get('/shows/confirmed', config);
+        var card = response.data.map(obj => {
+          let showDate = format(new Date(obj.schedule.startDateTime), "dd/MM/yyyy");
+          let showStartDateTime = format(new Date(obj.schedule.startDateTime), "HH:mm");
+          let showEndDateTime = format(new Date(obj.schedule.endDateTime), "HH:mm");
+
+          return {
+            establishment: obj.event.establishment.establishmentName,
+            event: obj.event.name,
+            date: showDate,
+            time: `${showStartDateTime} - ${showEndDateTime}`,
+          }
+        })
+        setCardData(card);
+      } catch (error) {
+        console.error('Erro ao buscar os dados dos cards:', error);
+      }
+    };
+
+    fetchCardData();
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -132,11 +148,6 @@ export default function Dashboard() {
                 <img src={logo} alt="" className="nav__logo-img" />
               </a>
             </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
@@ -176,76 +187,84 @@ export default function Dashboard() {
             <Grid container spacing={3}>
               {/* Recent Deposits */}
               <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 310,
-                  }}
-                >
-                  {/* Conteúdo da Card */}
-                  <Deposits
-                    estabelecimento="Casa de Show A"
-                    evento="Noite do Jazz"
-                    dataDoShow="01/05/2023"
-                    horarioMarcado="22:00"
-                  />
-                </Paper>
+                {cardData.length > 0 && (
+                  <Paper
+                    sx={{
+                      p: 2,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: 310,
+                    }}
+                  >
+                    <Deposits
+                      estabelecimento={cardData[0].establishment}
+                      evento={cardData[0].event}
+                      dataDoShow={cardData[0].date}
+                      horarioMarcado={cardData[0].time}
+                    />
+                  </Paper>
+                )}
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 310,
-                  }}
-                >
-                  {/* Conteúdo da Card */}
-                  <Deposits
-                    estabelecimento="Casa de Show A"
-                    evento="Noite do Jazz"
-                    dataDoShow="01/05/2023"
-                    horarioMarcado="22:00"
-                  />
-                </Paper>
+                {/* Conteúdo da Card */}
+                {cardData.length > 1 && (
+                  <Paper
+                    sx={{
+                      p: 2,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: 310,
+                    }}
+                  >
+                    <Deposits
+                      estabelecimento={cardData[1].establishment}
+                      evento={cardData[1].event}
+                      dataDoShow={cardData[1].date}
+                      horarioMarcado={cardData[1].time}
+                    />
+                  </Paper>
+                )}
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 310,
-                  }}
-                >
-                  {/* Conteúdo da Card */}
-                  <Deposits
-                    estabelecimento="Casa de Show A"
-                    evento="Noite do Jazz"
-                    dataDoShow="01/05/2023"
-                    horarioMarcado="22:00"
-                  />
-                </Paper>
+                {/* Conteúdo da Card */}
+                {cardData.length > 2 && (
+                  <Paper
+                    sx={{
+                      p: 2,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: 310,
+                    }}
+                  >
+                    <Deposits
+                      estabelecimento={cardData[2].establishment}
+                      evento={cardData[2].event}
+                      dataDoShow={cardData[2].date}
+                      horarioMarcado={cardData[2].time}
+                    />
+                  </Paper>
+                )}
               </Grid>
               <Grid item xs={12} md={4} lg={3}>
-                <Paper
-                  sx={{
-                    p: 2,
-                    display: 'flex',
-                    flexDirection: 'column',
-                    height: 310,
-                  }}
-                >
-                  {/* Conteúdo da Card */}
-                  <Deposits
-                    estabelecimento="Casa de Show A"
-                    evento="Noite do Jazz"
-                    dataDoShow="01/05/2023"
-                    horarioMarcado="22:00"
-                  />
-                </Paper>
+                {/* Conteúdo da Card */}
+                {cardData.length > 3 && (
+                  <Paper
+                    sx={{
+                      p: 2,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      height: 310,
+                    }}
+                  >
+                    <Deposits
+                      estabelecimento={cardData[3].establishment}
+                      evento={cardData[3].event}
+                      dataDoShow={cardData[3].date}
+                      horarioMarcado={cardData[3].time}
+                    />
+                  </Paper>
+                )}
+
               </Grid>
               {/* Recent Orders */}
               <Grid item xs={12}>
@@ -267,7 +286,6 @@ export default function Dashboard() {
                 </Paper>
               </Grid>
             </Grid>
-            <Copyright sx={{ pt: 4 }} />
           </Container>
         </Box>
       </Box>

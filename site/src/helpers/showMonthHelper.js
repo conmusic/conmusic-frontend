@@ -1,43 +1,43 @@
 function getDisplayMonth(month) {
     let displayMonth = month
     
-    switch (displayMonth) {
-        case "January":
+    switch (month) {
+        case 1:
             displayMonth = "Janeiro"
             break;
-        case "February":
+        case 2:
             displayMonth = "Fevereiro"
             break;
-        case "March":
+        case 3:
             displayMonth = "Março"
             break;
-        case "April":
+        case 4:
             displayMonth = "Abril"
             break
-        case "May":
+        case 5:
             displayMonth = "Maio"
             break
-        case "June":
+        case 6:
             displayMonth = "Junho"
             break
-        case "July":
+        case 7:
             displayMonth = "Julho"
             break
-        case "August":
+        case 8:
             displayMonth = "Agosto"
             break
-        case "September":
+        case 9:
             displayMonth = "Setembro"
             break
-        case "October":
+        case 10:
             displayMonth = "Outubro"
             break
-        case "November":
+        case 11:
             displayMonth = "Nobembro"
             break
-        case "December":
-        displayMonth = "Dezembro"
-        break
+        case 12:
+            displayMonth = "Dezembro"
+            break
         default:
             displayMonth = "Indefinido"
             break;

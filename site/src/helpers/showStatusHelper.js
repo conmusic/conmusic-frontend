@@ -31,7 +31,7 @@ function getDisplayName(status) {
             break
         case "ARTIST_CANCELED", "MANAGER_CANCELED":
             displayName = "Show Cancelado"
-            
+            break;
         default:
             displayName = "Indefinido"
             break;

@@ -8,7 +8,7 @@ import TableRow from '@mui/material/TableRow';
 import Title from './Title';
 import { TableContainer } from '@mui/material';
 import api from '../services/api';
-import { format } from 'date-fns';
+import { format, isAfter } from 'date-fns';
 import showStatusHelper from '../helpers/showStatusHelper';
 
 function preventDefault(event) {
@@ -28,16 +28,18 @@ export default function Orders() {
         const response = await api.get('/shows/negotiations', config);
        
 
-        var TableData = response.data.map(row => {
-          let showDate = format(new Date(row.schedule.startDateTime), "dd/MM/yyyy - HH:mm");
-          return {
-            id: row.id,
-            establishment: row.event.establishment.establishmentName,
-            event: row.event.name,
-            dateShow: showDate,
-            status: showStatusHelper.getDisplayName(row.status)
-          }
-        })
+        var TableData = response.data
+          .filter(obj => isAfter(new Date(obj.schedule.startDateTime), new Date()))
+          .map(row => {
+            let showDate = format(new Date(row.schedule.startDateTime), "dd/MM/yyyy - HH:mm");
+            return {
+              id: row.id,
+              establishment: row.event.establishment.establishmentName,
+              event: row.event.name,
+              dateShow: showDate,
+              status: showStatusHelper.getDisplayName(row.status)
+            }
+          })
         setTableData(TableData);
       } catch (error) {
         console.error('Erro ao buscar os dados da tabela:', error);

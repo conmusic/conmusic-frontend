@@ -22,13 +22,20 @@ const theme = createTheme();
 export default function SignInSide() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [apiErrorMessage, setApiErrorMessage] = useState('');
 
   const handleLogin = () => {
-    if (email === 'user@example.com' && password === 'password') {
-      setErrorMessage('');
+    if (email === '' || password === '') {
+      setEmailError(email === '');
+      setPasswordError(password === '');
+      setErrorMessage('Por favor, preencha todos os campos.');
     } else {
-      setErrorMessage('Credenciais inválidas. Por favor, tente novamente.');
+      setEmailError(false);
+      setPasswordError(false);
+      login(email, password); // Realizar o login
     }
   };
 
@@ -69,6 +76,14 @@ export default function SignInSide() {
   const validatePassword = () => {
     if (password.length < 6) {
       setErrorMessage('A senha deve ter pelo menos 6 caracteres.');
+    } else {
+      setErrorMessage('');
+    }
+  };
+
+  const validatePasswordAndEmail = () => {
+    if (email === "" && password === "") {
+      setErrorMessage('Preencha todos os campos.');
     } else {
       setErrorMessage('');
     }
@@ -132,8 +147,9 @@ export default function SignInSide() {
                 autoFocus
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                onBlur={validateEmail}
+                onBlur={validateEmail, validatePasswordAndEmail}
                 error={errorMessage !== ''}
+                error={emailError}
               />
               <TextField
                 margin="normal"
@@ -146,8 +162,9 @@ export default function SignInSide() {
                 autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                onBlur={validatePassword}
+                onBlur={validatePassword, validatePasswordAndEmail}
                 error={errorMessage !== ''}
+                error={passwordError}
               />
               {errorMessage && (
                 <Typography variant="body2" color="error" sx={{ mb: 1 }}>

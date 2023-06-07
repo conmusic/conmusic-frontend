@@ -18,16 +18,16 @@ export default function Chart() {
         const config = {
           headers: { Authorization: `Bearer ${token}` },
           params: {
-            startDate: startDate,
-            endDate: endDate,
+            startDate: format(startDate, "yyyy-MM-dd HH:mm:ss"),
+            endDate: format(endDate, "yyyy-MM-dd HH:mm:ss"),
           }
         };
 
         const response = await api.get('/shows/statistics/count-confirmed-by-month', config);
         var graphData = response.data.map(obj => {
           return {
-            time: obj.mounth,
-            amount: obj.count
+            month: obj.month,
+            count: obj.count
           }
         })
         setChartData(graphData)
@@ -54,9 +54,10 @@ export default function Chart() {
         >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
-            dataKey="time"
+            dataKey="month"
             stroke={theme.palette.text.secondary}
             style={theme.typography.body2}
+
           />
           <YAxis
             stroke={theme.palette.text.secondary}
@@ -78,7 +79,7 @@ export default function Chart() {
           <Line
             isAnimationActive={true}
             type="monotone"
-            dataKey="amount"
+            dataKey="count"
             stroke="red"
             strokeWidth={2}
             dot={{ stroke: "red", strokeWidth: 2, r: 4 }}

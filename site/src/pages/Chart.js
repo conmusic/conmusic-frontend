@@ -4,6 +4,7 @@ import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, Car
 import Title from './Title';
 import api from '../services/api';
 import { format, getYear, setMonth } from 'date-fns';
+import showMonthHelper from '../helpers/showMonthHelper'
 
 export default function Chart() {
   const theme = useTheme();
@@ -27,7 +28,7 @@ export default function Chart() {
         var graphData = response.data.map(obj => {
           return {
             month: obj.month,
-            count: obj.count
+            count: showMonthHelper.getDisplayMonth(obj.count)
           }
         })
         setChartData(graphData)

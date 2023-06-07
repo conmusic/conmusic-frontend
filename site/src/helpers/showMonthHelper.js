@@ -47,7 +47,7 @@ function getDisplayMonth(month) {
 }
 
 const showMonthHelper = {
-    displayMonth
+    getDisplayMonth
 }
 
 export default showMonthHelper;

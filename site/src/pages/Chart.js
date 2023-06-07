@@ -27,8 +27,8 @@ export default function Chart() {
         const response = await api.get('/shows/statistics/count-confirmed-by-month', config);
         var graphData = response.data.map(obj => {
           return {
-            month: obj.month,
-            count: showMonthHelper.getDisplayMonth(obj.count)
+            month: showMonthHelper.getDisplayMonth(obj.month),
+            count: obj.count
           }
         })
         setChartData(graphData)

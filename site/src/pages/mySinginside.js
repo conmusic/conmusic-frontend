@@ -25,7 +25,6 @@ export default function SignInSide() {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [apiErrorMessage, setApiErrorMessage] = useState('');
 
   const handleLogin = () => {
     if (email === '' || password === '') {

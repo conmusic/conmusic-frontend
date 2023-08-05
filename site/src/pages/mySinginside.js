@@ -25,7 +25,6 @@ export default function SignInSide() {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [apiErrorMessage, setApiErrorMessage] = useState('');
 
   const handleLogin = () => {
     if (email === '' || password === '') {
@@ -46,6 +45,8 @@ export default function SignInSide() {
       password: password,
     };
 
+    setErrorMessage('');
+
     api
       .post('/users/authentication', body)
       .then((response) => {
@@ -53,7 +54,11 @@ export default function SignInSide() {
         navigate('/dashboard');
       })
       .catch((error) => {
-        console.log(error);
+        if (error.response.status === 403) {
+          setErrorMessage("Email e/ou Senha inválida!")
+        } else {
+          setErrorMessage("Erro desconhecido")
+        }
       });
   }
 

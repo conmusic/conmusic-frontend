@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material/styles';
 import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts';
 import Title from './Title';
 import api from '../services/api';
-import { format, getYear, setMonth } from 'date-fns';
+import { format, getYear } from 'date-fns';
 import showMonthHelper from '../helpers/showMonthHelper'
 
 export default function Chart() {
@@ -58,7 +58,6 @@ export default function Chart() {
             dataKey="month"
             stroke={theme.palette.text.secondary}
             style={theme.typography.body2}
-
           />
           <YAxis
             stroke={theme.palette.text.secondary}
@@ -85,6 +84,7 @@ export default function Chart() {
             strokeWidth={2}
             dot={{ stroke: "red", strokeWidth: 2, r: 4 }}
             activeDot={{ r: 8 }}
+            name="Shows confirmados"
           />
         </LineChart>
       </ResponsiveContainer>

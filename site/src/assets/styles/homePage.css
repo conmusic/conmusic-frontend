@@ -159,6 +159,12 @@ body.dark-theme {
   padding: 4.5rem 0 1rem;
 }
 
+@media (max-width: 300px) {
+  body {
+    background-color: red !important;
+  }
+}
+
 .section__title {
   font-size: var(--h2-font-size);
   margin-bottom: var(--mb-2-5);

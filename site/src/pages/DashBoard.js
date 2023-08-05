@@ -23,7 +23,7 @@ import Deposits from './Deposits';
 import Orders from './Orders';
 import logo from '../assets/images/logoConMusic-removebg-preview.png';
 import api from '../services/api';
-import { format } from 'date-fns';
+import { format, isAfter } from 'date-fns';
 
 const drawerWidth = 240;
 
@@ -105,18 +105,20 @@ export default function Dashboard() {
           headers: { Authorization: `Bearer ${token}` }
         };
         const response = await api.get('/shows/confirmed', config);
-        var card = response.data.map(obj => {
-          let showDate = format(new Date(obj.schedule.startDateTime), "dd/MM/yyyy");
-          let showStartDateTime = format(new Date(obj.schedule.startDateTime), "HH:mm");
-          let showEndDateTime = format(new Date(obj.schedule.endDateTime), "HH:mm");
+        var card = response.data
+          .filter(obj => isAfter(new Date(obj.schedule.startDateTime), new Date()))
+          .map(obj => {
+            let showDate = format(new Date(obj.schedule.startDateTime), "dd/MM/yyyy");
+            let showStartDateTime = format(new Date(obj.schedule.startDateTime), "HH:mm");
+            let showEndDateTime = format(new Date(obj.schedule.endDateTime), "HH:mm");
 
-          return {
-            establishment: obj.event.establishment.establishmentName,
-            event: obj.event.name,
-            date: showDate,
-            time: `${showStartDateTime} - ${showEndDateTime}`,
-          }
-        })
+            return {
+              establishment: obj.event.establishment.establishmentName,
+              event: obj.event.name,
+              date: showDate,
+              time: `${showStartDateTime} - ${showEndDateTime}`,
+            }
+          })
         setCardData(card);
       } catch (error) {
         console.error('Erro ao buscar os dados dos cards:', error);

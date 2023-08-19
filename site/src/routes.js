@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import CadastroPage from './pages/CadastroPage';
 import CadastroPageDois from './pages/CadastroPageDois';
 import Dash from './pages/Dash';
+import DashEstablishment from './pages/DashEstablishment';
 
 export default function MainRoutes() {
   return (
@@ -16,6 +17,7 @@ export default function MainRoutes() {
       <Route path="/register" element={<CadastroPage />} />
         <Route path="/register-two-step" element={<CadastroPageDois />} />
       <Route path="/dashboard" element={<Dash />} />
+      <Route path="/dashboard-establishment" element={<DashEstablishment />} />
       <Route path="*" element={<h1>Not Found</h1>} />
     </Routes>
   );

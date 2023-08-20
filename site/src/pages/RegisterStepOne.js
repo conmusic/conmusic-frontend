@@ -1,7 +1,6 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  Avatar,
   Box,
   Button,
   Grid,
@@ -10,44 +9,43 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import { useAuth } from '../hooks/auth';
-
 import myImage from '../assets/images/image.png';
 import myOtherImage from '../assets/images/logo.png';
 
-export default function LoginPage() {
+export default function RegisterStepOne() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-  const navigate = useNavigate();
-  const { login } = useAuth();
-
-  const handleSubmit = useCallback(async (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    
-    if (formData.get('email') === '' || formData.get('password') === '') {
-      setErrorMessage('Por favor, preencha todos os campos.');
-      return;
-    }
-
-    try {
-      await login({ email: formData.get('email'), password: formData.get('password') })
-
-      navigate('/dashboard');
-    } catch (error) {
-      if (error.response.status === 403) {
-        setErrorMessage("Email e/ou Senha inválida!")
-      } else {
-        setErrorMessage("Erro desconhecido")
+    if (email && password) {
+      if (!validateEmail(email)) {
+        setErrorMessage('Email inválido. Por favor, insira um email válido.');
+        return;
       }
+
+      const data = new FormData(event.currentTarget);
+
+      const dados = {
+        email: data.get('email'),
+        password: data.get('password'),
+      };
+
+      navigate('/register-two-step', { state: dados });
+    } else {
+      setErrorMessage('Por favor, preencha todos os campos.');
     }
-  }, [login, navigate]);
+  };
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   return (
-    <Grid container component="main" sx={{ height: '100vh' }}>      
+    <Grid container component="main" sx={{ height: '100vh' }}>
       <Grid
         item
         xs={false}
@@ -84,11 +82,11 @@ export default function LoginPage() {
             alignItems: 'center',
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'red' }}>
-            <LockOutlinedIcon />
-          </Avatar>
+          <Typography sx={{ color: '#d3d3d3 ' }} component="h1" variant="h5">
+            Etapa 1 de 2
+          </Typography>
           <Typography component="h1" variant="h5">
-            Faça seu login
+            Crie sua conta
           </Typography>
           <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
@@ -101,7 +99,8 @@ export default function LoginPage() {
               autoComplete="email"
               autoFocus
               value={email}
-              onChange={(e) => setEmail(e.target.value)}                
+              onChange={(e) => setEmail(e.target.value)}
+              error={errorMessage.includes('Email')}
             />
             <TextField
               margin="normal"
@@ -114,9 +113,10 @@ export default function LoginPage() {
               autoComplete="current-password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              error={errorMessage.includes('Senha')}
             />
-            {(errorMessage && errorMessage !== '') && (
-              <Typography variant="body2" color="error" sx={{ mb: 1 }}>
+            {errorMessage && (
+              <Typography variant="body2" color="error">
                 {errorMessage}
               </Typography>
             )}
@@ -132,32 +132,16 @@ export default function LoginPage() {
                 mb: 2,
                 backgroundColor: 'red',
                 border: '1px solid black',
-                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)'
+                boxShadow: '0 2px 4px rgba(0, 0, 0, 0.2)',
               }}
             >
-              Entrar
-            </Button>
-            <Button
-              fullWidth
-              variant="contained"
-              onClick={() => { navigate('/register') }}
-              sx={{
-                '&:hover': {
-                  backgroundColor: 'black',
-                  color: 'white'
-                },
-                mb: 2,
-                backgroundColor: 'white',
-                color: 'black',
-                border: '1px solid black'
-              }}
-            >
-              Cadastrar
+              Continuar
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Esqueceu a senha?
+                Já tem uma conta?
+                <Link href="/" variant="body2">
+                  Faça login
                 </Link>
               </Grid>
             </Grid>
@@ -172,4 +156,3 @@ export default function LoginPage() {
     </Grid>
   );
 }
-

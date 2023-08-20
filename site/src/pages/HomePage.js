@@ -2,8 +2,10 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import Swiper from 'swiper';
 import ScrollReveal from 'scrollreveal';
+
 import '../assets/styles/homePage.css';
 import '../assets/styles/swiper-bundle.min.css';
+
 import logo from '../assets/images/logoConMusic-removebg-preview.png';
 import navbar from '../assets/images/nav-light.png';
 import imageHome from '../assets/images/drums-guitar-removebg-preview.png';
@@ -30,10 +32,6 @@ function HomePage() {
       const navMenu = document.getElementById('nav-menu');
       const navToggle = document.getElementById('nav-toggle');
       const navClose = document.getElementById('nav-close');
-
-      console.log(navMenu)
-      console.log(navToggle)
-      console.log(navClose)
 
       /*===== Mostrando o menu =====*/
       /* validando se o menu existe */

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Link from '@mui/material/Link';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -15,7 +14,7 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
-export default function Orders() {
+export default function CurrentNegotiationsTable() {
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {

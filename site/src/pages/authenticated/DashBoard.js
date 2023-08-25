@@ -11,8 +11,8 @@ import {
 import api from '../../services/api';
 
 import Chart from '../../components/charts/Chart';
-import Deposits from '../../components/Deposits';
-import Orders from '../../components/Orders';
+import CardShows from '../../components/CardShows';
+import CurrentNegotiationsTable from '../../components/CurrentNegotiationsTable';
 import Title from '../../components/Title';
 import SideBar from '../../components/SideBar';
 import Header from '../../components/Header';
@@ -71,7 +71,7 @@ export default function Dashboard() {
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
           <Title>Shows Confirmados</Title>
           <Grid container spacing={3}>
-            {/* Recent Deposits */}
+            {/* Recent CardShows */}
             <Grid item xs={12} md={4} lg={3}>
               {cardData.length > 0 && (
                 <Paper
@@ -82,7 +82,7 @@ export default function Dashboard() {
                     height: 310,
                   }}
                 >
-                  <Deposits
+                  <CardShows
                     estabelecimento={cardData[0].establishment}
                     evento={cardData[0].event}
                     dataDoShow={cardData[0].date}
@@ -102,7 +102,7 @@ export default function Dashboard() {
                     height: 310,
                   }}
                 >
-                  <Deposits
+                  <CardShows
                     estabelecimento={cardData[1].establishment}
                     evento={cardData[1].event}
                     dataDoShow={cardData[1].date}
@@ -122,7 +122,7 @@ export default function Dashboard() {
                     height: 310,
                   }}
                 >
-                  <Deposits
+                  <CardShows
                     estabelecimento={cardData[2].establishment}
                     evento={cardData[2].event}
                     dataDoShow={cardData[2].date}
@@ -142,7 +142,7 @@ export default function Dashboard() {
                     height: 310,
                   }}
                 >
-                  <Deposits
+                  <CardShows
                     estabelecimento={cardData[3].establishment}
                     evento={cardData[3].event}
                     dataDoShow={cardData[3].date}
@@ -152,10 +152,10 @@ export default function Dashboard() {
               )}
 
             </Grid>
-            {/* Recent Orders */}
+            {/* Recent CurrentNegotiationsTable */}
             <Grid item xs={12}>
               <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                <Orders />
+                <CurrentNegotiationsTable />
               </Paper>
             </Grid>
             {/* Chart */}

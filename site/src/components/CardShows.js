@@ -6,7 +6,7 @@ function preventDefault(event) {
   event.preventDefault();
 }
 
-export default function Deposits(props) {
+export default function CardShows(props) {
   return (
     <React.Fragment>
         <React.Fragment>

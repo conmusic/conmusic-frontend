@@ -17,6 +17,8 @@ import MeetingRoomIcon from '@mui/icons-material/MeetingRoom';
 import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import MicExternalOnIcon from '@mui/icons-material/MicExternalOn';
 import PersonPinIcon from '@mui/icons-material/PersonPin';
+import { Link } from 'react-router-dom';
+
 
 
 
@@ -32,7 +34,13 @@ export const mainListItems = (
       <ListItemIcon>
         <ExploreIcon />
       </ListItemIcon>
-      <ListItemText primary="Explorar" />
+      <ListItemText
+        primary={
+          <Link to="/Album" style={{ textDecoration: 'none', color: 'inherit' }}>
+            Explorar
+          </Link>
+        }
+      />
     </ListItemButton>
     <ListItemButton>
       <ListItemIcon>

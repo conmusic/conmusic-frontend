@@ -1,11 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-
-function preventDefault(event) {
-  event.preventDefault();
-}
-
 export default function CardShows(props) {
   return (
     <React.Fragment>

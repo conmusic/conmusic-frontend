@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { 
     Drawer, 
     styled, 
@@ -8,7 +8,8 @@ import {
     List,
     ListItemButton,
     ListItemIcon,
-    ListItemText
+    ListItemText,
+    Tooltip
 } from "@mui/material";
 import { 
     ChevronLeft,
@@ -22,6 +23,11 @@ import {
     PersonPin,
     MeetingRoom
 } from '@mui/icons-material'
+
+import SideBarOption from "./SideBarOption";
+
+import { useAuth } from '../hooks/auth';
+import { useNavigate } from "react-router";
 
 const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
@@ -52,78 +58,105 @@ const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'ope
 );
 
 export default function SideBar() {
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+
+    const [currentMenu, setCurrentMenu] = useState("Visão  Geral");
     const [open, setOpen] = useState(true);
 
     const toggleDrawer = () => { setOpen(!open); };
+
+    const endSession = useCallback(() => {
+        logout()
+        navigate('/')
+    }, [navigate, logout])
 
     return (
         <CustomDrawer variant="permanent" open={open}>
             <Toolbar />
             <List component="nav" >
-                <ListItemButton>
-                    <ListItemIcon>
-                        <Dashboard />
-                    </ListItemIcon>
-                <ListItemText primary="Visão Geral" />
-                </ListItemButton>
-                <ListItemButton>
-                    <ListItemIcon>
-                        <Explore />
-                    </ListItemIcon>
-                    <ListItemText primary="Explorar" />
-                </ListItemButton>
-                <ListItemButton>
-                    <ListItemIcon>
-                        <Work />
-                    </ListItemIcon>
-                    <ListItemText primary="Negociações" />
-                </ListItemButton>
-                <ListItemButton>
-                    <ListItemIcon>
-                        <CalendarMonth />
-                    </ListItemIcon>
-                    <ListItemText primary="Agenda" />
-                </ListItemButton>
-                <ListItemButton>
-                    <ListItemIcon>
-                        <MicExternalOn />
-                    </ListItemIcon>
-                    <ListItemText primary="Eventos" />
-                </ListItemButton>
-                <ListItemButton>
-                    <ListItemIcon>
-                        <WorkspacePremium />
-                    </ListItemIcon>
-                    <ListItemText primary="Oportunidades" />
-                </ListItemButton>
-                <ListItemButton>
-                    <ListItemIcon>
-                        <MapsHomeWork />
-                    </ListItemIcon>
-                    <ListItemText primary="Estabelecimentos" />
-                </ListItemButton>
-                <ListItemButton>
-                    <ListItemIcon>
-                        <PersonPin />
-                    </ListItemIcon>
-                    <ListItemText primary="Perfil" />
-                </ListItemButton>
-                <ListItemButton>
-                    <ListItemIcon>
-                        <MeetingRoom />
-                    </ListItemIcon>
-                    <ListItemText primary="Sair" />
-                </ListItemButton>
+                <SideBarOption 
+                    isVisible={true} 
+                    text={"Visão Geral"} 
+                    currentMenu={currentMenu} 
+                    setCurrentMenu={setCurrentMenu} 
+                    icon={Dashboard} 
+                    destination={"/dashboard"} 
+                />
+                <SideBarOption 
+                    isVisible={true} 
+                    text={"Explorar"} 
+                    currentMenu={currentMenu} 
+                    setCurrentMenu={setCurrentMenu} 
+                    icon={Explore} 
+                    destination={"/explore"} 
+                />
+                <SideBarOption 
+                    isVisible={true} 
+                    text={"Negociações"} 
+                    currentMenu={currentMenu} 
+                    setCurrentMenu={setCurrentMenu} 
+                    icon={Work} 
+                    destination={"/negotiations"} 
+                />
+                <SideBarOption 
+                    isVisible={true} 
+                    text={"Agenda"} 
+                    currentMenu={currentMenu} 
+                    setCurrentMenu={setCurrentMenu} 
+                    icon={CalendarMonth} 
+                    destination={"/calendar"} 
+                />
+                <SideBarOption 
+                    isVisible={true} 
+                    text={"Eventos"} 
+                    currentMenu={currentMenu} 
+                    setCurrentMenu={setCurrentMenu} 
+                    icon={MicExternalOn} 
+                    destination={"/events"} 
+                />
+                <SideBarOption 
+                    isVisible={true} 
+                    text={"Oportunidades"} 
+                    currentMenu={currentMenu} 
+                    setCurrentMenu={setCurrentMenu} 
+                    icon={WorkspacePremium} 
+                    destination={"/opportunities"} 
+                />
+                <SideBarOption 
+                    isVisible={true} 
+                    text={"Estabelecimentos"} 
+                    currentMenu={currentMenu} 
+                    setCurrentMenu={setCurrentMenu} 
+                    icon={MapsHomeWork} 
+                    destination={"/establishments"} 
+                />
+                <SideBarOption 
+                    isVisible={true} 
+                    text={"Perfil"} 
+                    currentMenu={currentMenu} 
+                    setCurrentMenu={setCurrentMenu} 
+                    icon={PersonPin} 
+                    destination={"/profile"} 
+                />
+                <Tooltip title="Sair" placement="right">
+                    <ListItemButton onClick={endSession}>
+                        <ListItemIcon sx={{ color: '#FB2D57'}}>
+                            <MeetingRoom />
+                        </ListItemIcon>
+                        <ListItemText primary="Sair" />
+                    </ListItemButton>
+                </Tooltip>
                 <Divider sx={{ my: 1, }} />
                 <Toolbar
                     sx={{
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'flex-end',
+                        justifyContent: open ? 'flex-end' : 'flex-start',
                         px: [1],
                     }}
                 >
-                    <IconButton onClick={toggleDrawer}>
+                    <IconButton sx={{ color: '#FB2D57'}} onClick={toggleDrawer}>
                         <ChevronLeft />
                     </IconButton>
                 </Toolbar>

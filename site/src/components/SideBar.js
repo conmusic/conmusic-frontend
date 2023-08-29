@@ -61,7 +61,7 @@ export default function SideBar() {
     const { logout } = useAuth();
     const navigate = useNavigate();
 
-    const [currentMenu, setCurrentMenu] = useState("Visão  Geral");
+    const [currentMenu, setCurrentMenu] = useState("Visão Geral");
     const [open, setOpen] = useState(true);
 
     const toggleDrawer = () => { setOpen(!open); };

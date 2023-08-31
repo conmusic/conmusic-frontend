@@ -62,7 +62,8 @@ export default function NegotiationDetails() {
                             <Details />
                         </CustomTabPanel>
                         <CustomTabPanel value={currentTab} index={1}>
-                            <Chat/>
+                            <Typography>Chat</Typography>
+                            {/* <Chat/> */}
                         </CustomTabPanel>
                     </Paper>
                 </Grid>

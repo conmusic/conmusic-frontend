@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import Link from '@mui/material/Link';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Title from './Title';
-import { TableContainer } from '@mui/material';
-import api from '../services/api';
 import { format, isAfter } from 'date-fns';
+import { 
+  TableContainer,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow
+} from '@mui/material';
+
+import api from '../services/api';
 import showStatusHelper from '../helpers/showStatusHelper';
 
-function preventDefault(event) {
-  event.preventDefault();
-}
+import Title from './Title';
 
-export default function Orders() {
+export default function CurrentNegotiationsTable() {
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {

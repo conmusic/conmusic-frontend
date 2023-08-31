@@ -1,10 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme } from '@mui/material/styles';
-import { LineChart, Line, XAxis, YAxis, Label, ResponsiveContainer, Tooltip, CartesianGrid } from 'recharts';
-import Title from './Title';
-import api from '../services/api';
+import { useTheme } from '@mui/material';
+import { 
+  LineChart, 
+  Line, 
+  XAxis, 
+  YAxis, 
+  Label, 
+  ResponsiveContainer, 
+  Tooltip, 
+  CartesianGrid 
+} from 'recharts';
 import { format, getYear } from 'date-fns';
-import showMonthHelper from '../helpers/showMonthHelper'
+import showMonthHelper from '../../helpers/showMonthHelper'
+
+import api from '../../services/api';
+
+import Title from '../Title';
 
 export default function Chart() {
   const theme = useTheme();

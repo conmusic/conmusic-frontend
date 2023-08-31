@@ -1,10 +1,11 @@
 import React from "react";
+import { Outlet } from 'react-router'
 import { Box, Toolbar } from "@mui/material";
 
 import SideBar from "../components/SideBar";
 import Header from "../components/Header";
 
-export default function Layout({ component: Component, ...rest }) {
+export default function Layout({ children, ...rest }) {
     return (
         <Box sx={{ display: 'flex', }}>
             <Header />
@@ -22,7 +23,7 @@ export default function Layout({ component: Component, ...rest }) {
                 }}
             >
                 <Toolbar />
-                <Component />
+                <Outlet />
             </Box>
         </Box>
     );

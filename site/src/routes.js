@@ -17,8 +17,10 @@ export default function MainRoutes() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/register" element={<RegisterStepOne />} />
       <Route path="/register-two-step" element={<RegisterStepTwo />} />
-      <Route path="/dashboard" element={<Layout component={DashBoard} />} />
-      <Route path="/negotiations/:showId" element={<Layout component={NegotiationDetails} />} />
+      <Route element={<Layout />} >
+        <Route path="/dashboard" element={<DashBoard />} />
+        <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
+      </Route>
       <Route path="*" element={<h1>Not Found</h1>} />
     </Routes>
   );

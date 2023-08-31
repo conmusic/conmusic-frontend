@@ -1,4 +1,4 @@
-.container {
+.chat-container {
     display: flex;
     background-color: white;
     flex-direction: column;
@@ -7,13 +7,13 @@
     height: 100%;
 }
 
-.messages {
+.chat-messages {
     height: 80%;
     overflow: scroll;
     overflow-y: hidden;
 }
 
-.input-container {
+.chat-input-container {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -21,7 +21,7 @@
     height: 20%;
 }
 
-.input-field {
+.chat-input-field {
     border: 2px solid black;
     border-radius: 10px;
     text-align: start;

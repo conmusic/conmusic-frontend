@@ -418,7 +418,7 @@ function HomePage() {
           <img src={Footer1} alt="" className="footer__img1" />
         </div>
 
-        <span className="footer__copy">&/#169; Feito com <i className='bx bx-heart'></i> por CONMUSIC</span>
+        <span className="footer__copy">Feito com <i className='bx bx-heart'></i> por CONMUSIC</span>
       </footer>
 
       <a href="/#" className="scrollup" id="scroll-up">

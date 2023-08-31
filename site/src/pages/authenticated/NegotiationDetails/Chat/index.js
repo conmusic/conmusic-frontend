@@ -9,8 +9,8 @@ export default function Chat() {
     const [text, setText] = useState("")
 
     return (
-        <div className="container">
-            <div className="messages">
+        <div className="chat-container">
+            <div className="chat-messages">
                 {
                     messages.map(m => (
                         <div style={{ width: "100%", display: 'flex', flexDirection: 'row', justifyContent: 'left' }}>
@@ -21,7 +21,7 @@ export default function Chat() {
                     ))
                 }
             </div>
-            <div className="input-container">
+            <div className="chat-input-container">
                 <InputBase
                     style={{ padding: "10px" }}
                     sx={{ ml: 1, flex: 1 }}
@@ -29,7 +29,7 @@ export default function Chat() {
                     autoFocus={true}
                     multiline
                     rows={2}
-                    className="input-field"
+                    className="chat-input-field"
                     fullWidth
                     onChange={() => console.log(0)}
                     value={text}

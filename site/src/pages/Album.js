@@ -198,6 +198,7 @@ export default function Dashboard() {
                 : theme.palette.grey[900],
             flexGrow: 1,
             height: '100vh',
+            width: '100vh',
             overflow: 'auto',
 
           }}
@@ -206,45 +207,32 @@ export default function Dashboard() {
 
 <div style={{ display: 'flex', justifyContent: 'center', margin: 0 }}>
   <Container maxWidth="sm" style={{ margin: 0, padding: 0 }}>
-    <Grid container alignItems="center" justifyContent="center">
+  <Grid container alignItems="center" justify="space-around" display= 'flex'>
+  {/* Your grid items/components here */}
+
       <List sx={style} component="nav" aria-label="mailbox folders" style={{ display: 'flex', flexDirection: 'row' }}>
-        <ListItem button style={{ marginRight: '24px' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="64" viewBox="0 0 24 24" width="64">
-            <rect fill="none" height="36" width="36"/>
-            <path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M14,14.5h0.25V19h-4.5v-4.5H10 c0.55,0,1-0.45,1-1V5h2v8.5C13,14.05,13.45,14.5,14,14.5z M5,5h2v8.5c0,0.55,0.45,1,1,1h0.25V19H5V5z M19,19h-3.25v-4.5H16 c0.55,0,1-0.45,1-1V5h2V19z"/>
-          </svg>
+        <ListItem button style={{ marginRight: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <img width="90" height="90" src="https://img.icons8.com/ios-glyphs/90/rock-music.png" alt="rock-music"/>
+          <span style={{ marginTop: '8px' }}>Rock</span>
         </ListItem>
-        <ListItem button style={{ marginRight: '24px' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="64" viewBox="0 0 24 24" width="64">
-            <rect fill="none" height="36" width="36"/>
-            <path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M14,14.5h0.25V19h-4.5v-4.5H10 c0.55,0,1-0.45,1-1V5h2v8.5C13,14.05,13.45,14.5,14,14.5z M5,5h2v8.5c0,0.55,0.45,1,1,1h0.25V19H5V5z M19,19h-3.25v-4.5H16 c0.55,0,1-0.45,1-1V5h2V19z"/>
-          </svg>
+
+        <ListItem button style={{ marginRight: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <img width="90" height="90" src="https://img.icons8.com/ios-glyphs/90/piano.png" alt="piano"/>
+          <span style={{ marginTop: '8px' }}>Classica</span>
         </ListItem>
-        <ListItem button style={{ marginRight: '24px' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="64" viewBox="0 0 24 24" width="64">
-            <rect fill="none" height="36" width="36"/>
-            <path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M14,14.5h0.25V19h-4.5v-4.5H10 c0.55,0,1-0.45,1-1V5h2v8.5C13,14.05,13.45,14.5,14,14.5z M5,5h2v8.5c0,0.55,0.45,1,1,1h0.25V19H5V5z M19,19h-3.25v-4.5H16 c0.55,0,1-0.45,1-1V5h2V19z"/>
-          </svg>
+        <ListItem button style={{ marginRight: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <img width="85" height="85" src="https://img.icons8.com/ios-glyphs/90/micro.png" alt="micro"/>
+          <span style={{ marginTop: '8px' }}>Pop</span>
         </ListItem>
-        <ListItem button style={{ marginRight: '24px' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="64" viewBox="0 0 24 24" width="64">
-            <rect fill="none" height="36" width="36"/>
-            <path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M14,14.5h0.25V19h-4.5v-4.5H10 c0.55,0,1-0.45,1-1V5h2v8.5C13,14.05,13.45,14.5,14,14.5z M5,5h2v8.5c0,0.55,0.45,1,1,1h0.25V19H5V5z M19,19h-3.25v-4.5H16 c0.55,0,1-0.45,1-1V5h2V19z"/>
-          </svg>
+        <ListItem button style={{ marginRight: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <img width="100" height="100" src="https://img.icons8.com/ios-filled/100/jazz.png" alt="jazz"/>
+          <span style={{ marginTop: '8px' }}>Jazz</span>
         </ListItem>
-        <ListItem button style={{ marginRight: '24px' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="64" viewBox="0 0 24 24" width="64">
-            <rect fill="none" height="36" width="36"/>
-            <path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M14,14.5h0.25V19h-4.5v-4.5H10 c0.55,0,1-0.45,1-1V5h2v8.5C13,14.05,13.45,14.5,14,14.5z M5,5h2v8.5c0,0.55,0.45,1,1,1h0.25V19H5V5z M19,19h-3.25v-4.5H16 c0.55,0,1-0.45,1-1V5h2V19z"/>
-          </svg>
+        <ListItem button style={{ marginRight: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <img width="64" height="64" src="https://img.icons8.com/pastel-glyph/64/guitar--v1.png" alt="guitar--v1"/>
+          <span style={{ marginTop: '8px' }}>Sertanejo</span>
         </ListItem>
-        <ListItem button style={{ marginRight: '24px' }}>
-          <svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 24 24" height="64" viewBox="0 0 24 24" width="64">
-            <rect fill="none" height="36" width="36"/>
-            <path d="M19,3H5C3.9,3,3,3.9,3,5v14c0,1.1,0.9,2,2,2h14c1.1,0,2-0.9,2-2V5C21,3.9,20.1,3,19,3z M14,14.5h0.25V19h-4.5v-4.5H10 c0.55,0,1-0.45,1-1V5h2v8.5C13,14.05,13.45,14.5,14,14.5z M5,5h2v8.5c0,0.55,0.45,1,1,1h0.25V19H5V5z M19,19h-3.25v-4.5H16 c0.55,0,1-0.45,1-1V5h2V19z"/>
-          </svg>
-        </ListItem>
-        
+    
         {/* Repita para os outros ícones... */}
         
       </List>
@@ -267,14 +255,16 @@ export default function Dashboard() {
                       }}
                       image="https://source.unsplash.com/random?wallpapers"
                     />
-                    <CardContent sx={{ flexGrow: 1 }}>
-                      <Typography gutterBottom variant="h5" component="h2">
-                        titulo
-                      </Typography>
-                      <Typography>
-                        This is a media card
-                      </Typography>
-                    </CardContent>
+         <CardContent sx={{ flexGrow: 1 }}>
+  <Typography gutterBottom variant="h6" component="h2" style={{ display: "flex", alignItems: "center" , fontWeight: 'bold'}}>
+    Título
+    <img width="24" height="24" src="https://img.icons8.com/material/24/star--v1.png" alt="star--v1" style={{ marginLeft: "120px" }}/>
+    4.0
+  </Typography>
+  <Typography>
+    This is a media card
+  </Typography>
+</CardContent>
                   </Card>
                 </Grid>
               ))}

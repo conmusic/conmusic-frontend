@@ -9,23 +9,31 @@ import List from '@mui/material/List';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { mainListItems } from './listItems';
 import logo from '../assets/images/logoConMusic-removebg-preview.png';
 import { spacing } from '@mui/system';
 import { Button } from '@mui/material';
+import Paper from '@mui/material/Paper';
 
 const Container = styled('div')({
   display: 'flex',
   flexDirection: 'column',
-  alignItems: 'center',
+  alignItems: 'flex-start',
   justifyContent: 'center',
   height: '100vh',
-  backgroundColor: '#f5f5f5',
-  flex: 1, // To make it take up the remaining space
-  left: 20, // Distância da margem esquerda
-  top: 20, // Distância da margem superior
+  backgroundColor: 'white',
+  flex: 1,
+  left: 20,
+  top: 20,
+  marginLeft: '20px', // Espaçamento aqui
+  marginTop: '20px',
+});
+
+const SocialMedia = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'flex-start',
+  justifyContent: 'center',
 });
 
 const SmallImage = styled('img')({
@@ -44,20 +52,12 @@ const ContactText = styled('p')({
   margin: '8px 0',
 });
 
-const SocialMedia = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  margin: '16px 0',
-});
-
 const LargeImageContainer = styled('div')({
   display: 'flex',
   flexDirection: 'row',
   alignItems: 'center',
   marginTop: '16px',
-  flex: 1, // To make it take up the remaining space
-  backgroundColor: '#f5f5f5',
+  flex: 1,
   justifyContent: 'center',
 });
 
@@ -66,12 +66,36 @@ const SubtitleContainer = styled('div')({
   flexDirection: 'column',
   backgroundColor: 'white',
   maxWidth: '600px',
+  marginLeft: "100px",
+  justifyContent: "center"
 })
 
 const LargeImage = styled('img')({
   display: 'solid',
-  maxWidth: '550px',
-  maxHeight: '500px',
+  maxWidth: '400px',
+  maxHeight: '400px',
+});
+
+const ContainerPerfil = styled('div')({
+  display: "flex",
+  marginLeft: "50px"
+})
+
+const CarouselContainer = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginTop: '16px',
+  overflow: 'hidden',
+  marginBottom: "50px",
+  marginLeft: "100px"
+});
+
+const CarouselImage = styled('img')({
+  display: 'block',
+  maxWidth: '100%',
+  height: 'auto',
+  transition: 'transform 0.3s',
 });
 
 const drawerWidth = 240;
@@ -143,15 +167,10 @@ export default function OpportunityDetails() {
   ]
 
   const images = [
-    'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
+    'https://siterg.uol.com.br/wp-content/uploads/2021/08/carat-restaurante-1-1500.jpg',
     'https://i.em.com.br/rAJeeP9SoFSjX_I1nrctXKWpDiM=/1200x900/smart/imgsapp.em.com.br/app/noticia_127983242361/2023/03/20/1470806/fotos-tulio-santosem_1_72755.jpg',
-    'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
+    'https://turismodeminas.com.br/wp-content/uploads/2021/09/Lugares-por-Beaga-Bar-do-Antonio-costelinha-com-molho-de-rapadura-com-queijo-pacha-torresmo-de-barriga-carnoba-file-com-taioba-bacon-batata-credito-Vivi-Martineli-4-scaled.jpg',
   ];
-
-  const handleNextImage = (increment) => {
-    const newIndex = (selectedImages + increment + images.length) % images.length;
-    setSelectedImages(newIndex);
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -195,39 +214,54 @@ export default function OpportunityDetails() {
             <Divider sx={{ my: 1 }} />
           </List>
         </Drawer>
-        <Container>
-          <CssBaseline />
-          <SmallImage src={image[selectedImage]} alt="Profile" />
+        <ContainerPerfil>
+          <Container>
+            <CssBaseline />
+            <SmallImage src={image[selectedImage]} alt="Profile" />
 
-          <Typography variant="h4">
-            <HighlightText>Rock and Pub</HighlightText>
-          </Typography>
+            <Typography variant="h4">
+              <HighlightText>Rock and Pub</HighlightText>
+            </Typography>
 
-          <ContactText>rockandpub@casa.com</ContactText>
-          <ContactText>(79) 2448-4646</ContactText>
+            <ContactText>rockandpub@casa.com</ContactText>
+            <ContactText>(79) 2448-4646</ContactText>
 
-          <Button variant="contained" color="primary" backgroundColor="green">
-            Propor Serviço
-          </Button>
+            <Button variant="contained" color="primary" backgroundColor="green">
+              Propor Serviço
+            </Button>
 
-          <SocialMedia>
-            <Typography variant="h5">Instagram:</Typography>
-            <Typography>@RockandPub</Typography>
-            <Typography variant="h5">Facebook:</Typography>
-            <Typography>rockandpub@casa</Typography>
-          </SocialMedia>
-        </Container>
+            <SocialMedia>
+              <ContactText variant="h5">Instagram:</ContactText>
+              <ContactText>@RockandPub</ContactText>
+              <ContactText variant="h5">Facebook:</ContactText>
+              <ContactText>rockandpub@casa</ContactText>
+            </SocialMedia>
+
+          </Container>
+        </ContainerPerfil>
         <SubtitleContainer>
-          <LargeImageContainer>
-            <IconButton onClick={() => handleNextImage(-1)}>
-              <ChevronLeftIcon />
-            </IconButton>
-            <LargeImage src={images[selectedImages]} alt="Large" />
-            <IconButton onClick={() => handleNextImage(1)}>
-              <ChevronRightIcon />
-            </IconButton>
-          </LargeImageContainer>
-          <ContactText>Somos um bar localizado no coração da cidade e temos uma estrutura ideal para shows intimistas e acústicos. Nossa casa tem um ambiente descontraído e aconchegante, perfeito para quem busca um lugar para relaxar e curtir boa música.</ContactText>
+          <CarouselContainer>
+            {images.map((imgUrl, index) => (
+              <CarouselImage
+                key={index}
+                src={imgUrl}
+                alt={`Image ${index}`}
+                style={{
+                  maxWidth: '350px',
+                  height: 'auto',
+                }}
+              />
+            ))}
+          </CarouselContainer>
+          <Paper elevation={3} style={{ width: 'calc(100% - 100px)', padding: '20px', border: '1px solid black', 
+          marginLeft: "100px", 
+          }}>
+            <Typography variant="subtitle1">Somos um bar localizado no coração da cidade 
+            e temos uma estrutura ideal para shows intimistas e acústicos. 
+            Nossa casa tem um ambiente descontraído e aconchegante, perfeito para 
+            quem busca um lugar para relaxar e curtir boa música.
+            </Typography>
+          </Paper>
         </SubtitleContainer>
       </Box>
     </ThemeProvider >

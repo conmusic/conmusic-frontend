@@ -7,8 +7,6 @@ import LoginPage from './pages/LoginPage';
 import CadastroPage from './pages/CadastroPage';
 import CadastroPageDois from './pages/CadastroPageDois';
 import Dash from './pages/Dash';
-import DashBoardEstablishment from './pages/DashBoardEstablishment';
-import OpportunityDetails from './pages/OpportunityDetails';
 
 export default function MainRoutes() {
   return (

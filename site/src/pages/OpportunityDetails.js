@@ -11,22 +11,34 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import { mainListItems } from './listItems';
 import logo from '../assets/images/logoConMusic-removebg-preview.png';
-import { spacing } from '@mui/system';
 import { Button } from '@mui/material';
 import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
+import { spacing } from '@mui/system';
 
 const Container = styled('div')({
-  display: 'flex',
+  display: 'block',
   flexDirection: 'column',
-  alignItems: 'flex-start',
+  alignItems: 'baseline',
   justifyContent: 'center',
   height: '100vh',
   backgroundColor: 'white',
+  overflow: 'hidden',
   flex: 1,
   left: 20,
   top: 20,
-  marginLeft: '20px', // Espaçamento aqui
-  marginTop: '20px',
+  marginLeft: '20px',
+  marginTop: "100px"
+});
+
+const CarouselContainer = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginTop: '16px',
+  overflow: 'hidden',
+  marginBottom: "50px",
+  marginTop: "100px"
 });
 
 const SocialMedia = styled('div')({
@@ -52,15 +64,6 @@ const ContactText = styled('p')({
   margin: '8px 0',
 });
 
-const LargeImageContainer = styled('div')({
-  display: 'flex',
-  flexDirection: 'row',
-  alignItems: 'center',
-  marginTop: '16px',
-  flex: 1,
-  justifyContent: 'center',
-});
-
 const SubtitleContainer = styled('div')({
   display: 'flex',
   flexDirection: 'column',
@@ -70,32 +73,28 @@ const SubtitleContainer = styled('div')({
   justifyContent: "center"
 })
 
-const LargeImage = styled('img')({
-  display: 'solid',
-  maxWidth: '400px',
-  maxHeight: '400px',
-});
-
 const ContainerPerfil = styled('div')({
   display: "flex",
   marginLeft: "50px"
 })
 
-const CarouselContainer = styled('div')({
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  marginTop: '16px',
-  overflow: 'hidden',
-  marginBottom: "50px",
-  marginLeft: "100px"
-});
 
 const CarouselImage = styled('img')({
   display: 'block',
   maxWidth: '100%',
   height: 'auto',
   transition: 'transform 0.3s',
+});
+
+const ContainerTela = styled('div')({
+  display: 'flex',
+  alignItems: 'row',
+  justifyContent: 'center',
+  marginTop: '16px',
+  overflow: 'hidden',
+  marginBottom: "50px",
+  marginLeft: "80px",
+  marginTop: "100px"
 });
 
 const drawerWidth = 240;
@@ -159,7 +158,6 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 export default function OpportunityDetails() {
-  const [selectedImages, setSelectedImages] = useState(0);
   const [selectedImage, setSelectedImage] = useState(0);
 
   const image = [
@@ -174,96 +172,101 @@ export default function OpportunityDetails() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar position="absolute">
-          <Toolbar
-            sx={{
-              backgroundColor: 'white',
-              pr: '24px',
-            }}
-          >
-            <Typography
-              component="h1"
-              variant="h6"
-              color="inherit"
-              noWrap
-              sx={{ flexGrow: 1 }}
-            >
-              <a href="/#" className="nav__logo">
-                <img src={logo} alt="" className="nav__logo-img" />
-              </a>
-            </Typography>
-          </Toolbar>
-        </AppBar>
-        <Drawer variant="permanent" >
-          <Toolbar
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              px: [1],
-            }}
-          >
-            <IconButton>
-            </IconButton>
-          </Toolbar>
-          <Divider />
-          <List component="nav">
-            {mainListItems}
-            <Divider sx={{ my: 1 }} />
-          </List>
-        </Drawer>
-        <ContainerPerfil>
-          <Container>
-            <CssBaseline />
-            <SmallImage src={image[selectedImage]} alt="Profile" />
-
-            <Typography variant="h4">
-              <HighlightText>Rock and Pub</HighlightText>
-            </Typography>
-
-            <ContactText>rockandpub@casa.com</ContactText>
-            <ContactText>(79) 2448-4646</ContactText>
-
-            <Button variant="contained" color="primary" backgroundColor="green">
-              Propor Serviço
-            </Button>
-
-            <SocialMedia>
-              <ContactText variant="h5">Instagram:</ContactText>
-              <ContactText>@RockandPub</ContactText>
-              <ContactText variant="h5">Facebook:</ContactText>
-              <ContactText>rockandpub@casa</ContactText>
-            </SocialMedia>
-
-          </Container>
-        </ContainerPerfil>
-        <SubtitleContainer>
-          <CarouselContainer>
-            {images.map((imgUrl, index) => (
-              <CarouselImage
-                key={index}
-                src={imgUrl}
-                alt={`Image ${index}`}
-                style={{
-                  maxWidth: '350px',
-                  height: 'auto',
+      <Box>
+        <Grid container spacing={2}>
+          <CssBaseline />
+          <Grid item xs={12} md={3}>
+            <AppBar position="absolute">
+              <Toolbar
+                sx={{
+                  backgroundColor: 'white',
+                  pr: '24px',
                 }}
-              />
-            ))}
-          </CarouselContainer>
-          <Paper elevation={3} style={{ width: 'calc(100% - 100px)', padding: '20px', border: '1px solid black', 
-          marginLeft: "100px", 
-          }}>
-            <Typography variant="subtitle1">Somos um bar localizado no coração da cidade 
-            e temos uma estrutura ideal para shows intimistas e acústicos. 
-            Nossa casa tem um ambiente descontraído e aconchegante, perfeito para 
-            quem busca um lugar para relaxar e curtir boa música.
-            </Typography>
-          </Paper>
-        </SubtitleContainer>
+              >
+                <Typography
+                  component="h1"
+                  variant="h6"
+                  color="inherit"
+                  noWrap
+                  sx={{ flexGrow: 1 }}
+                >
+                  <a href="/#" className="nav__logo">
+                    <img src={logo} alt="" className="nav__logo-img" />
+                  </a>
+                </Typography>
+              </Toolbar>
+            </AppBar>
+            <Drawer variant="permanent">
+              <Toolbar
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'flex-end',
+                  px: [1],
+                }}
+              >
+                <IconButton>
+                </IconButton>
+              </Toolbar>
+              <Divider />
+              <List component="nav">
+                {mainListItems}
+                <Divider sx={{ my: 1 }} />
+              </List>
+            </Drawer>
+          </Grid>
+          <Grid item xs={12} md={3}>
+            <ContainerPerfil>
+              <Container>
+                <CssBaseline />
+                <SmallImage src={image[selectedImage]} alt="Profile" />
+
+                <Typography variant="h4">
+                  <HighlightText>Rock and Pub</HighlightText>
+                </Typography>
+
+                <ContactText>rockandpub@casa.com</ContactText>
+                <ContactText>(79) 2448-4646</ContactText>
+
+                <Button variant="contained" color="primary" backgroundColor="green">
+                  Propor Serviço
+                </Button>
+
+                <SocialMedia>
+                  <ContactText variant="h5">Instagram:</ContactText>
+                  <ContactText>@RockandPub</ContactText>
+                  <ContactText variant="h5">Facebook:</ContactText>
+                  <ContactText>rockandpub@casa</ContactText>
+                </SocialMedia>
+              </Container>
+            </ContainerPerfil>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <SubtitleContainer>
+              <CarouselContainer>
+                {images.map((imgUrl, index) => (
+                  <CarouselImage
+                    key={index}
+                    src={imgUrl}
+                    alt={`Image ${index}`}
+                    style={{
+                      maxWidth: '350px',
+                      height: 'auto',
+                    }}
+                  />
+                ))}
+              </CarouselContainer>
+              <Paper elevation={3} style={{ width: '100%', padding: '20px', border: '1px solid black' }}>
+                <Typography variant="subtitle1">Somos um bar localizado no coração da cidade
+                  e temos uma estrutura ideal para shows intimistas e acústicos.
+                  Nossa casa tem um ambiente descontraído e aconchegante, perfeito para
+                  quem busca um lugar para relaxar e curtir boa música.
+                </Typography>
+              </Paper>
+            </SubtitleContainer>
+          </Grid>
+        </Grid>
       </Box>
-    </ThemeProvider >
+    </ThemeProvider>
   );
 }

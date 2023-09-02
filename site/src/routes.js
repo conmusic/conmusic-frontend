@@ -9,6 +9,7 @@ import RegisterStepTwo from './pages/RegisterStepTwo';
 import DashBoard from './pages/authenticated/DashBoard';
 import Layout from './layouts/Layout';
 import NegotiationDetails from './pages/authenticated/NegotiationDetails';
+import DashBoardAdmin from './pages/authenticated/DashBoardAdmin';
 
 export default function MainRoutes() {
   return (
@@ -18,6 +19,7 @@ export default function MainRoutes() {
       <Route path="/register" element={<RegisterStepOne />} />
       <Route path="/register-two-step" element={<RegisterStepTwo />} />
       <Route element={<Layout />} >
+        <Route path="/dash-admin" element={<DashBoardAdmin />} />
         <Route path="/dashboard" element={<DashBoard />} />
         <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
       </Route>

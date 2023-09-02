@@ -18,8 +18,6 @@ export default function MainRoutes() {
       <Route path="/register" element={<CadastroPage />} />
         <Route path="/register-two-step" element={<CadastroPageDois />} />
       <Route path="/dashboard" element={<Dash />} />
-      <Route path="/dashboard-establishment" element={<DashBoardEstablishment />} />
-      <Route path="/opportunity" element={<OpportunityDetails />} />
       <Route path="*" element={<h1>Not Found</h1>} />
     </Routes>
   );

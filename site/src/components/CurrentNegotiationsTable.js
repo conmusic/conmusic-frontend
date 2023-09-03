@@ -14,7 +14,7 @@ import showStatusHelper from '../helpers/showStatusHelper';
 
 import Title from './Title';
 
-export default function CurrentNegotiationsTable() {
+export default function CurrentNegotiationsTable({ mode, ...rest }) {
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
@@ -33,6 +33,7 @@ export default function CurrentNegotiationsTable() {
             let showDate = format(new Date(row.schedule.startDateTime), "dd/MM/yyyy - HH:mm");
             return {
               id: row.id,
+              artist: row.artist.name,
               establishment: row.event.establishment.establishmentName,
               event: row.event.name,
               dateShow: showDate,
@@ -56,7 +57,7 @@ export default function CurrentNegotiationsTable() {
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell style={{ textAlign: 'left' }}>Nome do Estabelecimento</TableCell>
+                <TableCell style={{ textAlign: 'left' }}>Nome do { mode === 'Artist' ? "Estabelecimento" : "Artista" }</TableCell>
                 <TableCell style={{ textAlign: 'left' }}>Evento</TableCell>
                 <TableCell style={{ textAlign: 'left' }}>Data do Show</TableCell>
                 <TableCell style={{ textAlign: 'left' }}>Status de negociação</TableCell>
@@ -65,7 +66,7 @@ export default function CurrentNegotiationsTable() {
             <TableBody>
               {tableData.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell style={{ textAlign: 'left' }}>{row.establishment}</TableCell>
+                  <TableCell style={{ textAlign: 'left' }}>{ mode === 'Artist' ? row.establishment : row.artist }</TableCell>
                   <TableCell style={{ textAlign: 'left' }}>{row.event}</TableCell>
                   <TableCell style={{ textAlign: 'left' }}>{row.dateShow}</TableCell>
                   <TableCell style={{ textAlign: 'left' }}>{row.status}</TableCell>

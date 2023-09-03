@@ -2,7 +2,8 @@ function getDisplayName(status) {
     let displayName = status
     
     switch (displayName) {
-        case "ARTIST_PROPOSAL", "MANAGER_PROPOSAL":
+        case "MANAGER_PROPOSAL":
+        case "ARTIST_PROPOSAL":
             displayName = "Proposta Enviada"
             break;
         case "NEGOTIATION":
@@ -20,7 +21,8 @@ function getDisplayName(status) {
         case "CONCLUDED":
             displayName = "Concluido"
             break
-        case "ARTIST_REJECTED", "MANAGER_REJECTED":
+        case "MANAGER_REJECTED":
+        case "ARTIST_REJECTED":
             displayName = "Proposta Recusada"
             break
         case "ARTIST_WITHDRAW":
@@ -29,7 +31,8 @@ function getDisplayName(status) {
         case "MANAGER_WITHDRAW":
             displayName = "Gerente Desistiu"
             break
-        case "ARTIST_CANCELED", "MANAGER_CANCELED":
+        case "MANAGER_CANCELED":
+        case "ARTIST_CANCELED":
             displayName = "Show Cancelado"
             break;
         default:

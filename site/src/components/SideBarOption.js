@@ -22,19 +22,19 @@ export default function SideBarOption({
         <Tooltip title={text} placement="right">
             <ListItemButton 
                 sx={{
-                    backgroundColor: currentMenu === text ? '#FB2D57' : '#FFFFFF'
+                    backgroundColor: currentMenu === destination ? '#FB2D57' : '#FFFFFF'
                 }}
                 onClick={navigateTo}
             >
                 <ListItemIcon
                     sx={{
-                        color: currentMenu === text ? '#FFFFFF' : '#FB2D57'
+                        color: currentMenu === destination ? '#FFFFFF' : '#FB2D57'
                     }}
                 >
                     <Icon />
                 </ListItemIcon>
                 <ListItemText 
-                    sx={currentMenu === text
+                    sx={currentMenu === destination
                         ? { color: '#FFFFFF'}
                         : {}}
                     primary={text} 

@@ -1,9 +1,7 @@
 import { ClassNames } from "@emotion/react";
 import {
-    Container,
+
     Grid,
-    Paper,
-    CardActionArea,
     Typography,
     Card,
     CardMedia,
@@ -49,16 +47,15 @@ function CardProposal(){
               <p>01/05/2023</p> 
               </Typography>
             </CardContent>
-          <CardContent sx={{ display: "flex", alignItems: "center"}}>
-            <Button variant="outlined" color="success" sx={{mr: 1}}>Sim</Button>
-            <Button variant="outlined" color="error">Não</Button>
+          <CardContent sx={{ display: "flex"}}>
             <Button
               variant="outlined"
               size="medium"
               color="inherit"
               sx={{
+                mt: 1,
+                mr: 3,
                 alignSelf: "center",
-                alignItems: "flex-end",
                 borderColor: 'black',
                 backgroundColor: '#fb2b57',
                 color: 'white',

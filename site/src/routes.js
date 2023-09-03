@@ -6,7 +6,8 @@ import LoginPage from './pages/LoginPage';
 import RegisterStepOne from './pages/RegisterStepOne';
 import RegisterStepTwo from './pages/RegisterStepTwo';
 
-import Proposal from "./pages/authenticated/Proposal"
+import Proposal from "./pages/authenticated/Proposal";
+import Oportunity from "./pages/authenticated/Oportunity";
 import DashBoard from './pages/authenticated/DashBoard';
 import Layout from './layouts/Layout';
 import NegotiationDetails from './pages/authenticated/NegotiationDetails';
@@ -22,6 +23,7 @@ export default function MainRoutes() {
         <Route path="/dashboard" element={<DashBoard />} />
         <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
         <Route path="/proposal" element={<Proposal />} />
+        <Route path="/oportunity" element={<Oportunity />} />
       </Route>
       <Route path="*" element={<h1>Not Found</h1>} />
     </Routes>

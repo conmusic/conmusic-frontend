@@ -9,6 +9,7 @@ import RegisterStepTwo from './pages/RegisterStepTwo';
 import DashBoard from './pages/authenticated/DashBoard';
 import Layout from './layouts/Layout';
 import NegotiationDetails from './pages/authenticated/NegotiationDetails';
+import ManageEstablishment from './pages/authenticated/ManageEstablishment';
 
 export default function MainRoutes() {
   return (
@@ -19,6 +20,7 @@ export default function MainRoutes() {
       <Route path="/register-two-step" element={<RegisterStepTwo />} />
       <Route element={<Layout />} >
         <Route path="/dashboard" element={<DashBoard />} />
+        <Route path="/manage-establishment" element={<ManageEstablishment />} />
         <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
       </Route>
       <Route path="*" element={<h1>Not Found</h1>} />

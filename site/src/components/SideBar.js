@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate, useHref } from "react-router";
 import { 
     Drawer, 
     styled, 
@@ -27,7 +28,6 @@ import {
 import SideBarOption from "./SideBarOption";
 
 import { useAuth } from '../hooks/auth';
-import { useNavigate } from "react-router";
 
 const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
@@ -60,11 +60,16 @@ const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'ope
 export default function SideBar() {
     const { logout } = useAuth();
     const navigate = useNavigate();
+    const href = useHref();
 
-    const [currentMenu, setCurrentMenu] = useState("Visão Geral");
+    const [currentMenu, setCurrentMenu] = useState("/dashboard");
     const [open, setOpen] = useState(true);
 
     const toggleDrawer = () => { setOpen(!open); };
+
+    useEffect(() => {
+        setCurrentMenu('/' + href.substring(1).split('/')[0])
+    }, [href])
 
     const endSession = useCallback(() => {
         logout()

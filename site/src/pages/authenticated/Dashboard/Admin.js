@@ -8,12 +8,12 @@ import {
 } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
-import api from '../../services/api';
+import api from '../../../services/api';
 
-import ChartAdmin from '../../components/charts/ChartAdmin';
-import ChartAdminMonth from '../../components/charts/ChartAdminMonth';
-import Title from '../../components/Title';
-import CardAdmin from '../../components/CardAdmin';
+import ChartAdmin from '../../../components/charts/ChartAdmin';
+import ChartAdminMonth from '../../../components/charts/ChartAdminMonth';
+import Title from '../../../components/Title';
+import CardAdmin from '../../../components/CardAdmin';
 
 export default function DashBoardAdmin() {
     const [cardData, setCardData] = useState([]);

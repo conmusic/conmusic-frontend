@@ -62,7 +62,7 @@ function CardManageEstablishment() {
                     }}
                     src={myImage}
                 />
-                <CardContent sx={{ flex: 1, mt: 1 }}>
+                <CardContent sx={{ flex: 1, mt: 1, marginLeft: "25%" }}>
                     <Typography component="h2" variant="h5">
                         <p>Casa de show A</p>
                     </Typography>
@@ -71,14 +71,6 @@ function CardManageEstablishment() {
                     </Typography>
                     <Typography variant="subtitle1" paragraph>
                         <p>São Paulo - SP</p>
-                    </Typography>
-                </CardContent>
-                <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center", mt: 2 }}>
-                    <Typography>
-                        <p>01/05/2023</p>
-                    </Typography>
-                    <Typography variant="subtitle1" >
-                        <p>01/05/2023</p>
                     </Typography>
                 </CardContent>
                 <CardContent item xs={12} md={4} lg={4} style={{ display: 'flex', alignItems: 'center' }}>

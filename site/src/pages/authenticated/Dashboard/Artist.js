@@ -6,14 +6,14 @@ import {
   Paper,
 } from '@mui/material';
 
-import api from '../../services/api';
+import api from '../../../services/api';
 
-import Chart from '../../components/charts/Chart';
-import CardShows from '../../components/CardShows';
-import CurrentNegotiationsTable from '../../components/CurrentNegotiationsTable';
-import Title from '../../components/Title';
+import Chart from '../../../components/charts/Chart';
+import CardShows from '../../../components/CardShows';
+import CurrentNegotiationsTable from '../../../components/CurrentNegotiationsTable';
+import Title from '../../../components/Title';
 
-export default function Dashboard() {
+export default function DashboardArtist() {
   const [cardData, setCardData] = useState([]);
 
   useEffect(() => {
@@ -63,10 +63,11 @@ export default function Dashboard() {
               }}
             >
               <CardShows
-                estabelecimento={cardData[0].establishment}
-                evento={cardData[0].event}
-                dataDoShow={cardData[0].date}
-                horarioMarcado={cardData[0].time}
+                mode="Artist"
+                name={cardData[0].establishment}
+                eventName={cardData[0].event}
+                showDate={cardData[0].date}
+                showTime={cardData[0].time}
               />
             </Paper>
           )}
@@ -83,10 +84,11 @@ export default function Dashboard() {
               }}
             >
               <CardShows
-                estabelecimento={cardData[1].establishment}
-                evento={cardData[1].event}
-                dataDoShow={cardData[1].date}
-                horarioMarcado={cardData[1].time}
+                mode="Artist"
+                name={cardData[1].establishment}
+                eventName={cardData[1].event}
+                showDate={cardData[1].date}
+                showTime={cardData[1].time}
               />
             </Paper>
           )}
@@ -103,10 +105,11 @@ export default function Dashboard() {
               }}
             >
               <CardShows
-                estabelecimento={cardData[2].establishment}
-                evento={cardData[2].event}
-                dataDoShow={cardData[2].date}
-                horarioMarcado={cardData[2].time}
+                mode="Artist"
+                name={cardData[2].establishment}
+                eventName={cardData[2].event}
+                showDate={cardData[2].date}
+                showTime={cardData[2].time}
               />
             </Paper>
           )}
@@ -123,10 +126,11 @@ export default function Dashboard() {
               }}
             >
               <CardShows
-                estabelecimento={cardData[3].establishment}
-                evento={cardData[3].event}
-                dataDoShow={cardData[3].date}
-                horarioMarcado={cardData[3].time}
+                mode="Artist"
+                name={cardData[3].establishment}
+                eventName={cardData[3].event}
+                showDate={cardData[3].date}
+                showTime={cardData[3].time}
               />
             </Paper>
           )}
@@ -135,7 +139,7 @@ export default function Dashboard() {
         {/* Recent CurrentNegotiationsTable */}
         <Grid item xs={12}>
           <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-            <CurrentNegotiationsTable />
+            <CurrentNegotiationsTable mode="Artist" />
           </Paper>
         </Grid>
         {/* Chart */}

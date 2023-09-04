@@ -58,8 +58,6 @@ export default function ChartAdminMonth() {
                         data: [2, 5, 3, 4, 5, 3, 7, 8, 10, 11, 15, 20],
                     },
                 ]}
-                width={600}
-                height={300}
             />
         </React.Fragment>
     );

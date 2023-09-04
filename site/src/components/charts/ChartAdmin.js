@@ -59,8 +59,6 @@ export default function ChartAdmin() {
                         data: [2, 5, 3, 4, 5, 3, 7, 8, 10],
                     },
                 ]}
-                width={1200}
-                height={300}
             />
         </React.Fragment>
     );

@@ -22,7 +22,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 610,
+    width: 'auto',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -97,82 +97,71 @@ export default function ManageEstablishment() {
                             autoComplete="off"
                             flex-wrap= 'wrap' 
                         >
-                            <div>
+                            <div style={{marginLeft: '-7px'}}>
                             <TextField
                                     label="Nome do Estabelecimento"
                                     id="filled-size-normal"
-                                    defaultValue="Normal"
                                     variant="filled"
                                 />
                                 <TextField
-                                    label="CNPJ"
+                                    label="Nome Popular"
                                     id="filled-size-normal"
-                                    defaultValue="Normal"
                                     variant="filled"
                                 />
                             </div>
-                            <div>
+                            <div style={{marginLeft: '-7px'}}>
                             <TextField
                                     label="Número de Telefone"
                                     id="filled-size-normal"
-                                    defaultValue="Normal"
                                     variant="filled"
                                 />
                                 
                                 <TextField
-                                    label="Quantidade de tomadas 220"
+                                    label="CNPJ"
                                     id="filled-size-normal"
-                                    defaultValue="Normal"
                                     variant="filled"
                                 />
                             </div>
-                            <div>
+                            <div style={{marginLeft: '-7px'}}>
                             <TextField
                                     label="Quantidade de tomadas 110"
                                     id="filled-size-normal"
-                                    defaultValue="Normal"
                                     variant="filled"
                                 />
                                 <TextField
-                                    label="Capacidade"
+                                    label="Quantidade de tomadas 220"
                                     id="filled-size-normal"
-                                    defaultValue="Normal"
                                     variant="filled"
                                 />
                             </div>
-                            <div>
+                            <div style={{marginLeft: '-7px'}}>
                             <TextField
                                     label="Endereço"
                                     id="filled-size-normal"
-                                    defaultValue="Normal"
                                     variant="filled"
                                 />
                                 <TextField
                                     label="Cidade"
                                     id="filled-size-normal"
-                                    defaultValue="Normal"
                                     variant="filled"
                                 />
                             </div>
-                            <div>
+                            <div style={{marginLeft: '-7px'}}>
                             <TextField
                                     label="Estado"
                                     id="filled-size-normal"
-                                    defaultValue="Normal"
                                     variant="filled"
                                 />
                                 <TextField
                                     label="CEP"
                                     id="filled-size-normal"
-                                    defaultValue="Normal"
                                     variant="filled"
                                 />
                             </div>
-                            <div>
+                            <div style={{marginLeft: '-7px'}}>
                             <TextField
-                                    label="Size"
+                                    label="Capacidade"
                                     id="filled-size-normal"
-                                    defaultValue="Normal"
                                     variant="filled"
                                 />
                             </div>

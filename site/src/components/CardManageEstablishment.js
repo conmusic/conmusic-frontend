@@ -19,14 +19,14 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 600,
+    width: 'auto',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    height: 300
+    height: 'auto'
 };
 
 const styleButton = {
@@ -45,7 +45,7 @@ function CardManageEstablishment() {
     const [location, setLocation] = React.useState('Rua x');
 
     return (
-        <Grid item xs={12} md={12} lg={12} sx={{ display: "flex", marginTop: 3}}>
+        <Grid item xs={12} md={12} lg={12} sx={{ display: "flex", marginTop: 3 }}>
             <Card sx={{
                 display: 'flex',
                 width: 1300,
@@ -75,8 +75,10 @@ function CardManageEstablishment() {
                 </CardContent>
                 <CardContent item xs={12} md={4} lg={4} style={{ display: 'flex', alignItems: 'center' }}>
                     <Button onClick={handleOpen2} variant="contained"
-                        style={{ display: 'flex', backgroundColor: '#FB2D57', 
-                        color: 'white', width: 120, height: 40, marginRight: 15 }}>
+                        style={{
+                            display: 'flex', backgroundColor: '#FB2D57',
+                            color: 'white', width: 120, height: 40, marginRight: 15
+                        }}>
                         Gerenciar
                     </Button>
                     <Modal
@@ -85,22 +87,99 @@ function CardManageEstablishment() {
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                     >
-                        <Box sx={style} spacing={2}>
+                        <Box sx={style}>
                             <Typography id="modal-modal-title" variant="h6" component="h2">
                                 Rock and Pub
                             </Typography>
-                            <TextField value={name} id="outlined-controlled" label="Nome"
-                                style={{ color: '#FB2D57' }} focused
-                                onChange={(event) => {
-                                    setName(event.target.value);
-                                }}
-                            />
-                            <TextField value={location} id="outlined-controlled" label="Localização"
-                                style={{ color: '#FB2D57' }} focused
-                                onChange={(event) => {
-                                    setLocation(event.target.value);
-                                }}
-                            />
+                            <Box
+                            component="form"
+                            sx={{
+                                '& .MuiTextField-root': { m: 1, width: '25ch' },
+                            }}
+                            noValidate
+                            autoComplete="off"
+                            flex-wrap= 'wrap' 
+                        >
+                            <div style={{marginLeft: '-7px'}}>
+                            <TextField
+                                    label="Nome do Estabelecimento"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                                <TextField
+                                    label="Nome Popular"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                            </div>
+                            <div style={{marginLeft: '-7px'}}>
+                            <TextField
+                                    label="Número de Telefone"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                                
+                                <TextField
+                                    label="CNPJ"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                            </div>
+                            <div style={{marginLeft: '-7px'}}>
+                            <TextField
+                                    label="Quantidade de tomadas 110"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                                <TextField
+                                    label="Quantidade de tomadas 220"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                            </div>
+                            <div style={{marginLeft: '-7px'}}>
+                            <TextField
+                                    label="Endereço"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                                <TextField
+                                    label="Cidade"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                            </div>
+                            <div style={{marginLeft: '-7px'}}>
+                            <TextField
+                                    label="Estado"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                                <TextField
+                                    label="CEP"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                            </div>
+                            <div style={{marginLeft: '-7px'}}>
+                            <TextField
+                                    label="Capacidade"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                            </div>
+                            </Box>
                             <div sx={styleButton}
                                 style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
                                 <Button variant="contained" color="success" style={{ width: '30%' }}>

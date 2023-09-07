@@ -2,11 +2,12 @@ import React from "react";
 import DashboardArtist from "./Artist";
 import DashboardEstablishment from "./Establishment";
 import DashBoardAdmin from "./Admin";
+import { useAuth } from "../../../hooks/auth";
 
 export default function DashBoard() {
-    const userType = "Admin"
+    const { type } = useAuth();
 
-    switch (userType) {
+    switch (type) {
         case 'Artist':
             return (<DashboardArtist />);
         case 'Manager':

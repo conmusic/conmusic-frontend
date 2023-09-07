@@ -6,10 +6,15 @@ import LoginPage from './pages/LoginPage';
 import RegisterStepOne from './pages/RegisterStepOne';
 import RegisterStepTwo from './pages/RegisterStepTwo';
 
-import DashBoard from './pages/authenticated/DashBoard';
+import DashBoard from './pages/authenticated/Dashboard';
 import Layout from './layouts/Layout';
 import NegotiationDetails from './pages/authenticated/NegotiationDetails';
+
 import ManageEstablishment from './pages/authenticated/ManageEstablishment';
+
+import Album from './pages/authenticated/Album';
+import OpportunityDetails from './pages/authenticated/OpportunityDetails';
+
 
 export default function MainRoutes() {
   return (
@@ -21,6 +26,8 @@ export default function MainRoutes() {
       <Route element={<Layout />} >
         <Route path="/dashboard" element={<DashBoard />} />
         <Route path="/manage-establishment" element={<ManageEstablishment />} />
+        <Route path="/explore" element={<Album />} /> 
+        <Route path="/explore/:10" element={<OpportunityDetails />} /> 
         <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
       </Route>
       <Route path="*" element={<h1>Not Found</h1>} />

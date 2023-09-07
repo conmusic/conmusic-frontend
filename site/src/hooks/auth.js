@@ -7,21 +7,21 @@ const AuthContext = createContext({});
 const AuthProvider = ({ children }) => {
     const [data, setData] = useState({
         token: null,
-        name: null,
-        email: null,
+        type: null,
+        user: null,
         id: 0
     });
 
     useEffect(() => {
-        let token = localStorage.getItem('@conmusic:token');
-        let name = localStorage.getItem('@conmusic:name');
-        let email = localStorage.getItem('@conmusic:email');
-        let id = localStorage.getItem('@conmusic:id');
+        const token = localStorage.getItem('@conmusic:token');
+        const user = localStorage.getItem('@conmusic:user');
+        const type = localStorage.getItem('@conmusic:type');
+        const id = localStorage.getItem('@conmusic:id');
 
-        if (token && name) {
+        if (token && user) {
             api.defaults.headers.authorization = `Bearer ${token}`;
 
-            setData({ token, name, email, id: Number(id) })
+            setData({ token, user: JSON.parse(user), type, id: Number(id) })
         }
     }, [setData])
 
@@ -33,35 +33,34 @@ const AuthProvider = ({ children }) => {
 
         const response = await api.post('/users/authentication', body)
 
-        const { token, name, id } = response.data;
+        const { token, user } = response.data;
 
         localStorage.setItem('@conmusic:token', token);
-        localStorage.setItem('@conmusic:name', name);
-        localStorage.setItem('@conmusic:email', email);
-        localStorage.setItem('@conmusic:id', id);
+        localStorage.setItem('@conmusic:user', JSON.stringify(user));
+        localStorage.setItem('@conmusic:type', user.userType);
+        localStorage.setItem('@conmusic:id', user.id);
 
-        setData({ token, name, email, id: Number(id) })
+        setData({ token, user, type: user.userType, id: Number(user.id) })
     }, []);
 
     const logout = useCallback(() => {
         localStorage.removeItem('@conmusic:token');
-        localStorage.removeItem('@conmusic:name');
-        localStorage.removeItem('@conmusic:email');
+        localStorage.removeItem('@conmusic:user');
+        localStorage.removeItem('@conmusic:type');
         localStorage.removeItem('@conmusic:id');
 
-        setData({ token: null, name: null, email: null, id: 0 })
+        setData({ token: null, user: null, type: null, id: 0 })
     }, []);
 
-    const updateUser = useCallback(({ name, email }) => {
-        localStorage.setItem('@conmusic:name', name);
-        localStorage.setItem('@conmusic:email', email);
+    const updateUser = useCallback((user) => {
+        localStorage.setItem('@conmusic:user', JSON.stringify(user));
 
-        setData({ name, email })
+        setData({ user })
     }, [])
 
     return (
         <AuthContext.Provider
-            value={{ userId: data.id, userName: data.name, login, logout, updateUser }}
+            value={{ userId: data.id, type: data.type, user: data.user, login, logout, updateUser }}
         >
             {children}
         </AuthContext.Provider>

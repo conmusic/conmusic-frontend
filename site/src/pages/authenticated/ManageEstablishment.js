@@ -22,14 +22,14 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 600,
+    width: 610,
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    height: 300
+    height: 'auto'
 };
 
 export default function ManageEstablishment() {
@@ -88,8 +88,95 @@ export default function ManageEstablishment() {
                         <Typography id="modal-modal-title" variant="h6" component="h2">
                             Criar Estabelecimento
                         </Typography>
-                        <TextField label="Nome" style={{ color: '#FB2D57' }} focused />
-                        <TextField label="Localização" style={{ color: '#FB2D57' }} focused />
+                        <Box
+                            component="form"
+                            sx={{
+                                '& .MuiTextField-root': { m: 1, width: '25ch' },
+                            }}
+                            noValidate
+                            autoComplete="off"
+                            flex-wrap= 'wrap' 
+                        >
+                            <div>
+                            <TextField
+                                    label="Nome do Estabelecimento"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                                <TextField
+                                    label="CNPJ"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                            </div>
+                            <div>
+                            <TextField
+                                    label="Número de Telefone"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                                
+                                <TextField
+                                    label="Quantidade de tomadas 220"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                            </div>
+                            <div>
+                            <TextField
+                                    label="Quantidade de tomadas 110"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                                <TextField
+                                    label="Capacidade"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                            </div>
+                            <div>
+                            <TextField
+                                    label="Endereço"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                                <TextField
+                                    label="Cidade"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                            </div>
+                            <div>
+                            <TextField
+                                    label="Estado"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                                <TextField
+                                    label="CEP"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                            </div>
+                            <div>
+                            <TextField
+                                    label="Size"
+                                    id="filled-size-normal"
+                                    defaultValue="Normal"
+                                    variant="filled"
+                                />
+                            </div>
+                        </Box>
                         <Button variant="contained" color="success" style={{ width: 250, height: 40 }}>
                             Criar Estabelecimento
                         </Button>

@@ -231,6 +231,7 @@ function HomePage() {
                 <br />
                 <button onClick={() => { navigate('/register') }} className="button" style={{ marginRight: '20px' }}>Cadastrar-se</button>
                 <button onClick={() => { navigate('/login') }} className="buttonLogin">Login</button>
+                <button onClick={() => { navigate('/manage-establishment') }} className="buttonLogin">Login</button>
               </p>
             </div>
           </div>

@@ -1,25 +1,26 @@
 import React from 'react';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-export default function CardShows(props) {
+
+export default function CardShows({ mode, name, eventName, showDate, showTime, ...rest }) {
   return (
     <React.Fragment>
         <React.Fragment>
-          <Typography component="p">Estabelecimento:</Typography>
+          <Typography component="p">{ mode === 'Artist' ? "Estabelecimento" : "Artista" }</Typography>
           <Typography color="text.secondary" sx={{ flex: 1 }}>
-            {props.estabelecimento}
+            {name}
           </Typography>
           <Typography component="p">Evento:</Typography>
           <Typography color="text.secondary" sx={{ flex: 1 }}>
-            {props.evento}
+            {eventName}
           </Typography>
           <Typography component="p">Data do Show:</Typography>
           <Typography color="text.secondary" sx={{ flex: 1 }}>
-            {props.dataDoShow}
+            {showDate}
           </Typography>
           <Typography component="p">Horário Marcado:</Typography>
           <Typography color="text.secondary" sx={{ flex: 1 }}>
-            {props.horarioMarcado}
+            {showTime}
           </Typography>
           <Button
             variant="outlined"

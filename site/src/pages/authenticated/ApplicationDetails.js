@@ -117,7 +117,7 @@ export default function ApplicationDetails() {
 
                         <div style={{ display: 'flex', flexDirection: 'column' }}>
                             <Button variant="contained" color="success" style={{ width: '23ch', marginBottom: 8 }}>
-                                Iniciar Converça
+                                Iniciar Conversa
                             </Button>
                             <Button variant="contained" color="error" style={{ width: '23ch' }}>
                                 Recusar

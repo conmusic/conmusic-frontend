@@ -11,6 +11,7 @@ import Layout from './layouts/Layout';
 import NegotiationDetails from './pages/authenticated/NegotiationDetails';
 import Album from './pages/authenticated/Album';
 import OpportunityDetails from './pages/authenticated/OpportunityDetails';
+import ProposalDetails from './pages/authenticated/ProposalDetails';
 
 export default function MainRoutes() {
   return (
@@ -23,6 +24,7 @@ export default function MainRoutes() {
         <Route path="/dashboard" element={<DashBoard />} />
         <Route path="/explore" element={<Album />} /> 
         <Route path="/explore/:10" element={<OpportunityDetails />} /> 
+        <Route path="/proposal-details" element={<ProposalDetails />} /> 
         <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
       </Route>
       <Route path="*" element={<h1>Not Found</h1>} />

@@ -83,7 +83,15 @@ const Item = styled(Paper)(({ theme }) => ({
     color: theme.palette.text.secondary,
 }));
 
-
+const ItemArtist = ({ imageSrc, label }) => (
+    <div style={{ textAlign: 'center' }}>
+        <img src={imageSrc} alt="Item" style={{ width: '150px', display: "flex", 
+        flexDirection: "column" }} />
+        <Typography variant="caption" align="center" gutterBottom>
+            {label}
+        </Typography>
+    </div>
+);
 
 export default function ApplicationDetails() {
     const [selectedImage, setSelectedImage] = useState(0);
@@ -188,10 +196,10 @@ export default function ApplicationDetails() {
                     </div>
                 </div>
                 <div>
-                    <Stack direction="row" marginTop={2} justifyContent='space-between' spacing={2}>
-                        <Item>Item 1</Item>
-                        <Item>Item 2</Item>
-                        <Item>Item 3</Item>
+                    <Stack direction="row" marginTop={2} justifyContent="space-between" spacing={2}>
+                        <ItemArtist imageSrc="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e" label="Item 1" />
+                        <ItemArtist imageSrc="https://images.unsplash.com/photo-1551782450-a2132b4ba21d" label="Item 2" />
+                        <ItemArtist imageSrc="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62" label="Item 3" />
                     </Stack>
                 </div>
             </Grid>

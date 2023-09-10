@@ -3,6 +3,7 @@ import { Avatar, Box, Divider, Stack, Typography } from "@mui/material";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import showStatusHelper from "../../../helpers/showStatusHelper";
+import eventPropsHelper from "../../../helpers/eventPropsHelper";
 
 export default function Details({ 
     eventName, 
@@ -20,7 +21,7 @@ export default function Details({
     showId
 }) {
     const formattedAddress = useMemo(() => {
-        return address != null ? `${address.address}. ${address.city} - ${address.state}` : "Endereço indisponível"
+        return address != null ? eventPropsHelper.getFormattedAddress(address) : "Endereço indisponível"
     }, [address])
 
     const formattedStartDateTime = useMemo(() => {
@@ -38,13 +39,13 @@ export default function Details({
     const formattedPaymentValue = useMemo(() => {
         let value = paymentValue != null ? Number(paymentValue) : 0;
 
-        return `R$ ${value.toFixed(2).replace('.', ',')}`
+        return eventPropsHelper.getFormattedPaymentValue(value)
     }, [paymentValue])
 
     const formattedCouvertCharge = useMemo(() => {
         let value = couvertCharge != null ? String(couvertCharge) : "0";
 
-        return `${value}%`
+        return eventPropsHelper.getFormattedCouvertCharge(value)
     }, [couvertCharge])
 
     return (

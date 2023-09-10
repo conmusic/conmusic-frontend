@@ -75,9 +75,8 @@ const CarouselImage = styled('img')({
 function srcset(image, size, rows = 1, cols = 1) {
   return {
     src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-    srcSet: `${image}?w=${size * cols}&h=${
-      size * rows
-    }&fit=crop&auto=format&dpr=2 2x`,
+    srcSet: `${image}?w=${size * cols}&h=${size * rows
+      }&fit=crop&auto=format&dpr=2 2x`,
   };
 }
 
@@ -162,22 +161,22 @@ export default function OpportunityDetails() {
       <Grid item xs={12} md={6}>
         <SubtitleContainer>
           <CarouselContainer>
-          <ImageList
-      sx={{ width: 500, height: 370 }}
-      variant="quilted"
-      cols={4}
-      rowHeight={121}
-    >
-      {itemData.map((item) => (
-        <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
-          <img
-            {...srcset(item.img, 121, item.rows, item.cols)}
-            alt={item.title}
-            loading="lazy"
-          />
-        </ImageListItem>
-      ))}
-    </ImageList>
+            <ImageList
+              sx={{ width: 500, height: 370 }}
+              variant="quilted"
+              cols={4}
+              rowHeight={121}
+            >
+              {itemData.map((item) => (
+                <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
+                  <img
+                    {...srcset(item.img, 121, item.rows, item.cols)}
+                    alt={item.title}
+                    loading="lazy"
+                  />
+                </ImageListItem>
+              ))}
+            </ImageList>
           </CarouselContainer>
           <Paper elevation={3} style={{ width: '100%', padding: '20px', border: '1px solid black' }}>
             <Typography variant="subtitle1">Somos um bar localizado no coração da cidade

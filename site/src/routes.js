@@ -25,7 +25,7 @@ export default function MainRoutes() {
         <Route path="/explore" element={<Album />} /> 
         <Route path="/explore/:10" element={<OpportunityDetails />} /> 
         <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
-        <Route path="/negotiation" element={<Negotiation />} />
+        <Route path="/list-negotiation" element={<Negotiation />} />
       </Route>
       <Route path="*" element={<h1>Not Found</h1>} />
     </Routes>

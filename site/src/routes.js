@@ -9,9 +9,9 @@ import RegisterStepTwo from './pages/RegisterStepTwo';
 import DashBoard from './pages/authenticated/Dashboard';
 import Layout from './layouts/Layout';
 import NegotiationDetails from './pages/authenticated/NegotiationDetails';
-import Album from './pages/authenticated/Album';
 import OpportunityDetails from './pages/authenticated/OpportunityDetails';
 import ApplicationDetails from './pages/authenticated/ApplicationDetails';
+import Explore from './pages/authenticated/Explore';
 
 export default function MainRoutes() {
   return (
@@ -22,8 +22,8 @@ export default function MainRoutes() {
       <Route path="/register-two-step" element={<RegisterStepTwo />} />
       <Route element={<Layout />} >
         <Route path="/dashboard" element={<DashBoard />} />
-        <Route path="/explore" element={<Album />} /> 
         <Route path="/application" element={<ApplicationDetails />} /> 
+        <Route path="/explore" element={<Explore />} /> 
         <Route path="/explore/:10" element={<OpportunityDetails />} /> 
         <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
       </Route>

@@ -1,40 +1,70 @@
-import React, { useState } from "react";
-import { useParams } from "react-router";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router";
 import { 
-    Box, 
-    Breadcrumbs, 
+    Box,
     Container, 
-    Grid, 
-    Link,
+    Grid,
     Paper, 
     Tab, 
-    Tabs, 
-    Typography
+    Tabs,
 } from "@mui/material";
 
 import CustomTabPanel from "../../../components/CustomTabPanel";
 
 import Details from "./Details";
 import Chat from "./Chat";
+import api from "../../../services/api";
 
 export default function NegotiationDetails() {
     const { showId } = useParams();
+    const navigate = useNavigate();
 
     const [currentTab, setCurrentTab] = useState(0);
+    const [show, setShow] = useState({})
 
-    const handleChange = (event, newValue) => {
-        setCurrentTab(newValue);
-    }
+    useEffect(() => {
+        const getShowData = async () => {
+            try {
+                const { data } = await api.get(`/shows/${showId}`)
+                
+                console.log(data)
+        
+                setShow({
+                    eventName: data.event.name,
+                    status: data.status,
+                    eventDescription: data.description,
+                    establishmentName: data.event.establishment.fantasyName,
+                    address: {
+                        address: data.event.establishment.address,
+                        city: data.event.establishment.city,
+                        state: data.event.establishment.state,
+                    },
+                    startDateTime: data.schedule.startDateTime,
+                    endDateTime: data.schedule.endDateTime,
+                    artistName: data.artist.name,
+                    artistInstagram: data.artist.instagram,
+                    artistAvatarUrl: data.artist.avatarUrl,
+                    paymentValue: data.value,
+                    couvertCharge: data.coverCharge
+                })
+            } catch (error) {
+                console.error(error)
+                if (error.status === 404) {
+                    navigate('negotiations')
+                }
+            }
+        }
 
-    function a11yProps(index) {
-        return {
-          id: `simple-tab-${index}`,
-          'aria-controls': `simple-tabpanel-${index}`,
-        };
-    }
+        if (api.defaults.headers.authorization !== undefined) {
+            getShowData()
+        }
+    }, [showId, navigate, setShow])
+
+    const handleChange = (event, newValue) => { setCurrentTab(newValue); }
+    function a11yProps(index) { return { id: `simple-tab-${index}`, 'aria-controls': `simple-tabpanel-${index}`, }; }
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Container sx={{ mt: 4, mb: 4 }}>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={12} lg={12}>               
                     <Paper
@@ -44,14 +74,6 @@ export default function NegotiationDetails() {
                             flexDirection: 'column',
                         }}
                     >
-                        <Breadcrumbs>
-                            <Link underline="hover" color={"inherit"} href="/negotiations">
-                                Negociações
-                            </Link>
-                            <Typography>
-                                {showId}
-                            </Typography>
-                        </Breadcrumbs>
                         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                             <Tabs value={currentTab} onChange={handleChange} aria-label="basic tabs example">
                                 <Tab label="Detalhes" {...a11yProps(0)} />
@@ -59,11 +81,27 @@ export default function NegotiationDetails() {
                             </Tabs>
                         </Box>
                         <CustomTabPanel value={currentTab} index={0}>
-                            <Details />
+                            <Details
+                                showId={showId}
+                                eventName={show.eventName}
+                                status={show.status} 
+                                eventDescription={show.eventDescription}
+                                establishmentName={show.establishmentName} 
+                                address={show.address} 
+                                startDateTime={show.startDateTime} 
+                                endDateTime={show.endDateTime} 
+                                artistName={show.artistName}
+                                artistInstagram={show.artistInstagram}
+                                artistAvatarUrl={show.artistAvatarUrl}
+                                paymentValue={show.paymentValue}
+                                couvertCharge={show.couvertCharge}
+                            />
                         </CustomTabPanel>
                         <CustomTabPanel value={currentTab} index={1}>
-                            <Typography>Chat</Typography>
-                            {/* <Chat/> */}
+                            <Chat
+                                showId={showId}
+                                otherUserName={show.artistName}
+                            />
                         </CustomTabPanel>
                     </Paper>
                 </Grid>

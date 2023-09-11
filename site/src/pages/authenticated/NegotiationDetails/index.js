@@ -100,6 +100,7 @@ export default function NegotiationDetails() {
                         <CustomTabPanel value={currentTab} index={1}>
                             <Chat
                                 showId={showId}
+                                otherUserName={show.artistName}
                             />
                         </CustomTabPanel>
                     </Paper>

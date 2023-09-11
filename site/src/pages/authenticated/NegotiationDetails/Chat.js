@@ -8,7 +8,7 @@ import { Send } from '@mui/icons-material';
 import db from '../../../services/firebase/firestore';
 import { useAuth } from "../../../hooks/auth";
 
-export default function Chat({ showId, otherUserName }) {
+export default function Chat({ showId, otherUserName = "Usuário" }) {
     const { userId, user } = useAuth();
     
     const [messages, setMessages] = useState([])
@@ -83,10 +83,10 @@ export default function Chat({ showId, otherUserName }) {
                                     alignSelf: m.userId !== userId ? "flex-start" : "flex-end",
                                     paddingX:2,
                                     paddingY:1,                                   
-                                    borderTopLeftRadius: m.userId !== userId ? 0 : 10,
-                                    borderTopRightRadius: m.userId !== userId ? 10 : 0,
-                                    borderBottomLeftRadius: 10,
-                                    borderBottomRightRadius: 10,
+                                    borderTopLeftRadius: m.userId !== userId ? 0 : 15,
+                                    borderTopRightRadius: m.userId !== userId ? 15 : 0,
+                                    borderBottomLeftRadius: 15,
+                                    borderBottomRightRadius: 15,
                                 }}
                                 ref={(messageBox) => (messagesRef.current = [...messagesRef.current, messageBox])}
                             >

@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
-
     Grid,
     Typography,
     Card,
     CardMedia,
     CardContent,
     Button,
+    Modal,
+    Box,
+    TextField
 } from '@mui/material';
+
 import myImage from '../assets/images/image.png';
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 
 const style = {
     position: 'absolute',
@@ -36,13 +36,13 @@ const styleButton = {
 };
 
 function CardManageEstablishment() {
-    const [open2, setOpen2] = React.useState(false);
+    const [open2, setOpen2] = useState(false);
 
     const handleOpen2 = () => setOpen2(true);
     const handleClose2 = () => setOpen2(false);
 
-    const [name, setName] = React.useState('Rock and Pub');
-    const [location, setLocation] = React.useState('Rua x');
+    const [name, setName] = useState('Rock and Pub');
+    const [location, setLocation] = useState('Rua x');
 
     return (
         <Grid item xs={12} md={12} lg={12} sx={{ display: "flex", marginTop: 3 }}>
@@ -81,118 +81,118 @@ function CardManageEstablishment() {
                         }}>
                         Gerenciar
                     </Button>
-                    <Modal
-                        open={open2}
-                        onClose={handleClose2}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={style}>
-                            <Typography id="modal-modal-title" variant="h6" component="h2">
-                                Rock and Pub
-                            </Typography>
-                            <Box
-                            component="form"
-                            sx={{
-                                '& .MuiTextField-root': { m: 1, width: '25ch' },
-                            }}
-                            noValidate
-                            autoComplete="off"
-                            flex-wrap= 'wrap' 
-                        >
-                            <div style={{marginLeft: '-7px'}}>
-                            <TextField
-                                    label="Nome do Estabelecimento"
-                                    id="filled-size-normal"
-                                    defaultValue="Normal"
-                                    variant="filled"
-                                />
-                                <TextField
-                                    label="Nome Popular"
-                                    id="filled-size-normal"
-                                    defaultValue="Normal"
-                                    variant="filled"
-                                />
-                            </div>
-                            <div style={{marginLeft: '-7px'}}>
-                            <TextField
-                                    label="Número de Telefone"
-                                    id="filled-size-normal"
-                                    defaultValue="Normal"
-                                    variant="filled"
-                                />
-                                
-                                <TextField
-                                    label="CNPJ"
-                                    id="filled-size-normal"
-                                    defaultValue="Normal"
-                                    variant="filled"
-                                />
-                            </div>
-                            <div style={{marginLeft: '-7px'}}>
-                            <TextField
-                                    label="Quantidade de tomadas 110"
-                                    id="filled-size-normal"
-                                    defaultValue="Normal"
-                                    variant="filled"
-                                />
-                                <TextField
-                                    label="Quantidade de tomadas 220"
-                                    id="filled-size-normal"
-                                    defaultValue="Normal"
-                                    variant="filled"
-                                />
-                            </div>
-                            <div style={{marginLeft: '-7px'}}>
-                            <TextField
-                                    label="Endereço"
-                                    id="filled-size-normal"
-                                    defaultValue="Normal"
-                                    variant="filled"
-                                />
-                                <TextField
-                                    label="Cidade"
-                                    id="filled-size-normal"
-                                    defaultValue="Normal"
-                                    variant="filled"
-                                />
-                            </div>
-                            <div style={{marginLeft: '-7px'}}>
-                            <TextField
-                                    label="Estado"
-                                    id="filled-size-normal"
-                                    defaultValue="Normal"
-                                    variant="filled"
-                                />
-                                <TextField
-                                    label="CEP"
-                                    id="filled-size-normal"
-                                    defaultValue="Normal"
-                                    variant="filled"
-                                />
-                            </div>
-                            <div style={{marginLeft: '-7px'}}>
-                            <TextField
-                                    label="Capacidade"
-                                    id="filled-size-normal"
-                                    defaultValue="Normal"
-                                    variant="filled"
-                                />
-                            </div>
-                            </Box>
-                            <div sx={styleButton}
-                                style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                <Button variant="contained" color="success" style={{ width: '30%' }}>
-                                    Atualizar
-                                </Button>
-                                <Button variant="contained" color="error" style={{ width: '30%' }}>
-                                    Deletar
-                                </Button>
-                            </div>
-                        </Box>
-                    </Modal>
                 </CardContent>
             </Card>
+            <Modal
+                open={open2}
+                onClose={handleClose2}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Rock and Pub
+                    </Typography>
+                    <Box
+                        component="form"
+                        sx={{
+                            '& .MuiTextField-root': { m: 1, width: '25ch' },
+                        }}
+                        noValidate
+                        autoComplete="off"
+                        flex-wrap='wrap'
+                    >
+                        <div style={{ marginLeft: '-7px' }}>
+                            <TextField
+                                label="Nome do Estabelecimento"
+                                id="filled-size-normal"
+                                defaultValue="Normal"
+                                variant="filled"
+                            />
+                            <TextField
+                                label="Nome Popular"
+                                id="filled-size-normal"
+                                defaultValue="Normal"
+                                variant="filled"
+                            />
+                        </div>
+                        <div style={{ marginLeft: '-7px' }}>
+                            <TextField
+                                label="Número de Telefone"
+                                id="filled-size-normal"
+                                defaultValue="Normal"
+                                variant="filled"
+                            />
+
+                            <TextField
+                                label="CNPJ"
+                                id="filled-size-normal"
+                                defaultValue="Normal"
+                                variant="filled"
+                            />
+                        </div>
+                        <div style={{ marginLeft: '-7px' }}>
+                            <TextField
+                                label="Quantidade de tomadas 110"
+                                id="filled-size-normal"
+                                defaultValue="Normal"
+                                variant="filled"
+                            />
+                            <TextField
+                                label="Quantidade de tomadas 220"
+                                id="filled-size-normal"
+                                defaultValue="Normal"
+                                variant="filled"
+                            />
+                        </div>
+                        <div style={{ marginLeft: '-7px' }}>
+                            <TextField
+                                label="Endereço"
+                                id="filled-size-normal"
+                                defaultValue="Normal"
+                                variant="filled"
+                            />
+                            <TextField
+                                label="Cidade"
+                                id="filled-size-normal"
+                                defaultValue="Normal"
+                                variant="filled"
+                            />
+                        </div>
+                        <div style={{ marginLeft: '-7px' }}>
+                            <TextField
+                                label="Estado"
+                                id="filled-size-normal"
+                                defaultValue="Normal"
+                                variant="filled"
+                            />
+                            <TextField
+                                label="CEP"
+                                id="filled-size-normal"
+                                defaultValue="Normal"
+                                variant="filled"
+                            />
+                        </div>
+                        <div style={{ marginLeft: '-7px' }}>
+                            <TextField
+                                label="Capacidade"
+                                id="filled-size-normal"
+                                defaultValue="Normal"
+                                variant="filled"
+                            />
+                        </div>
+                    </Box>
+                    <div sx={styleButton}
+                        style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                        <Button variant="contained" color="success" style={{ width: '30%' }}>
+                            Atualizar
+                        </Button>
+                        <Button variant="contained" color="error" style={{ width: '30%' }}>
+                            Deletar
+                        </Button>
+                    </div>
+                </Box>
+            </Modal>
         </Grid>
 
     )

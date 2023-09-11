@@ -6,14 +6,12 @@ import LoginPage from './pages/LoginPage';
 import RegisterStepOne from './pages/RegisterStepOne';
 import RegisterStepTwo from './pages/RegisterStepTwo';
 
-import DashBoard from './pages/authenticated/Dashboard';
 import Layout from './layouts/Layout';
+import DashBoard from './pages/authenticated/Dashboard';
+import Explore from './pages/authenticated/Explore';
+import ExploreDetails from './pages/authenticated/ExploreDetails';
 import NegotiationDetails from './pages/authenticated/NegotiationDetails';
-
 import ManageEstablishment from './pages/authenticated/ManageEstablishment';
-
-import Album from './pages/authenticated/Album';
-import OpportunityDetails from './pages/authenticated/OpportunityDetails';
 
 
 export default function MainRoutes() {
@@ -25,9 +23,9 @@ export default function MainRoutes() {
       <Route path="/register-two-step" element={<RegisterStepTwo />} />
       <Route element={<Layout />} >
         <Route path="/dashboard" element={<DashBoard />} />
-        <Route path="/manage-establishment" element={<ManageEstablishment />} />
-        <Route path="/explore" element={<Album />} /> 
-        <Route path="/explore/:10" element={<OpportunityDetails />} /> 
+        <Route path="/explore" element={<Explore />} /> 
+        <Route path="/explore/:exploreId" element={<ExploreDetails />} /> 
+        <Route path="/establishments" element={<ManageEstablishment />} />
         <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
       </Route>
       <Route path="*" element={<h1>Not Found</h1>} />

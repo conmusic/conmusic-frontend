@@ -8,9 +8,11 @@ import RegisterStepTwo from './pages/RegisterStepTwo';
 
 import Layout from './layouts/Layout';
 import DashBoard from './pages/authenticated/Dashboard';
-import NegotiationDetails from './pages/authenticated/NegotiationDetails';
-import ExploreDetails from './pages/authenticated/ExploreDetails';
 import Explore from './pages/authenticated/Explore';
+import ExploreDetails from './pages/authenticated/ExploreDetails';
+import NegotiationDetails from './pages/authenticated/NegotiationDetails';
+import ManageEstablishment from './pages/authenticated/ManageEstablishment';
+
 
 export default function MainRoutes() {
   return (
@@ -23,6 +25,7 @@ export default function MainRoutes() {
         <Route path="/dashboard" element={<DashBoard />} />
         <Route path="/explore" element={<Explore />} /> 
         <Route path="/explore/:exploreId" element={<ExploreDetails />} /> 
+        <Route path="/establishments" element={<ManageEstablishment />} />
         <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
       </Route>
       <Route path="*" element={<h1>Not Found</h1>} />

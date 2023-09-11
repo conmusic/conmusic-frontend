@@ -58,7 +58,7 @@ const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'ope
 );
 
 export default function SideBar() {
-    const { logout, userType } = useAuth();
+    const { logout, type } = useAuth();
     const navigate = useNavigate();
     const href = useHref();
 
@@ -89,7 +89,7 @@ export default function SideBar() {
                     destination={"/dashboard"} 
                 />
                 <SideBarOption 
-                    isVisible={userType !== 'Admin'} 
+                    isVisible={type !== 'Admin'} 
                     text={"Explorar"} 
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 
@@ -97,7 +97,7 @@ export default function SideBar() {
                     destination={"/explore"} 
                 />
                 <SideBarOption 
-                    isVisible={userType !== 'Admin'} 
+                    isVisible={type !== 'Admin'} 
                     text={"Negociações"} 
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 
@@ -113,7 +113,7 @@ export default function SideBar() {
                     destination={"/calendar"} 
                 />
                 <SideBarOption 
-                    isVisible={userType === 'Manager'} 
+                    isVisible={type === 'Manager'} 
                     text={"Eventos"} 
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 
@@ -121,7 +121,7 @@ export default function SideBar() {
                     destination={"/events"} 
                 />
                 <SideBarOption 
-                    isVisible={userType !== 'Admin'} 
+                    isVisible={type !== 'Admin'} 
                     text={"Oportunidades"} 
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 
@@ -129,7 +129,7 @@ export default function SideBar() {
                     destination={"/opportunities"} 
                 />
                 <SideBarOption 
-                    isVisible={userType === 'Manager'} 
+                    isVisible={type === 'Manager'} 
                     text={"Estabelecimentos"} 
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 

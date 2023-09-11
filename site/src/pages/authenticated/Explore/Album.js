@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import {
   Typography,
   Container,
@@ -20,7 +21,6 @@ import {
 
 import api from '../../../services/api';
 import dateHelper from '../../../helpers/dateHelper';
-import { useNavigate } from 'react-router';
 import eventPropsHelper from '../../../helpers/eventPropsHelper';
 
 export default function Album() {
@@ -62,7 +62,7 @@ export default function Album() {
   }, [])
 
   const handleNavigate = useCallback((eventId) => {
-    navigate(`/explore/event/${eventId}`)
+    navigate(`/explore/${eventId}`)
   }, [])
 
   return (

@@ -88,7 +88,6 @@ const itemData = [
     img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
     title: 'Fern',
   },
-
 ];
 
 export default function ExploreEventDetails() {
@@ -174,7 +173,7 @@ export default function ExploreEventDetails() {
             </Box>
           </Box>
           <Divider orientation="horizontal" flexItem />
-          <Button variant="contained" color="primary" sx={{ backgroundColor: "green", marginY: 1.5 }}>
+          <Button variant="contained" color="success" sx={{ marginY: 1.5 }}>
             Propor Serviço
           </Button>
           <Divider orientation="horizontal" flexItem />

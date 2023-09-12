@@ -122,7 +122,7 @@ export default function SideBar() {
                 />
                 <SideBarOption 
                     isVisible={type !== 'Admin'} 
-                    text={"Oportunidades"} 
+                    text={"Propostas"} 
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 
                     icon={WorkspacePremium} 

@@ -63,7 +63,7 @@ export default function Album() {
 
   const handleNavigate = useCallback((eventId) => {
     navigate(`/explore/${eventId}`)
-  }, [])
+  }, [navigate])
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'react-router';
 import {
     Button,
@@ -10,10 +10,12 @@ import {
     Box,
     Chip,
     Divider,
-    Stack
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import eventPropsHelper from '../../../helpers/eventPropsHelper';
+import api from '../../../services/api';
+import { differenceInYears } from 'date-fns';
+import dateHelper from '../../../helpers/dateHelper';
 
 const CarouselContainer = styled('div')({
     display: 'flex',
@@ -91,7 +93,96 @@ const itemData = [
 export default function ProposalArtist() {
     const { proposalId } = useParams()
 
-    const [selectedImage, setSelectedImage] = useState(0);
+    const [proposal, setProposal] = useState({
+        artist: {
+            id: null,
+            name: null,
+            about: null,
+            birthDate: null,
+            cpf: null,
+            email: null,
+            instagram: null,
+            phoneNumber: null,
+            genres: [],
+        },
+        establishment: {
+            name: null,
+            phoneNumber: null,
+        },
+        address: {
+            address: null,
+            city: null,
+            state: null,
+            zipCode: null,
+        },
+        startDateTime: null,
+        endDateTime: null,
+        paymentValue: null,
+        couvertCharge: null,
+        event: {
+            name: null,
+            description: null,
+            genre: null,
+        }
+    })
+
+    useEffect(() => {
+        async function getProposal() {
+            try {
+                const { data } = await api.get(`/shows/${proposalId}`)
+
+                console.log(data)
+
+                setProposal({
+                    artist: {
+                        id: data.artist.id,
+                        name: data.artist.name,
+                        about: data.artist.about,
+                        birthDate: data.artist.birthDate,
+                        cpf: data.artist.cpf,
+                        email: data.artist.email,
+                        instagram: data.artist.instagram,
+                        phoneNumber: data.artist.phoneNumber,
+                        genres: data.artist.musicalGenres
+                    },
+                    establishment: {
+                        name: data.event.establishment.fantasyName,
+                        phoneNumber: data.event.establishment.phoneNumber,
+                    },
+                    address: {
+                        address: data.event.establishment.address,                        
+                        city: data.event.establishment.city,
+                        state: data.event.establishment.state,
+                        zipCode: data.event.establishment.zipCode,
+                    },
+                    startDateTime: data.schedule.startDateTime,
+                    endDateTime: data.schedule.endDateTime,
+                    paymentValue: data.value,
+                    couvertCharge: data.coverCharge,
+                    event: {
+                        name: data.event.name,
+                        description: data.event.description,
+                        genre: data.event.genre.name
+                    }
+                })
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
+        getProposal()
+    }, [proposalId])
+
+    const formattedBirthDateAndAge = useMemo(() => {
+        if (proposal.artist.birthDate != null) {
+            const birthDate = new Date(proposal.artist.birthDate)
+            const age = differenceInYears(new Date(), birthDate)
+    
+            return `${birthDate.toLocaleDateString('pt-BR')} - ${age} anos`
+        } 
+
+        return ''
+    }, [proposal.artist.birthDate])
 
     const image = [
         'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
@@ -101,31 +192,37 @@ export default function ProposalArtist() {
         <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
             <Grid item xs={12} md={4}>
                 <Paper sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: 4, gap: 1, my: 2 }}>
-                    <SmallImage src={image[selectedImage]} alt="Profile" />
+                    <SmallImage src={image[0]} alt="Profile" />
                     <Typography variant="h5" fontWeight='bold' style={{ color: '#FB2D57', marginTop: 2 }}>
-                        Leonardo Silva
+                        {proposal.artist.name}
                     </Typography>
-                    <Typography variant='caption' fontWeight='bold'>
-                        @leo.silva
+                    {
+                        proposal.artist.instagram &&
+                        (<Typography variant='caption' fontWeight='bold'>@{proposal.artist.instagram}</Typography>)
+                    }
+                    <Typography variant='body1'>
+                        {formattedBirthDateAndAge}
                     </Typography>
                     <Typography variant='body1'>
-                        18/08/2003 - 20 anos
+                        {eventPropsHelper.getFormattedPhoneNumber(proposal.artist.phoneNumber)}
                     </Typography>
                     <Divider orientation="horizontal" flexItem />
-                    <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
-                        Gêneros Musicais
-                    </Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, flexWrap: 'wrap' }}>
-                        <Chip label="Rock" />
-                        <Chip label="Rock" />
-                        <Chip label="Rock" />
-                        <Chip label="Rock" />
-                        <Chip label="Rock" />
-                        <Chip label="Rock" />
-                        <Chip label="Rock" />
-                        <Chip label="Rock" />
-                    </Box>
-                    <Divider orientation="horizontal" flexItem />
+                    {
+                        proposal.artist.genres && 
+                        proposal.artist.genres.length > 0 &&
+                        (<>
+                            <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
+                                Gêneros Musicais
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1, flexWrap: 'wrap' }}>
+                                {
+                                    proposal.artist.genres
+                                        .map((genre, i) => (<Chip sx={{ backgroundColor: i % 2 === 0 ? "#FF3E3A" : "#CC3245", color: '#F2F2F2' }} label={genre} />))
+                                }                        
+                            </Box>
+                            <Divider orientation="horizontal" flexItem />
+                        </>)
+                    }                    
                     <Button variant="contained" color="success" sx={{ marginTop: 1.5 }}>
                         Iniciar Negociação
                     </Button>
@@ -134,40 +231,43 @@ export default function ProposalArtist() {
                     </Button>
                     <Divider orientation="horizontal" flexItem />
                     <Typography variant="h5" fontWeight='bold' style={{ color: '#FB2D57', marginTop: 2 }}>
-                        Evento
+                        {proposal.event.name}
                     </Typography>                    
-                    <Box>
-                        <Typography variant="h6" mb={1} fontWeight="bold">Pagamento</Typography>
-                        <Box variant="body1" display='flex' flexDirection="row">
-                            <Typography fontWeight="bold" mr={0.5}>Valor fixo:</Typography>
-                            <Typography>{eventPropsHelper.getFormattedPaymentValue(1850)}</Typography>
-                        </Box>
-                        <Box variant="body1" display='flex' flexDirection="row">
-                            <Typography fontWeight="bold" mr={0.5}>Taxa de Couvert:</Typography>
-                            <Typography>{eventPropsHelper.getFormattedCouvertCharge(20)}</Typography>
-                        </Box>
-                    </Box>
-                    <Divider orientation="horizontal" flexItem />
                     <Box>
                         <Typography variant="h6" mb={1} fontWeight="bold">Data e Horário:</Typography>
                         <Box variant="body1" display='flex' flexDirection="row">
                             <Typography fontWeight="bold" mr={0.5}>Início:</Typography>
-                            <Typography textTransform='capitalize'>AAA</Typography>
+                            <Typography textTransform='capitalize'>{dateHelper.getFormattedScheduleDate(proposal.startDateTime)}</Typography>
                         </Box>
                         <Box variant="body1" display='flex' flexDirection="row">
                             <Typography fontWeight="bold" mr={0.5}>Término:</Typography>
-                            <Typography textTransform='capitalize'>BBB</Typography>
+                            <Typography textTransform='capitalize'>{dateHelper.getFormattedScheduleDate(proposal.endDateTime)}</Typography>
                         </Box>
                     </Box>
                     <Divider orientation="horizontal" flexItem />
-                    <Typography variant='body1'>
-                        Endereço
-                    </Typography>
-                    <Typography variant='body1'>
-                        {eventPropsHelper.getFormattedZipCode("01414001")}
+                    <Box>
+                        <Typography variant="h6" mb={1} fontWeight="bold">Pagamento</Typography>
+                        <Box variant="body1" display='flex' flexDirection="row">
+                            <Typography fontWeight="bold" mr={0.5}>Valor fixo:</Typography>
+                            <Typography>{eventPropsHelper.getFormattedPaymentValue(proposal.paymentValue)}</Typography>
+                        </Box>
+                        <Box variant="body1" display='flex' flexDirection="row">
+                            <Typography fontWeight="bold" mr={0.5}>Taxa de Couvert:</Typography>
+                            <Typography>{eventPropsHelper.getFormattedCouvertCharge(proposal.couvertCharge)}</Typography>
+                        </Box>
+                    </Box>
+                    <Divider orientation="horizontal" flexItem />
+                    <Typography fontWeight="bold" mr={0.5}>
+                        {proposal.establishment.name}
                     </Typography>
                     <Typography>
-                        {eventPropsHelper.getFormattedPhoneNumber(11996489985)}
+                        {eventPropsHelper.getFormattedPhoneNumber(proposal.establishment.phoneNumber)}
+                    </Typography>
+                    <Typography variant='body1'>
+                        {eventPropsHelper.getFormattedAddress(proposal.address)}
+                    </Typography>
+                    <Typography variant='body1'>
+                        {eventPropsHelper.getFormattedZipCode(proposal.address.zipCode)}
                     </Typography>
                 </Paper>
             </Grid>
@@ -194,7 +294,7 @@ export default function ProposalArtist() {
                     <Paper style={{ width: '100%', padding: '20px' }}>
                         <Typography variant="h6" mb={1} fontWeight="bold">Sobre o Artista</Typography>
                         <Typography variant="subtitle1">
-                            Descrição
+                            {proposal.artist.about != null ? proposal.artist.about : "Sem descrição do artista"}
                         </Typography>
                     </Paper>
                 </SubtitleContainer>

@@ -117,28 +117,32 @@ export default function ExploreEventDetails() {
 
   useEffect(() => {
     const getEventData = async () => {
-      const { data } = await api.get(`/events/${exploreId}`)
+      try {
+        const { data } = await api.get(`/events/${exploreId}`)
 
-      setEvent({
-        name: data.name,
-        genre: data.genre.name,
-        paymentValue: data.value,
-        couvertCharge: data.coverCharge,
-        establishmentName: data.establishment.fantasyName,
-        address: {
-          address: data.establishment.address,
-          city: data.establishment.city,
-          state: data.establishment.state,
-          zipCode: data.establishment.zipCode,
-        },
-        phoneNumber: data.establishment.phoneNumber,
-        infrastructure: {
-          capacity: data.establishment.capacity,
-          outlet110: data.establishment.amount110Outlets,
-          outlet220: data.establishment.amount220Outlets,
-        },
-        description: data.description
-      });
+        setEvent({
+          name: data.name,
+          genre: data.genre.name,
+          paymentValue: data.value,
+          couvertCharge: data.coverCharge,
+          establishmentName: data.establishment.fantasyName,
+          address: {
+            address: data.establishment.address,
+            city: data.establishment.city,
+            state: data.establishment.state,
+            zipCode: data.establishment.zipCode,
+          },
+          phoneNumber: data.establishment.phoneNumber,
+          infrastructure: {
+            capacity: data.establishment.capacity,
+            outlet110: data.establishment.amount110Outlets,
+            outlet220: data.establishment.amount220Outlets,
+          },
+          description: data.description
+        });
+      } catch (error) {
+        console.error(error)
+      }
     }
 
     getEventData()
@@ -180,14 +184,14 @@ export default function ExploreEventDetails() {
           <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
             {event.establishmentName}
           </Typography>
+          <Typography>
+            {eventPropsHelper.getFormattedPhoneNumber(event.phoneNumber)}
+          </Typography>
           <Typography variant='body1'>
             {eventPropsHelper.getFormattedAddress(event.address)}
           </Typography>
           <Typography variant='body1'>
             {eventPropsHelper.getFormattedZipCode(event.address.zipCode)}
-          </Typography>
-          <Typography>
-            {eventPropsHelper.getFormattedPhoneNumber(event.phoneNumber)}
           </Typography>
           <Divider orientation="horizontal" flexItem />
           <Typography variant='h6' sx={{ fontWeight: 'bold' }}>

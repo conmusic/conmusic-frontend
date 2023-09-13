@@ -59,7 +59,21 @@ function ModalTinder(){
                         native: true,
                     }}
                     sx={{ 
-                        width: 700, 
+                        width: 930, 
+                    }}
+                    variant="outlined"
+                >
+                </TextField>
+                <Typography id="modal-modal-title" variant="h6" component="h2" sx={{ alignSelf: "center"}}>
+                    Evento
+                </Typography>  
+                <TextField
+                    select
+                    SelectProps={{
+                        native: true,
+                    }}
+                    sx={{ 
+                        width: 930, 
                     }}
                     variant="outlined"
                 >

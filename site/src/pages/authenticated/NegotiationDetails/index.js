@@ -14,9 +14,11 @@ import CustomTabPanel from "../../../components/CustomTabPanel";
 import Details from "./Details";
 import Chat from "./Chat";
 import api from "../../../services/api";
+import { useAuth } from "../../../hooks/auth";
 
 export default function NegotiationDetails() {
     const { showId } = useParams();
+    const { type } = useAuth()
     const navigate = useNavigate();
 
     const [currentTab, setCurrentTab] = useState(0);
@@ -45,7 +47,8 @@ export default function NegotiationDetails() {
                     artistInstagram: data.artist.instagram,
                     artistAvatarUrl: data.artist.avatarUrl,
                     paymentValue: data.value,
-                    couvertCharge: data.coverCharge
+                    couvertCharge: data.coverCharge,
+                    managerName: data.managerName
                 })
             } catch (error) {
                 console.error(error)
@@ -100,7 +103,11 @@ export default function NegotiationDetails() {
                         <CustomTabPanel value={currentTab} index={1}>
                             <Chat
                                 showId={showId}
-                                otherUserName={show.artistName}
+                                otherUserName={
+                                    type === "Manager" 
+                                        ? show.artistName
+                                        : show.managerName
+                                }
                             />
                         </CustomTabPanel>
                     </Paper>

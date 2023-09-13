@@ -10,7 +10,10 @@ import {
 import myImage from '../assets/images/image.png';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
 const style = {
   position: 'absolute',
@@ -34,22 +37,41 @@ const styleButton = {
   justifyContent: 'space-between',
 };
 
-function CardNegotiation() {
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+function CardNegotiations({establishment, event, local, showStart, showEnd}) {
   const [value, setValue] = React.useState(2);
   const [open, setOpen] = React.useState(false);
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [showConfirmationButton, setShowConfirmationButton] = useState(false);
+  const [openToast, setOpenToast] = React.useState(false);
+
+  const handleClick = () => {
+    setOpenToast(true);
+    handleClose()
+  };
+
+  const handleCloseToast = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenToast(false);
+  };
 
   var status = 'CONCLUDED'
 
   useEffect(() => {
+    console.log("Test")
     if (status === 'CONCLUDED') {
       setShowConfirmationButton(true);
     }
   }, [status]);
-  
+
   return (
     <Grid item xs={12} md={7} sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
       <Card sx={{ display: 'flex', width: 1300 }}>
@@ -67,21 +89,21 @@ function CardNegotiation() {
         />
         <CardContent sx={{ flex: 1, mt: 1 }}>
           <Typography component="h2" variant="h5">
-            <p>Casa de show A</p>
+            {establishment}
           </Typography>
           <Typography variant="subtitle1" >
-            <p>Noite do Jazz</p>
+            {event}
           </Typography>
           <Typography variant="subtitle1" paragraph>
-            <p>São Paulo - SP</p>
+            {local}
           </Typography>
         </CardContent>
         <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
           <Typography>
-            <p>01/05/2023</p>
+            {showStart}
           </Typography>
           <Typography variant="subtitle1" >
-            <p>01/05/2023</p>
+            {showEnd}
           </Typography>
         </CardContent>
         <CardContent sx={{ display: "flex" }}>
@@ -147,22 +169,37 @@ function CardNegotiation() {
                     setValue(newValue);
                   }}
                 />
+                <TextField
+                  id="outlined-multiline-static"
+                  label="Comentário"
+                  multiline
+                  rows={4}
+                  style={{ display: "flex", width: "auto", marginTop: 15 }}
+                />
+               
               </Box>
+
               <div sx={styleButton}
                 style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                <Button variant="contained" color="success" style={{ width: '30%' }}>
+                <Button variant="contained" color="success" style={{ width: '30%' }} 
+                onClick={handleClick}>
                   Avaliar
                 </Button>
-                <Button variant="contained" color="error" style={{ width: '30%' }}>
+                <Button variant="contained" color="error" style={{ width: '30%' }} onClick={handleClose}>
                   Sair
                 </Button>
               </div>
             </Box>
           </Modal>
+          <Snackbar open={openToast} autoHideDuration={6000} onClose={handleCloseToast}>
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          Avaliação enviada!
+        </Alert>
+      </Snackbar>
         </CardContent>
       </Card>
     </Grid>
 
   )
 }
-export default CardNegotiation;
+export default CardNegotiations;

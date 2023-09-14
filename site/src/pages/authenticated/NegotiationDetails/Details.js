@@ -1,9 +1,9 @@
 import React, { useMemo } from "react";
 import { Avatar, Box, Divider, Stack, Typography } from "@mui/material";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
+
 import showStatusHelper from "../../../helpers/showStatusHelper";
 import eventPropsHelper from "../../../helpers/eventPropsHelper";
+import dateHelper from "../../../helpers/dateHelper";
 
 export default function Details({ 
     eventName, 
@@ -26,13 +26,13 @@ export default function Details({
 
     const formattedStartDateTime = useMemo(() => {
         return startDateTime != null
-            ? format(new Date(startDateTime), "eee, Pp", { locale: ptBR })
+            ? dateHelper.getFormattedScheduleDate(startDateTime)
             : "Data e horário indisponível"
     }, [startDateTime])
 
     const formattedEndDateTime = useMemo(() => {
         return endDateTime != null
-            ? format(new Date(endDateTime), "eee, Pp", { locale: ptBR })
+            ? dateHelper.getFormattedScheduleDate(endDateTime)
             : "Data e horário indisponível"
     }, [endDateTime])
 

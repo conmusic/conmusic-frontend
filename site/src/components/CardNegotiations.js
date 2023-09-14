@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Grid,
   Typography,
@@ -14,6 +14,7 @@ import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { useNavigate } from "react-router";
 
 const style = {
   position: 'absolute',
@@ -41,7 +42,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function CardNegotiations({establishment, event, local, showStart, showEnd}) {
+function CardNegotiations({establishment, event, local, showStart, showEnd, id}) {
   const [value, setValue] = React.useState(2);
   const [open, setOpen] = React.useState(false);
 
@@ -55,6 +56,10 @@ function CardNegotiations({establishment, event, local, showStart, showEnd}) {
     handleClose()
   };
 
+  const handleNavigation = useCallback(() => {
+    navigate(`/negotiations/${id}`)
+  }, [id])
+
   const handleCloseToast = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -63,6 +68,7 @@ function CardNegotiations({establishment, event, local, showStart, showEnd}) {
     setOpenToast(false);
   };
 
+  const navigate = useNavigate();
   var status = 'CONCLUDED'
 
   useEffect(() => {
@@ -89,10 +95,10 @@ function CardNegotiations({establishment, event, local, showStart, showEnd}) {
         />
         <CardContent sx={{ flex: 1, mt: 1 }}>
           <Typography component="h2" variant="h5">
-            {establishment}
+            {event}
           </Typography>
           <Typography variant="subtitle1" >
-            {event}
+            {establishment}
           </Typography>
           <Typography variant="subtitle1" paragraph>
             {local}
@@ -111,6 +117,7 @@ function CardNegotiations({establishment, event, local, showStart, showEnd}) {
             <Button
               variant="outlined"
               color="inherit"
+              onClick={handleNavigation}
               sx={{
                 mt: 1,
                 mr: 3,
@@ -122,7 +129,8 @@ function CardNegotiations({establishment, event, local, showStart, showEnd}) {
                   backgroundColor: 'white',
                   color: 'black',
                 },
-              }}>
+              }}
+              >
               Ir para o chat
             </Button>
             {showConfirmationButton && (

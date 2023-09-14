@@ -49,6 +49,7 @@ function Negotiations() {
                 cardData.map(item => (
                     <CardNegotiations
                         key={`Negotiation#${item.id}`}
+                        id={item.id}
                         establishment={item.establishment}
                         event={item.event}
                         local={item.local}

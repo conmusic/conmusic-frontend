@@ -11,6 +11,9 @@ import DashBoard from './pages/authenticated/Dashboard';
 import Explore from './pages/authenticated/Explore';
 import ExploreDetails from './pages/authenticated/ExploreDetails';
 import NegotiationDetails from './pages/authenticated/NegotiationDetails';
+
+import Negotiations from './pages/authenticated/Negotiations';
+import ManageEstablishment from './pages/authenticated/ManageEstablishment';
 import ManageEstablishment from './pages/authenticated/ManageEstablishment';
 import ProposalDetails from './pages/authenticated/ProposalDetails'
 
@@ -27,6 +30,7 @@ export default function MainRoutes() {
         <Route path="/explore/:exploreId" element={<ExploreDetails />} /> 
         <Route path="/establishments" element={<ManageEstablishment />} />
         <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
+        <Route path="/negotiations" element={<Negotiations />} />
         <Route path="/proposals/:proposalId" element={<ProposalDetails />} /> 
       </Route>
       <Route path="*" element={<h1>Not Found</h1>} />

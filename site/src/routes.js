@@ -14,7 +14,6 @@ import NegotiationDetails from './pages/authenticated/NegotiationDetails';
 
 import Negotiations from './pages/authenticated/Negotiations';
 import ManageEstablishment from './pages/authenticated/ManageEstablishment';
-import ManageEstablishment from './pages/authenticated/ManageEstablishment';
 import ProposalDetails from './pages/authenticated/ProposalDetails'
 
 export default function MainRoutes() {

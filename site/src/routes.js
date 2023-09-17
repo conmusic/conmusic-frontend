@@ -6,12 +6,15 @@ import LoginPage from './pages/LoginPage';
 import RegisterStepOne from './pages/RegisterStepOne';
 import RegisterStepTwo from './pages/RegisterStepTwo';
 
-import DashBoard from './pages/authenticated/Dashboard';
 import Layout from './layouts/Layout';
+import DashBoard from './pages/authenticated/Dashboard';
+import Explore from './pages/authenticated/Explore';
+import ExploreDetails from './pages/authenticated/ExploreDetails';
 import NegotiationDetails from './pages/authenticated/NegotiationDetails';
-import Album from './pages/authenticated/Album';
-import OpportunityDetails from './pages/authenticated/OpportunityDetails';
-import ProposalDetails from './pages/authenticated/ProposalDetails';
+
+import Negotiations from './pages/authenticated/Negotiations';
+import ManageEstablishment from './pages/authenticated/ManageEstablishment';
+import ProposalDetails from './pages/authenticated/ProposalDetails'
 
 export default function MainRoutes() {
   return (
@@ -22,10 +25,12 @@ export default function MainRoutes() {
       <Route path="/register-two-step" element={<RegisterStepTwo />} />
       <Route element={<Layout />} >
         <Route path="/dashboard" element={<DashBoard />} />
-        <Route path="/explore" element={<Album />} /> 
-        <Route path="/explore/:10" element={<OpportunityDetails />} /> 
-        <Route path="/proposal-details" element={<ProposalDetails />} /> 
+        <Route path="/explore" element={<Explore />} /> 
+        <Route path="/explore/:exploreId" element={<ExploreDetails />} /> 
+        <Route path="/establishments" element={<ManageEstablishment />} />
         <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
+        <Route path="/negotiations" element={<Negotiations />} />
+        <Route path="/proposals/:proposalId" element={<ProposalDetails />} /> 
       </Route>
       <Route path="*" element={<h1>Not Found</h1>} />
     </Routes>

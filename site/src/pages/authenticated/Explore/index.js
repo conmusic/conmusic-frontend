@@ -11,6 +11,6 @@ export default function Explore() {
         case 'Manager':
             return (<></>);        
         default:
-            return (<h1>Not Found</h1>)
+            return (<h1>Unauthorized</h1>)
     }
 }

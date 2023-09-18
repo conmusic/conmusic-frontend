@@ -15,7 +15,7 @@ import ChartAdminMonth from '../../../components/charts/ChartAdminMonth';
 import Title from '../../../components/Title';
 import CardAdmin from '../../../components/CardAdmin';
 
-export default function DashBoardAdmin() {
+export default function DashboardAdmin() {
     const [cardData, setCardData] = useState([]);
 
     useEffect(() => {

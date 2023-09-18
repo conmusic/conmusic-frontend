@@ -12,7 +12,7 @@ import Title from '../../../components/Title';
 import CardShows from '../../../components/CardShows';
 import CurrentNegotiationsTable from '../../../components/CurrentNegotiationsTable';
 
-export default function DashboardEstablishment() {
+export default function DashboardManager() {
     const [cardData, setCardData] = useState([]);
 
     useEffect(() => {

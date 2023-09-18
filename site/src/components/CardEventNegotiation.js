@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from "react-router";
 import {
   Grid,
   Typography,
@@ -14,7 +15,6 @@ import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import { useNavigate } from "react-router";
 
 const style = {
   position: 'absolute',
@@ -42,7 +42,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function CardNegotiations({establishment, event, local, showStart, showEnd, id}) {
+function CardEventNegotiation({ establishment, event, local, showStart, showEnd, id }) {
   const [value, setValue] = React.useState(2);
   const [open, setOpen] = React.useState(false);
 
@@ -94,7 +94,7 @@ function CardNegotiations({establishment, event, local, showStart, showEnd, id})
           src={myImage}
         />
         <CardContent sx={{ flex: 1, mt: 1 }}>
-          <Typography component="h2" variant="h5">
+          <Typography component="h2" variant="h5" fontWeight="bold">
             {event}
           </Typography>
           <Typography variant="subtitle1" >
@@ -130,7 +130,7 @@ function CardNegotiations({establishment, event, local, showStart, showEnd, id})
                   color: 'black',
                 },
               }}
-              >
+            >
               Ir para o chat
             </Button>
             {showConfirmationButton && (
@@ -184,13 +184,13 @@ function CardNegotiations({establishment, event, local, showStart, showEnd, id})
                   rows={4}
                   style={{ display: "flex", width: "auto", marginTop: 15 }}
                 />
-               
+
               </Box>
 
               <div sx={styleButton}
                 style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                <Button variant="contained" color="success" style={{ width: '30%' }} 
-                onClick={handleClick}>
+                <Button variant="contained" color="success" style={{ width: '30%' }}
+                  onClick={handleClick}>
                   Avaliar
                 </Button>
                 <Button variant="contained" color="error" style={{ width: '30%' }} onClick={handleClose}>
@@ -200,14 +200,14 @@ function CardNegotiations({establishment, event, local, showStart, showEnd, id})
             </Box>
           </Modal>
           <Snackbar open={openToast} autoHideDuration={6000} onClose={handleCloseToast}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-          Avaliação enviada!
-        </Alert>
-      </Snackbar>
+            <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+              Avaliação enviada!
+            </Alert>
+          </Snackbar>
         </CardContent>
       </Card>
     </Grid>
 
   )
 }
-export default CardNegotiations;
+export default CardEventNegotiation;

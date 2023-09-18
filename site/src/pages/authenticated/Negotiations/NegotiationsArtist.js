@@ -1,12 +1,11 @@
-import CardNegotiations from "../../components/CardNegotiations"
-import Title from "../../components/Title"
+import CardEventNegotiation from "../../../components/CardEventNegotiation"
+import Title from "../../../components/Title"
 import { Container } from "@mui/material"
 import { format } from 'date-fns';
 import React, { useState, useEffect } from 'react';
-import api from "../../services/api";
+import api from "../../../services/api";
 
-function Negotiations() {
-
+export default function NegotiationsArtist() {
     const [cardData, setCardData] = useState([]);
 
     useEffect(() => {
@@ -47,7 +46,7 @@ function Negotiations() {
             <Title>Negociações</Title>
             {
                 cardData.map(item => (
-                    <CardNegotiations
+                    <CardEventNegotiation
                         key={`Negotiation#${item.id}`}
                         id={item.id}
                         establishment={item.establishment}
@@ -61,4 +60,3 @@ function Negotiations() {
         </Container>
     )
 }
-export default Negotiations

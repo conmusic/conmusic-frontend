@@ -1,6 +1,8 @@
 import React from "react";
-import ExploreEventDetails from './ExploreEvent';
+
 import { useAuth } from "../../../hooks/auth";
+
+import ExploreEventDetails from './ExploreEvent';
 
 export default function Explore() {
     const { type } = useAuth();
@@ -11,6 +13,6 @@ export default function Explore() {
         case 'Manager':
             return (<></>);        
         default:
-            return (<h1>Not Found</h1>)
+            return (<h1>Unauthorized</h1>)
     }
 }

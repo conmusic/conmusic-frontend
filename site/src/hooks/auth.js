@@ -35,12 +35,15 @@ const AuthProvider = ({ children }) => {
 
         const { token, user } = response.data;
 
-        localStorage.setItem('@conmusic:token', token);
-        localStorage.setItem('@conmusic:user', JSON.stringify(user));
-        localStorage.setItem('@conmusic:type', user.userType);
-        localStorage.setItem('@conmusic:id', user.id);
+        if (token != null & user != null)
+        {
+            localStorage.setItem('@conmusic:token', token);
+            localStorage.setItem('@conmusic:user', JSON.stringify(user));
+            localStorage.setItem('@conmusic:type', user.userType);
+            localStorage.setItem('@conmusic:id', user.id);
 
-        setData({ token, user, type: user.userType, id: Number(user.id) })
+            setData({ token, user, type: user.userType, id: Number(user.id) })
+        }
     }, []);
 
     const logout = useCallback(() => {

@@ -126,7 +126,7 @@ export default function SideBar() {
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 
                     icon={WorkspacePremium} 
-                    destination={"/opportunities"} 
+                    destination={"/proposals"} 
                 />
                 <SideBarOption 
                     isVisible={type === 'Manager'} 

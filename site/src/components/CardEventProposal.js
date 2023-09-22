@@ -1,19 +1,25 @@
-import { ClassNames } from "@emotion/react";
+import React, { useCallback } from 'react';
+import { useNavigate } from 'react-router';
 import {
-
     Grid,
     Typography,
     Card,
     CardMedia,
     CardContent,
     Button,
-  } from '@mui/material';
-  import myImage from '../assets/images/image.png';
+} from '@mui/material';
 
+import myImage from '../assets/images/image.png';
 
-function CardProposal(){
+function CardEventProposal({ establishment, event, local, showStart, showEnd, id }){
+  const navigate = useNavigate();
+
+  const handleNavigation = useCallback(() => {
+    navigate(`/proposals/${id}`)
+  }, [id])
+
     return(
-        <Grid item xs={12} md={7} sx={{display: "flex", justifyContent: "center", mb: 4}}>
+        <Grid item xs={12} md={7} sx={{display: "flex", justifyContent: "center", mb: 2}}>
           <Card sx={{ 
             display: 'flex', 
             width: 1300, 
@@ -30,21 +36,21 @@ function CardProposal(){
             />
             <CardContent sx={{ flex: 1, mt: 1 }}>
               <Typography component="h2" variant="h5">
-                <p>Casa de show A</p> 
+                {event}
               </Typography>
               <Typography variant="subtitle1" >
-              <p>Noite do Jazz</p> 
+                {establishment}
               </Typography>
               <Typography variant="subtitle1" paragraph>
-              <p>São Paulo - SP</p> 
+                {local}
               </Typography>
             </CardContent>
             <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column" , justifyContent: "center", mt: 2 }}>
               <Typography>
-                <p>01/05/2023</p> 
+                {showStart}
               </Typography>
               <Typography variant="subtitle1" >
-              <p>01/05/2023</p> 
+                {showEnd}
               </Typography>
             </CardContent>
           <CardContent sx={{ display: "flex"}}>
@@ -72,4 +78,4 @@ function CardProposal(){
 
     )
 }
-export default CardProposal;
+export default CardEventProposal;

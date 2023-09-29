@@ -1,5 +1,6 @@
 import { useAuth } from "../../../hooks/auth";
 import NegotiationsArtist from "./NegotiationsArtist";
+import NegotiationsManager from "./NegotiationsManager";
 
 export default function Negotiations() {
     const { type } = useAuth();
@@ -8,7 +9,7 @@ export default function Negotiations() {
         case "Artist":
             return (<NegotiationsArtist />);
         case "Manager":
-            return (<></>);
+            return (<NegotiationsManager />);
         default:
             return (<h1>Unathorized</h1>)
     }

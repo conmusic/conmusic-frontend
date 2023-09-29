@@ -11,7 +11,7 @@ import {
 
 import myImage from '../assets/images/image.png';
 
-function CardEventProposal({ establishment, event, local, showStart, showEnd, id }){
+function CardArtistProposal({ establishment, event, artist, showStart, showEnd, id }){
   const navigate = useNavigate();
 
   const handleNavigation = useCallback(() => {
@@ -25,24 +25,24 @@ function CardEventProposal({ establishment, event, local, showStart, showEnd, id
             width: 1300, 
             }}>
             <CardMedia
-            component="img"
-            sx={{ width: 120, 
-                height: 120,
-                display: { xs: 'none', sm: 'block' },
-                alignSelf: "center" ,
-                borderRadius: 10,
-                ml: 3, }}
-            src={myImage}
+                component="img"
+                sx={{ width: 120, 
+                    height: 120,
+                    display: { xs: 'none', sm: 'block' },
+                    alignSelf: "center" ,
+                    borderRadius: 10,
+                    ml: 3, }}
+                src={myImage}
             />
             <CardContent sx={{ flex: 1, mt: 1 }}>
               <Typography component="h2" variant="h5" fontWeight="bold">
-                {event}
+                {artist}
               </Typography>
               <Typography variant="subtitle1" >
-                {establishment}
+                {event}
               </Typography>
               <Typography variant="subtitle1" paragraph>
-                {local}
+                {establishment}
               </Typography>
             </CardContent>
             <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column" , justifyContent: "center", mt: 2 }}>
@@ -70,7 +70,7 @@ function CardEventProposal({ establishment, event, local, showStart, showEnd, id
                 color: 'black',
                 },
               }}
-              onClick={handleNavigation}
+              onClick={handleNavigation}  
             >
             Ir para conversa
             </Button>
@@ -80,4 +80,4 @@ function CardEventProposal({ establishment, event, local, showStart, showEnd, id
 
     )
 }
-export default CardEventProposal;
+export default CardArtistProposal;

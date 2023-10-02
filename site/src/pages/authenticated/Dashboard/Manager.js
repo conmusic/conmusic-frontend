@@ -52,7 +52,7 @@ export default function DashboardManager() {
             <Grid container spacing={3}>
                 <Grid item xs={12} md={6} lg={4}>
                     {/* Conteúdo da Card */}
-                    {cardData.length > 1 && (
+                    {cardData.length > 0 && (
                         <Paper
                             sx={{
                                 p: 2,
@@ -73,7 +73,7 @@ export default function DashboardManager() {
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
                     {/* Conteúdo da Card */}
-                    {cardData.length > 2 && (
+                    {cardData.length > 1 && (
                         <Paper
                             sx={{
                                 p: 2,
@@ -94,7 +94,7 @@ export default function DashboardManager() {
                 </Grid>
                 <Grid item xs={12} md={6} lg={4}>
                     {/* Conteúdo da Card */}
-                    {cardData.length > 3 && (
+                    {cardData.length > 2 && (
                         <Paper
                             sx={{
                                 p: 2,

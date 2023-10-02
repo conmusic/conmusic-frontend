@@ -35,7 +35,7 @@ export default function Album() {
       try {
           const { data } = await api.get(`/events/available`, {
             params: {
-              date: dateHelper.toLocalDateTimeISOString(new Date(2020, 5, 20, 10, 0, 0))
+              date: dateHelper.toLocalDateTimeISOString(new Date())
             }
           })
 

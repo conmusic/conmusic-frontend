@@ -52,6 +52,27 @@ export default function DashboardArtist() {
       <Grid container spacing={3}>
         <Grid item xs={12} md={6} lg={4}>
           {/* Conteúdo da Card */}
+          {cardData.length > 0 && (
+            <Paper
+              sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                height: "auto",
+              }}
+            >
+              <CardShows
+                mode="Artist"
+                name={cardData[0].establishment}
+                eventName={cardData[0].event}
+                showDate={cardData[0].date}
+                showTime={cardData[0].time}
+              />
+            </Paper>
+          )}
+        </Grid>
+        <Grid item xs={12} md={6} lg={4}>
+          {/* Conteúdo da Card */}
           {cardData.length > 1 && (
             <Paper
               sx={{
@@ -88,27 +109,6 @@ export default function DashboardArtist() {
                 eventName={cardData[2].event}
                 showDate={cardData[2].date}
                 showTime={cardData[2].time}
-              />
-            </Paper>
-          )}
-        </Grid>
-        <Grid item xs={12} md={6} lg={4}>
-          {/* Conteúdo da Card */}
-          {cardData.length > 3 && (
-            <Paper
-              sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                height: "auto",
-              }}
-            >
-              <CardShows
-                mode="Artist"
-                name={cardData[3].establishment}
-                eventName={cardData[3].event}
-                showDate={cardData[3].date}
-                showTime={cardData[3].time}
               />
             </Paper>
           )}

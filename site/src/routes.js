@@ -15,7 +15,6 @@ import NegotiationDetails from './pages/authenticated/NegotiationDetails';
 import ManageEstablishment from './pages/authenticated/ManageEstablishment';
 import ProposalDetails from './pages/authenticated/ProposalDetails';
 import Proposals from './pages/authenticated/Proposals';
-import Manager from './pages/authenticated/Dashboard/Manager';
 
 export default function MainRoutes() {
   return (
@@ -26,7 +25,6 @@ export default function MainRoutes() {
       <Route path="/register-two-step" element={<RegisterStepTwo />} />
       <Route element={<Layout />} >
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/dashboard-manager" element={<Manager />} />
         <Route path="/explore" element={<Explore />} /> 
         <Route path="/explore/:exploreId" element={<ExploreDetails />} /> 
         <Route path="/establishments" element={<ManageEstablishment />} />

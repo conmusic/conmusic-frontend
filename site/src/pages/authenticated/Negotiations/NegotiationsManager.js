@@ -31,7 +31,8 @@ export default function NegotiationsManager() {
                             artist: obj.artist.name,
                             showStart: `${showDate} - ${showStartDateTime}`,
                             showEnd: `${showDate} - ${showEndDateTime}`,
-                            id: obj.id
+                            id: obj.id,
+                            status: obj.status
                         }
                     })
                 setCardData(card);
@@ -56,6 +57,7 @@ export default function NegotiationsManager() {
                         artist={item.artist}
                         showStart={item.showStart}
                         showEnd={item.showEnd}
+                        status={item.status}
                     />
                 ))
             }

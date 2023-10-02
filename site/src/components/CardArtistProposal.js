@@ -16,7 +16,7 @@ function CardArtistProposal({ establishment, event, artist, showStart, showEnd, 
 
   const handleNavigation = useCallback(() => {
     navigate(`/proposals/${id}`)
-  }, [id])
+  }, [navigate, id])
 
     return(
         <Grid item xs={12} md={7} sx={{display: "flex", justifyContent: "center", mb: 2}}>
@@ -72,7 +72,7 @@ function CardArtistProposal({ establishment, event, artist, showStart, showEnd, 
               }}
               onClick={handleNavigation}  
             >
-            Ir para conversa
+              Ver Detalhes
             </Button>
         </CardContent>
       </Card>

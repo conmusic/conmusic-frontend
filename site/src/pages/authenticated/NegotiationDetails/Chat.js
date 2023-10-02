@@ -113,7 +113,7 @@ export default function Chat({ showId, otherUserName = "Usuário" }) {
             </Stack>
             <Stack direction="row">
                 <InputBase
-                    style={{ padding: "10px" }}                    
+                    style={{ padding: "10px", backgroundColor: "#F6F6F6", borderRadius: 15 }}                    
                     placeholder="Insira aqui sua mensagem"
                     multiline
                     rows={2}

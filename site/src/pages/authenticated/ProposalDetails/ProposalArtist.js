@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import {
     Button,
     Typography,
@@ -10,6 +10,13 @@ import {
     Box,
     Chip,
     Divider,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogContentText,
+    DialogActions,
+    Snackbar,
+    Alert as MuiAlert,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import eventPropsHelper from '../../../helpers/eventPropsHelper';
@@ -90,8 +97,13 @@ const itemData = [
     },
 ];
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 export default function ProposalArtist() {
     const { proposalId } = useParams()
+    const navigate = useNavigate();
 
     const [proposal, setProposal] = useState({
         artist: {
@@ -125,6 +137,42 @@ export default function ProposalArtist() {
             genre: null,
         }
     })
+
+    const [rejectDialogOpen, setRejectDialogOpen] = useState(false)
+    const [toast, setToast] = useState({
+        open: false,
+        message: "",
+        severity: "info"
+    })
+
+    const handleRejectProposal = useCallback(async () => {
+        setRejectDialogOpen(false)
+
+        try {
+            const response = await api.delete(`/shows/proposals/${proposalId}`)
+
+            if (response.status === 204) {
+                setToast({
+                    open: true,
+                    message: "Proposta rejeitada com sucesso",
+                    severity: "success"
+                })
+
+                setTimeout(() => {
+                    navigate('/proposals')
+                }, 6000)
+            } else {
+                setToast({
+                    open: true,
+                    message: "Erro ao rejeitar proposta",
+                    severity: "error"
+                })
+            }
+        }
+        catch (error) {
+            console.log(error)
+        }
+    }, [proposalId, navigate])
 
     useEffect(() => {
         async function getProposal() {
@@ -188,6 +236,18 @@ export default function ProposalArtist() {
         'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
     ]
 
+    const handleCloseToast = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setToast({
+            open: false,
+            message: "",
+            severity: "info"
+        });
+    };
+
     return (
         <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
             <Grid item xs={12} md={4}>
@@ -223,10 +283,19 @@ export default function ProposalArtist() {
                             <Divider orientation="horizontal" flexItem />
                         </>)
                     }                    
-                    <Button variant="contained" color="success" sx={{ marginTop: 1.5 }}>
+                    <Button 
+                        variant="contained" 
+                        color="success" 
+                        sx={{ marginTop: 1.5 }}
+                    >
                         Iniciar Negociação
                     </Button>
-                    <Button variant="contained" color="error" sx={{ marginBottom: 1.5 }}>
+                    <Button 
+                        variant="contained" 
+                        color="error" 
+                        sx={{ marginBottom: 1.5 }}
+                        onClick={() => setRejectDialogOpen(true)}
+                    >
                         Recusar Proposta
                     </Button>
                     <Divider orientation="horizontal" flexItem />
@@ -299,6 +368,33 @@ export default function ProposalArtist() {
                     </Paper>
                 </SubtitleContainer>
             </Grid>
+
+            <Dialog
+                open={rejectDialogOpen}
+                aria-labelledby="reject-dialog-title"
+                aria-describedby="reject-dialog-description"
+            >
+                <DialogTitle id="reject-dialog-title">
+                    Rejeitar proposta
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="reject-dialog-description">
+                        Tem certeza que deseja rejeitar essa proposta? Uma vez rejeitada, a proposta não pode ser recuperada
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setRejectDialogOpen(false)} autoFocus>
+                        Cancelar
+                    </Button>
+                    <Button color="error" onClick={handleRejectProposal}>Rejeitar</Button>
+                </DialogActions>
+            </Dialog>
+
+            <Snackbar open={toast.open} autoHideDuration={6000} onClose={handleCloseToast}>
+                <Alert severity={toast.severity} sx={{ width: '100%' }}>
+                    {toast.message}
+                </Alert>
+            </Snackbar>
         </Grid>
     );
 }

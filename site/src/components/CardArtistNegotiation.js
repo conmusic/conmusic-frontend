@@ -15,6 +15,7 @@ import TextField from '@mui/material/TextField';
 import Rating from '@mui/material/Rating';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import StatusChip from './StatusChip';
 
 const style = {
   position: 'absolute',
@@ -42,7 +43,9 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function CardArtistNegotiation({ establishment, event, artist, showStart, showEnd, id }) {
+function CardArtistNegotiation({ establishment, event, artist, showStart, showEnd, id, status }) {
+  const navigate = useNavigate();
+
   const [value, setValue] = React.useState(2);
   const [open, setOpen] = React.useState(false);
 
@@ -58,7 +61,7 @@ function CardArtistNegotiation({ establishment, event, artist, showStart, showEn
 
   const handleNavigation = useCallback(() => {
     navigate(`/negotiations/${id}`)
-  }, [id])
+  }, [navigate, id])
 
   const handleCloseToast = (event, reason) => {
     if (reason === 'clickaway') {
@@ -67,9 +70,6 @@ function CardArtistNegotiation({ establishment, event, artist, showStart, showEn
 
     setOpenToast(false);
   };
-
-  const navigate = useNavigate();
-  var status = 'CONCLUDED'
 
   useEffect(() => {
     console.log("Test")
@@ -80,7 +80,7 @@ function CardArtistNegotiation({ establishment, event, artist, showStart, showEn
 
   return (
     <Grid item xs={12} md={7} sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
-      <Card sx={{ display: 'flex', width: 1300 }}>
+      <Card sx={{ display: 'flex', width: 1300, alignItems: 'center', justifyContent: 'space-between' }}>
         <CardMedia
           component="img"
           sx={{
@@ -111,6 +111,9 @@ function CardArtistNegotiation({ establishment, event, artist, showStart, showEn
           <Typography variant="subtitle1" >
             {showEnd}
           </Typography>
+        </CardContent>
+        <CardContent sx={{ flex: 0.5, display: "flex" }}>
+          <StatusChip label={status} />
         </CardContent>
         <CardContent sx={{ display: "flex" }}>
           <div style={{ display: "flex", flexDirection: 'column', justifyContent: showConfirmationButton ? 'space-between' : 'center' }}>

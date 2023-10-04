@@ -21,7 +21,12 @@ export default function CardShows({ mode, name, eventName, showDate, showTime, .
       <Grid container spacing={4}>
         <Grid item xs={12} sm={12} md={12} lg={12}>
           <Card
-            sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', }}
+            sx={{ height: '100%', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            justifyContent: 'space-between', 
+            boxShadow: 0
+          }}
           >
             <CardMedia
               component="div"
@@ -32,7 +37,8 @@ export default function CardShows({ mode, name, eventName, showDate, showTime, .
               image="https://source.unsplash.com/random?wallpapers"
             />
             <CardContent sx={{ flexGrow: 1, justifyContent: 'space-between', display: 'flex', flexDirection: 'column' }}>
-              <Typography gutterBottom variant="h6" component="h2" style={{ display: "flex", alignItems: "center", fontWeight: 'bold' }}>
+              <Typography gutterBottom variant="h6" component="h2" style={{ display: "flex", 
+              alignItems: "center", fontWeight: 'bold' }}>
                 {name}
               </Typography>
               <Divider orientation="horizontal" flexItem sx={{ my: 1 }} />
@@ -42,12 +48,12 @@ export default function CardShows({ mode, name, eventName, showDate, showTime, .
               <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: 1 }}>
                 <Typography sx={{ display: 'flex', marginBottom: 1, flexDirection: 'row', justifyContent: "flex-start", 
               alignItems: "center"}}>
-                  <CalendarMonthIcon sx={{ color: '#FB2D57'}} />
+                  <CalendarMonthIcon sx={{ color: '#FB2D57', marginRight: "4px"}} />
                   {showDate}
                 </Typography>
                 <Typography sx={{ display: 'flex', marginBottom: 1, flexDirection: 'row', justifyContent: "flex-start", 
               alignItems: "center"}}>
-                  <AccessTimeIcon sx={{ color: '#FB2D57'}} />
+                  <AccessTimeIcon sx={{ color: '#FB2D57', marginRight: "4px"}} />
                   {showTime}
                 </Typography>
               </Box>

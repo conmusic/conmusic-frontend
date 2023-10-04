@@ -47,7 +47,7 @@ export default function DashboardArtist() {
   }, []);
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 3, mb: 3 }}>
+    <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
       <Title>Shows Confirmados</Title>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6} lg={4}>
@@ -58,7 +58,8 @@ export default function DashboardArtist() {
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                height: "auto",
+                maxHeight: "auto",
+                boxShadow: 5
               }}
             >
               <CardShows
@@ -79,7 +80,8 @@ export default function DashboardArtist() {
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                height: "auto",
+                maxHeight: "auto",
+                boxShadow: 5
               }}
             >
               <CardShows
@@ -100,7 +102,8 @@ export default function DashboardArtist() {
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                height: "auto",
+                maxHeight: "auto",
+                boxShadow: 5
               }}
             >
               <CardShows

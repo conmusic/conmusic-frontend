@@ -32,7 +32,7 @@ export default function DashboardManager() {
 
                         return {
                             artist: obj.artist.name,
-                            event: obj.artist.name,
+                            event: obj.event.name,
                             date: showDate,
                             time: `${showStartDateTime} - ${showEndDateTime}`,
                         }
@@ -47,31 +47,31 @@ export default function DashboardManager() {
     }, []);
 
     return (
-        <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+        <Container maxWidth="lg" sx={{ mt: 3, mb: 3 }}>
             <Title>Shows Confirmados</Title>
             <Grid container spacing={3}>
-                {/* Recent Deposits */}
-                <Grid item xs={12} md={4} lg={3}>
+                <Grid item xs={12} md={6} lg={4}>
+                    {/* Conteúdo da Card */}
                     {cardData.length > 0 && (
                         <Paper
                             sx={{
                                 p: 2,
                                 display: 'flex',
                                 flexDirection: 'column',
-                                height: 310,
+                                height: "auto",
                             }}
                         >
                             <CardShows
-                                mode="Manager"
-                                name={cardData[0].artist}
-                                eventName={cardData[0].event}
-                                showDate={cardData[0].date}
-                                showTime={cardData[0].time}
+                               mode="Manager"
+                               name={cardData[0].artist}
+                               eventName={cardData[0].event}
+                               showDate={cardData[0].date}
+                               showTime={cardData[0].time}
                             />
                         </Paper>
                     )}
                 </Grid>
-                <Grid item xs={12} md={4} lg={3}>
+                <Grid item xs={12} md={6} lg={4}>
                     {/* Conteúdo da Card */}
                     {cardData.length > 1 && (
                         <Paper
@@ -79,7 +79,7 @@ export default function DashboardManager() {
                                 p: 2,
                                 display: 'flex',
                                 flexDirection: 'column',
-                                height: 310,
+                                height: "auto",
                             }}
                         >
                             <CardShows
@@ -92,7 +92,7 @@ export default function DashboardManager() {
                         </Paper>
                     )}
                 </Grid>
-                <Grid item xs={12} md={4} lg={3}>
+                <Grid item xs={12} md={6} lg={4}>
                     {/* Conteúdo da Card */}
                     {cardData.length > 2 && (
                         <Paper
@@ -100,7 +100,7 @@ export default function DashboardManager() {
                                 p: 2,
                                 display: 'flex',
                                 flexDirection: 'column',
-                                height: 310,
+                                height: "auto",
                             }}
                         >
                             <CardShows
@@ -109,27 +109,6 @@ export default function DashboardManager() {
                                 eventName={cardData[2].event}
                                 showDate={cardData[2].date}
                                 showTime={cardData[2].time}
-                            />
-                        </Paper>
-                    )}
-                </Grid>
-                <Grid item xs={12} md={4} lg={3}>
-                    {/* Conteúdo da Card */}
-                    {cardData.length > 3 && (
-                        <Paper
-                            sx={{
-                                p: 2,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                height: 310,
-                            }}
-                        >
-                            <CardShows
-                                mode="Manager"
-                                name={cardData[3].artist}
-                                eventName={cardData[3].event}
-                                showDate={cardData[3].date}
-                                showTime={cardData[3].time}
                             />
                         </Paper>
                     )}

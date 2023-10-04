@@ -1,17 +1,16 @@
-import React, { useState, useEffect } from 'react';
 import { format, isAfter } from 'date-fns';
 import {
   Container,
   Grid,
   Paper,
 } from '@mui/material';
-
 import api from '../../../services/api';
 
 import Chart from '../../../components/charts/Chart';
 import CardShows from '../../../components/CardShows';
 import CurrentNegotiationsTable from '../../../components/CurrentNegotiationsTable';
 import Title from '../../../components/Title';
+import React, { useEffect, useState } from 'react';
 
 export default function DashboardArtist() {
   const [cardData, setCardData] = useState([]);
@@ -48,18 +47,19 @@ export default function DashboardArtist() {
   }, []);
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
       <Title>Shows Confirmados</Title>
       <Grid container spacing={3}>
-        {/* Recent CardShows */}
-        <Grid item xs={12} md={4} lg={3}>
+        <Grid item xs={12} md={6} lg={4}>
+          {/* Conteúdo da Card */}
           {cardData.length > 0 && (
             <Paper
               sx={{
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                height: 310,
+                maxHeight: "auto",
+                boxShadow: 5
               }}
             >
               <CardShows
@@ -72,7 +72,7 @@ export default function DashboardArtist() {
             </Paper>
           )}
         </Grid>
-        <Grid item xs={12} md={4} lg={3}>
+        <Grid item xs={12} md={6} lg={4}>
           {/* Conteúdo da Card */}
           {cardData.length > 1 && (
             <Paper
@@ -80,7 +80,8 @@ export default function DashboardArtist() {
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                height: 310,
+                maxHeight: "auto",
+                boxShadow: 5
               }}
             >
               <CardShows
@@ -93,7 +94,7 @@ export default function DashboardArtist() {
             </Paper>
           )}
         </Grid>
-        <Grid item xs={12} md={4} lg={3}>
+        <Grid item xs={12} md={6} lg={4}>
           {/* Conteúdo da Card */}
           {cardData.length > 2 && (
             <Paper
@@ -101,7 +102,8 @@ export default function DashboardArtist() {
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                height: 310,
+                maxHeight: "auto",
+                boxShadow: 5
               }}
             >
               <CardShows
@@ -110,27 +112,6 @@ export default function DashboardArtist() {
                 eventName={cardData[2].event}
                 showDate={cardData[2].date}
                 showTime={cardData[2].time}
-              />
-            </Paper>
-          )}
-        </Grid>
-        <Grid item xs={12} md={4} lg={3}>
-          {/* Conteúdo da Card */}
-          {cardData.length > 3 && (
-            <Paper
-              sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                height: 310,
-              }}
-            >
-              <CardShows
-                mode="Artist"
-                name={cardData[3].establishment}
-                eventName={cardData[3].event}
-                showDate={cardData[3].date}
-                showTime={cardData[3].time}
               />
             </Paper>
           )}

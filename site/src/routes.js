@@ -15,6 +15,8 @@ import NegotiationDetails from './pages/authenticated/NegotiationDetails';
 import ManageEstablishment from './pages/authenticated/ManageEstablishment';
 import ProposalDetails from './pages/authenticated/ProposalDetails';
 import Proposals from './pages/authenticated/Proposals';
+import Tinder from './pages/authenticated/TInder/Tinder';
+import Form from './pages/authenticated/TInder/TinderProposal';
 
 export default function MainRoutes() {
   return (
@@ -32,6 +34,8 @@ export default function MainRoutes() {
         <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
         <Route path="/proposals" element={<Proposals />} />
         <Route path="/proposals/:proposalId" element={<ProposalDetails />} /> 
+        <Route path="/tinder" element={<Tinder />} />
+        <Route path="/tinder/proposal" element={<Form />} />
       </Route>
       <Route path="*" element={<h1>Not Found</h1>} />
     </Routes>

@@ -9,7 +9,6 @@
     "@mui/icons-material": "^5.14.3",
     "@mui/material": "^5.14.5",
     "@mui/styled-engine-sc": "^5.12.0",
-    "@mui/styles": "^5.14.12",
     "@mui/x-charts": "^6.0.0-alpha.9",
     "@mui/x-date-pickers": "^6.16.0",
     "@testing-library/jest-dom": "^5.16.5",

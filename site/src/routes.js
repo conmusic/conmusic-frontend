@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterStepOne from './pages/RegisterStepOne';
 import RegisterStepTwo from './pages/RegisterStepTwo';
 
+import AddressForm from './pages/authenticated/Perfil/UserForm'
 import Layout from './layouts/Layout';
 import Dashboard from './pages/authenticated/Dashboard';
 import Explore from './pages/authenticated/Explore';
@@ -25,6 +26,7 @@ export default function MainRoutes() {
       <Route path="/register-two-step" element={<RegisterStepTwo />} />
       <Route element={<Layout />} >
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/perfil" element={<AddressForm />} />
         <Route path="/explore" element={<Explore />} /> 
         <Route path="/explore/:exploreId" element={<ExploreDetails />} /> 
         <Route path="/establishments" element={<ManageEstablishment />} />

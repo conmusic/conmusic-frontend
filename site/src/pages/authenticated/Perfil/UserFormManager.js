@@ -6,6 +6,7 @@ import {
     Button,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Autocomplete from '@mui/material/Autocomplete';
 
 const SmallImage = styled('img')({
     width: '150px',
@@ -13,11 +14,12 @@ const SmallImage = styled('img')({
     borderRadius: '50%',
 });
 
-export default function AddressForm() {
-    const [selectedImage, setSelectedImage] = useState(0);
+export default function UserFormManager() {
+    const [selectedImage] = useState(0);
     const image = [
         'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
     ]
+
     return (
         <React.Fragment >
             <Grid maxWidth="lg" sx={{ mt: 4, mb: 4, marginLeft: 9, width: "85%" }}>
@@ -34,7 +36,7 @@ export default function AddressForm() {
                             required
                             id="firstName"
                             name="firstName"
-                            label="First name"
+                            label="Nome do Estabelecimento"
                             fullWidth
                             autoComplete="given-name"
                             variant="outlined"
@@ -43,11 +45,63 @@ export default function AddressForm() {
                     <Grid item xs={12} sm={6}>
                         <TextField
                             required
-                            id="lastName"
-                            name="lastName"
-                            label="Last name"
+                            id="email"
+                            name="email"
+                            label="Email"
                             fullWidth
                             autoComplete="family-name"
+                            variant="outlined"
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            required
+                            id="state"
+                            name="state"
+                            label="Telefone"
+                            fullWidth
+                            variant="outlined"
+                            inputProps={{
+                                maxLength: 15,
+                                pattern: "\d{2} \d{5}-\d{4}",
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            required
+                            id="state"
+                            name="state"
+                            label="CNPJ"
+                            fullWidth
+                            variant="outlined"
+                            inputProps={{
+                                maxLength: 14,
+                                pattern: "\d{3}\.\d{3}\.\d{3}-\d{2}",
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            required
+                            fullWidth
+                            name="dataNasci"
+                            label="Razão Social"
+                            type="text"
+                            id="date"
+                            autoComplete="off"
+                            inputProps={{
+                                maxLength: 10,
+                                pattern: "\d{2}/\d{2}/\d{4}",
+                            }}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            id="state"
+                            name="state"
+                            label="Instagram"
+                            fullWidth
                             variant="outlined"
                         />
                     </Grid>
@@ -56,19 +110,9 @@ export default function AddressForm() {
                             required
                             id="address1"
                             name="address1"
-                            label="Address line 1"
+                            label="Endereço"
                             fullWidth
                             autoComplete="shipping address-line1"
-                            variant="outlined"
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            id="address2"
-                            name="address2"
-                            label="Address line 2"
-                            fullWidth
-                            autoComplete="shipping address-line2"
                             variant="outlined"
                         />
                     </Grid>
@@ -77,7 +121,7 @@ export default function AddressForm() {
                             required
                             id="city"
                             name="city"
-                            label="City"
+                            label="Cidade"
                             fullWidth
                             autoComplete="shipping address-level2"
                             variant="outlined"
@@ -85,9 +129,10 @@ export default function AddressForm() {
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <TextField
+                            required
                             id="state"
                             name="state"
-                            label="State/Province/Region"
+                            label="Estado"
                             fullWidth
                             variant="outlined"
                         />
@@ -97,10 +142,11 @@ export default function AddressForm() {
                             required
                             id="zip"
                             name="zip"
-                            label="Zip / Postal code"
+                            label="CEP"
                             fullWidth
                             autoComplete="shipping postal-code"
                             variant="outlined"
+
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -108,20 +154,29 @@ export default function AddressForm() {
                             required
                             id="country"
                             name="country"
-                            label="Country"
+                            label="UF"
                             fullWidth
                             autoComplete="shipping country"
                             variant="outlined"
                         />
                     </Grid>
-
+                    <Grid item xs={12}>
+                        <TextField
+                            id="outlined-multiline-static"
+                            label="Escreva um pouco sobre seu estabelecimento"
+                            multiline
+                            rows={4}
+                            fullWidth
+                            autoComplete="shipping country"
+                            variant="outlined"
+                        />
+                    </Grid>
                 </Grid>
-                <Grid sx={{display: "flex"}}>
+                <Grid sx={{ display: "flex" }}>
                     <Button
                         variant="contained"
                         size="medium"
                         sx={{
-                            marginTop: 'auto',
                             borderColor: 'black',
                             backgroundColor: 'green',
                             color: 'white',
@@ -138,7 +193,6 @@ export default function AddressForm() {
                             borderColor: 'black',
                             backgroundColor: 'red',
                             color: 'white',
-                            marginTop: 2,
                             marginLeft: 3
                         }}
                     >

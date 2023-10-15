@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterStepOne from './pages/RegisterStepOne';
 import RegisterStepTwo from './pages/RegisterStepTwo';
 
+import Event from './pages/authenticated/Event/Events';
 import Layout from './layouts/Layout';
 import Dashboard from './pages/authenticated/Dashboard';
 import Explore from './pages/authenticated/Explore';
@@ -26,6 +27,7 @@ export default function MainRoutes() {
       <Route element={<Layout />} >
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/explore" element={<Explore />} /> 
+        <Route path="/events" element={<Event />} /> 
         <Route path="/explore/:exploreId" element={<ExploreDetails />} /> 
         <Route path="/establishments" element={<ManageEstablishment />} />
         <Route path="/negotiations" element={<Negotiations />} />

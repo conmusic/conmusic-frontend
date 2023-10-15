@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from 'react';
 import { format, isAfter } from 'date-fns';
 import {
   Container,
   Grid,
   Paper,
 } from '@mui/material';
+import api from '../../../services/api';
 
-import api from '../../services/api';
+import Chart from '../../../components/charts/Chart';
+import CardShows from '../../../components/CardShows';
+import CurrentNegotiationsTable from '../../../components/CurrentNegotiationsTable';
+import Title from '../../../components/Title';
+import React, { useEffect, useState } from 'react';
 
-import Chart from '../../components/charts/Chart';
-import CardShows from '../../components/CardShows';
-import CurrentNegotiationsTable from '../../components/CurrentNegotiationsTable';
-import Title from '../../components/Title';
-
-export default function Dashboard() {
+export default function DashboardArtist() {
   const [cardData, setCardData] = useState([]);
 
   useEffect(() => {
@@ -48,30 +47,32 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+    <Container maxWidth="lg" sx={{ mt: 2, mb: 2 }}>
       <Title>Shows Confirmados</Title>
       <Grid container spacing={3}>
-        {/* Recent CardShows */}
-        <Grid item xs={12} md={4} lg={3}>
+        <Grid item xs={12} md={6} lg={4}>
+          {/* Conteúdo da Card */}
           {cardData.length > 0 && (
             <Paper
               sx={{
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                height: 310,
+                maxHeight: "auto",
+                boxShadow: 5
               }}
             >
               <CardShows
-                estabelecimento={cardData[0].establishment}
-                evento={cardData[0].event}
-                dataDoShow={cardData[0].date}
-                horarioMarcado={cardData[0].time}
+                mode="Artist"
+                name={cardData[0].establishment}
+                eventName={cardData[0].event}
+                showDate={cardData[0].date}
+                showTime={cardData[0].time}
               />
             </Paper>
           )}
         </Grid>
-        <Grid item xs={12} md={4} lg={3}>
+        <Grid item xs={12} md={6} lg={4}>
           {/* Conteúdo da Card */}
           {cardData.length > 1 && (
             <Paper
@@ -79,19 +80,21 @@ export default function Dashboard() {
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                height: 310,
+                maxHeight: "auto",
+                boxShadow: 5
               }}
             >
               <CardShows
-                estabelecimento={cardData[1].establishment}
-                evento={cardData[1].event}
-                dataDoShow={cardData[1].date}
-                horarioMarcado={cardData[1].time}
+                mode="Artist"
+                name={cardData[1].establishment}
+                eventName={cardData[1].event}
+                showDate={cardData[1].date}
+                showTime={cardData[1].time}
               />
             </Paper>
           )}
         </Grid>
-        <Grid item xs={12} md={4} lg={3}>
+        <Grid item xs={12} md={6} lg={4}>
           {/* Conteúdo da Card */}
           {cardData.length > 2 && (
             <Paper
@@ -99,34 +102,16 @@ export default function Dashboard() {
                 p: 2,
                 display: 'flex',
                 flexDirection: 'column',
-                height: 310,
+                maxHeight: "auto",
+                boxShadow: 5
               }}
             >
               <CardShows
-                estabelecimento={cardData[2].establishment}
-                evento={cardData[2].event}
-                dataDoShow={cardData[2].date}
-                horarioMarcado={cardData[2].time}
-              />
-            </Paper>
-          )}
-        </Grid>
-        <Grid item xs={12} md={4} lg={3}>
-          {/* Conteúdo da Card */}
-          {cardData.length > 3 && (
-            <Paper
-              sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                height: 310,
-              }}
-            >
-              <CardShows
-                estabelecimento={cardData[3].establishment}
-                evento={cardData[3].event}
-                dataDoShow={cardData[3].date}
-                horarioMarcado={cardData[3].time}
+                mode="Artist"
+                name={cardData[2].establishment}
+                eventName={cardData[2].event}
+                showDate={cardData[2].date}
+                showTime={cardData[2].time}
               />
             </Paper>
           )}
@@ -135,7 +120,7 @@ export default function Dashboard() {
         {/* Recent CurrentNegotiationsTable */}
         <Grid item xs={12}>
           <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-            <CurrentNegotiationsTable />
+            <CurrentNegotiationsTable mode="Artist" />
           </Paper>
         </Grid>
         {/* Chart */}

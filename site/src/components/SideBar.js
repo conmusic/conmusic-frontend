@@ -1,4 +1,5 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useNavigate, useHref } from "react-router";
 import { 
     Drawer, 
     styled, 
@@ -27,7 +28,6 @@ import {
 import SideBarOption from "./SideBarOption";
 
 import { useAuth } from '../hooks/auth';
-import { useNavigate } from "react-router";
 
 const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'open' })(
     ({ theme, open }) => ({
@@ -58,13 +58,18 @@ const CustomDrawer = styled(Drawer, { shouldForwardProp: (prop) => prop !== 'ope
 );
 
 export default function SideBar() {
-    const { logout } = useAuth();
+    const { logout, type } = useAuth();
     const navigate = useNavigate();
+    const href = useHref();
 
-    const [currentMenu, setCurrentMenu] = useState("Visão Geral");
+    const [currentMenu, setCurrentMenu] = useState("/dashboard");
     const [open, setOpen] = useState(true);
 
     const toggleDrawer = () => { setOpen(!open); };
+
+    useEffect(() => {
+        setCurrentMenu('/' + href.substring(1).split('/')[0])
+    }, [href])
 
     const endSession = useCallback(() => {
         logout()
@@ -84,7 +89,7 @@ export default function SideBar() {
                     destination={"/dashboard"} 
                 />
                 <SideBarOption 
-                    isVisible={true} 
+                    isVisible={type !== 'Admin'} 
                     text={"Explorar"} 
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 
@@ -92,7 +97,7 @@ export default function SideBar() {
                     destination={"/explore"} 
                 />
                 <SideBarOption 
-                    isVisible={true} 
+                    isVisible={type !== 'Admin'} 
                     text={"Negociações"} 
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 
@@ -100,7 +105,7 @@ export default function SideBar() {
                     destination={"/negotiations"} 
                 />
                 <SideBarOption 
-                    isVisible={true} 
+                    isVisible={false} 
                     text={"Agenda"} 
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 
@@ -108,7 +113,7 @@ export default function SideBar() {
                     destination={"/calendar"} 
                 />
                 <SideBarOption 
-                    isVisible={true} 
+                    isVisible={type === 'Manager'} 
                     text={"Eventos"} 
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 
@@ -116,15 +121,15 @@ export default function SideBar() {
                     destination={"/events"} 
                 />
                 <SideBarOption 
-                    isVisible={true} 
-                    text={"Oportunidades"} 
+                    isVisible={type !== 'Admin'} 
+                    text={"Propostas"} 
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 
                     icon={WorkspacePremium} 
-                    destination={"/opportunities"} 
+                    destination={"/proposals"} 
                 />
                 <SideBarOption 
-                    isVisible={true} 
+                    isVisible={type === 'Manager'} 
                     text={"Estabelecimentos"} 
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 

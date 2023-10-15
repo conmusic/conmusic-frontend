@@ -1,44 +1,83 @@
 import React from 'react';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-export default function CardShows(props) {
+import {
+  Typography,
+  Container,
+  Grid,
+  Card,
+  CardMedia,
+  CardContent,
+  Box,
+  Button,
+  Divider
+} from '@mui/material';
+
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+
+export default function CardShows({ mode, name, eventName, showDate, showTime, ...rest }) {
   return (
-    <React.Fragment>
-        <React.Fragment>
-          <Typography component="p">Estabelecimento:</Typography>
-          <Typography color="text.secondary" sx={{ flex: 1 }}>
-            {props.estabelecimento}
-          </Typography>
-          <Typography component="p">Evento:</Typography>
-          <Typography color="text.secondary" sx={{ flex: 1 }}>
-            {props.evento}
-          </Typography>
-          <Typography component="p">Data do Show:</Typography>
-          <Typography color="text.secondary" sx={{ flex: 1 }}>
-            {props.dataDoShow}
-          </Typography>
-          <Typography component="p">Horário Marcado:</Typography>
-          <Typography color="text.secondary" sx={{ flex: 1 }}>
-            {props.horarioMarcado}
-          </Typography>
-          <Button
-            variant="outlined"
-            size="small"
-            color="inherit"
-            sx={{
-              marginTop: 'auto',
-              borderColor: 'black',
-              backgroundColor: '#fb2b57',
-              color: 'white',
-              '&:hover': {
-                backgroundColor: 'white',
-                color: 'black',
-              },
-            }}
+    <Container sx={{ py: 2 }} maxWidth="md">
+      {/* End hero unit */}
+      <Grid container spacing={4}>
+        <Grid item xs={12} sm={12} md={12} lg={12}>
+          <Card
+            sx={{ height: '100%', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            justifyContent: 'space-between', 
+            boxShadow: 0
+          }}
           >
-            Ir para conversa
-          </Button>
-        </React.Fragment>
-    </React.Fragment>
+            <CardMedia
+              component="div"
+              sx={{
+                // 16:9
+                pt: '95.25%',
+              }}
+              image="https://source.unsplash.com/random?wallpapers"
+            />
+            <CardContent sx={{ flexGrow: 1, justifyContent: 'space-between', display: 'flex', flexDirection: 'column' }}>
+              <Typography gutterBottom variant="h6" component="h2" style={{ display: "flex", 
+              alignItems: "center", fontWeight: 'bold' }}>
+                {name}
+              </Typography>
+              <Divider orientation="horizontal" flexItem sx={{ my: 1 }} />
+              <Typography variant='caption' sx={{ display: 'flex', justifyContent: 'space-between', marginBottom: 1 }}>
+                {eventName}
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: 1 }}>
+                <Typography sx={{ display: 'flex', marginBottom: 1, flexDirection: 'row', justifyContent: "flex-start", 
+              alignItems: "center"}}>
+                  <CalendarMonthIcon sx={{ color: '#FB2D57', marginRight: "4px"}} />
+                  {showDate}
+                </Typography>
+                <Typography sx={{ display: 'flex', marginBottom: 1, flexDirection: 'row', justifyContent: "flex-start", 
+              alignItems: "center"}}>
+                  <AccessTimeIcon sx={{ color: '#FB2D57', marginRight: "4px"}} />
+                  {showTime}
+                </Typography>
+              </Box>
+              <Button
+                variant="outlined"
+                size="small"
+                color="inherit"
+                sx={{
+                  marginTop: 'auto',
+                  borderColor: 'black',
+                  backgroundColor: '#fb2b57',
+                  color: 'white',
+                  '&:hover': {
+                    backgroundColor: 'white',
+                    color: 'black',
+                  },
+                }}
+              >
+                Ir para conversa
+              </Button>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+    </Container>
   );
 }

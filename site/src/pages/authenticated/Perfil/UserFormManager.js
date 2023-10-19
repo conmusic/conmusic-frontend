@@ -6,7 +6,9 @@ import {
     Button,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import Autocomplete from '@mui/material/Autocomplete';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 
 const SmallImage = styled('img')({
     width: '150px',
@@ -14,7 +16,42 @@ const SmallImage = styled('img')({
     borderRadius: '50%',
 });
 
-export default function UserFormManager() {
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+export default function UserFormManager(onUpload) {
+    const [open, setOpen] = React.useState(false);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const [openToast, setOpenToast] = React.useState(false);
+
+    const handleClick = () => {
+        setOpenToast(true);
+        handleClose()
+    };
+
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    const handleCloseToast = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenToast(false);
+    };
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        setSelectedFile(file);
+    };
+
+    const handleUpload = () => {
+        if (selectedFile) {
+            onUpload(selectedFile);
+            setSelectedFile(null);
+        }
+    };
     const [selectedImage] = useState(0);
     const image = [
         'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
@@ -63,7 +100,7 @@ export default function UserFormManager() {
                             variant="outlined"
                             inputProps={{
                                 maxLength: 15,
-                                pattern: "\d{2} \d{5}-\d{4}",
+                                pattern: "{2} {5}-{4}",
                             }}
                         />
                     </Grid>
@@ -77,7 +114,7 @@ export default function UserFormManager() {
                             variant="outlined"
                             inputProps={{
                                 maxLength: 14,
-                                pattern: "\d{3}\.\d{3}\.\d{3}-\d{2}",
+                                pattern: "{3}{3}{3}-{2}",
                             }}
                         />
                     </Grid>
@@ -92,7 +129,7 @@ export default function UserFormManager() {
                             autoComplete="off"
                             inputProps={{
                                 maxLength: 10,
-                                pattern: "\d{2}/\d{2}/\d{4}",
+                                pattern: "{2}/{2}/{4}",
                             }}
                         />
                     </Grid>
@@ -160,7 +197,7 @@ export default function UserFormManager() {
                             variant="outlined"
                         />
                     </Grid>
-                    <Grid item xs={12}>
+                    <Grid item xs={12} sm={6}>
                         <TextField
                             id="outlined-multiline-static"
                             label="Escreva um pouco sobre seu estabelecimento"
@@ -170,6 +207,57 @@ export default function UserFormManager() {
                             autoComplete="shipping country"
                             variant="outlined"
                         />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            id="upload-button"
+                            style={{ display: 'none' }}
+                            onChange={handleFileChange}
+                        />
+                        <label htmlFor="upload-button">
+                            <Button
+                                variant="outlined"
+                                color="primary"
+                                component="span"
+                                startIcon={<CloudUploadIcon />}
+                                fullWidth
+                                style={{ padding: '13px', fontSize: '1.0rem' }}
+                                onClick={handleClick}
+                            >
+
+                                Upload de Imagem
+                            </Button>
+                            {selectedFile && (
+                                <Snackbar open={openToast} autoHideDuration={6000} onClose={handleCloseToast}>
+                                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                                        Imagem selecionada, agora basta enviar!
+                                    </Alert>
+                                </Snackbar>
+                            )}
+                        </label>
+                        <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    size="medium"
+                                    disabled={!selectedFile}
+                                    onClick={handleUpload}
+                                    fullWidth
+                                    sx={{
+                                        marginTop: 'auto',
+                                        borderColor: 'black',
+                                        backgroundColor: 'red',
+                                        color: 'white',
+                                        marginTop: 2,
+                                        height: 53
+                                    }}
+
+                                >
+                                    Enviar Imagem
+                                </Button>
+                            </div>
                     </Grid>
                 </Grid>
                 <Grid sx={{ display: "flex" }}>

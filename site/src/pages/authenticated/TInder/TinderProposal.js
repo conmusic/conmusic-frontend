@@ -7,19 +7,17 @@ import dayjs from 'dayjs';
 
 function Formulario() {
   const [formData, setFormData] = useState({
-    nome: '',
+    estabelecimento: '',
     evento: '',
-    data: '',
-    horaInicio: '',
-    horaFim: '',
+    horarios: '',
+    data: null,
     valores: '',
     taxaCouvert: '',
   });
 
-  const [value, setValue] = useState(null); // Inicialmente, não definimos uma data
+  const [value, setValue] = useState(null);
 
   useEffect(() => {
-    // Defina a data atual quando o componente for montado
     const dataAtual = dayjs();
     setValue(dataAtual);
   }, []);
@@ -32,19 +30,25 @@ function Formulario() {
     });
   };
 
+  const handleDataChange = (date) => {
+    setFormData({
+      ...formData,
+      data: date,
+    });
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Faça algo com os dados do formulário, como enviá-los para o servidor.
     console.log(formData);
   };
 
   return (
-    <div style={{ width: '80%', margin: '0 auto', display: 'flex' }}>
-      <form onSubmit={handleSubmit} style={{ flexDirection: 'row' }}>
+    <div style={{ width: '80%', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="subtitle1" component="h6">
-              Estabeleciemento
+              Estabelecimento
             </Typography>
             <FormControl fullWidth>
               <Select
@@ -76,104 +80,75 @@ function Formulario() {
               </Select>
             </FormControl>
           </Grid>
-
-          <Grid>
-
-            <Grid item xs={12}>
-              <Typography variant="subtitle1" component="h6">
-                Caledario
-              </Typography>
-              <FormControl xs={12}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <StaticDatePicker
-                    displayStaticWrapperAs="desktop"
-                    openTo="day"
-                    value={value}
-                    onChange={(newValue) => {
-                      setValue(newValue);
-                    }}
-                    renderInput={(params) => <TextField {...params} />}
-                  />
-                </LocalizationProvider>
-              </FormControl>
-            </Grid>
-
-            <Grid>
-
-              <Grid>
-
-                <Grid item xs={12}>
-                  <Typography variant="subtitle1" component="h6">
-                    Hora de Início
-                  </Typography>
-                  <FormControl fullWidth>
-                    <TextField
-                      id="horaInicio"
-                      name="horaInicio"
-                      type="time"
-                      value={formData.horaInicio}
-                      onChange={handleChange}
-                      required
-                    />
-                  </FormControl>
-                </Grid>
-
-                <Grid item xs={12}>
-                  <Typography variant="subtitle1" component="h6">
-                    Hora de Término
-                  </Typography>
-                  <FormControl fullWidth>
-                    <TextField
-                      id="horaFim"
-                      name="horaFim"
-                      type="time"
-                      value={formData.horaFim}
-                      onChange={handleChange}
-                      required
-                    />
-                  </FormControl>
-                </Grid>
-              </Grid>
-
-              <Grid item xs={6}>
-                <Typography variant="subtitle1" component="h6">
-                  Valores
-                </Typography>
-                <FormControl fullWidth>
-                  <TextField
-                    id="valores"
-                    name="valores"
-                    type="number"
-                    value={formData.valores}
-                    onChange={handleChange}
-                    required
-                  />
-                </FormControl>
-              </Grid>
-
-              <Grid item xs={6}>
-                <Typography variant="subtitle1" component="h6">
-                  Taxa de Couvert
-                </Typography>
-                <FormControl fullWidth>
-                  <TextField
-                    id="taxaCouvert"
-                    name="taxaCouvert"
-                    type="number"
-                    value={formData.taxaCouvert}
-                    onChange={handleChange}
-                    required
-                  />
-                </FormControl>
-              </Grid>
-            </Grid>
+          <Grid item xs={12}>
+            <Typography variant="subtitle1" component="h6">
+              Horários Cadastrados
+            </Typography>
+            <FormControl fullWidth>
+              <Select
+                id="horarios"
+                name="horarios"
+                value={formData.horarios}
+                onChange={handleChange}
+                required
+              >
+                <MenuItem value="horarios1">Horários 1</MenuItem>
+                <MenuItem value="horarios2">Horários 2</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary">
-              Enviar
-            </Button>
+            <Typography variant="subtitle1" component="h6">
+              Calendário
+            </Typography>
+            <FormControl fullWidth>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <StaticDatePicker
+                  displayStaticWrapperAs="desktop"
+                  openTo="day"
+                  value={value}
+                  onChange={(newValue) => {
+                    handleDataChange(newValue);
+                  }}
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </LocalizationProvider>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="subtitle1" component="h6">
+              Valores
+            </Typography>
+            <FormControl fullWidth>
+              <TextField
+                id="valores"
+                name="valores"
+                type="number"
+                value={formData.valores}
+                onChange={handleChange}
+                required
+              />
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="subtitle1" component="h6">
+              Taxa de Couvert
+            </Typography>
+            <FormControl fullWidth>
+              <TextField
+                id="taxaCouvert"
+                name="taxaCouvert"
+                type="number"
+                value={formData.taxaCouvert}
+                onChange={handleChange}
+                required
+              />
+            </FormControl>
           </Grid>
         </Grid>
+        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '1rem' }}>
+          Enviar
+        </Button>
       </form>
     </div>
   );

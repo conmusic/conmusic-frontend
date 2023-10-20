@@ -25,6 +25,7 @@ import Footer1 from '../assets/images/footer_1-removebg-preview.png';
 
 function HomePage() {
   const navigate = useNavigate();
+  const howInstace = process.env.REACT_APP_HOW_INSTACE || 'local';
 
   useEffect(() => {
     const initMainScript = async () => {
@@ -418,7 +419,7 @@ function HomePage() {
           <img src={Footer1} alt="" className="footer__img1" />
         </div>
 
-        <span className="footer__copy">Feito com <i className='bx bx-heart'></i> por CONMUSIC</span>
+        <span className="footer__copy">Feito com <i className='bx bx-heart'></i> por CONMUSIC - {howInstace}</span>
       </footer>
 
       <a href="/#" className="scrollup" id="scroll-up">

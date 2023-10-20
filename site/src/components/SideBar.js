@@ -113,7 +113,7 @@ export default function SideBar() {
                     destination={"/calendar"} 
                 />
                 <SideBarOption 
-                    isVisible={type === 'Manager'} 
+                    isVisible={type === 'Artist'} 
                     text={"Eventos"} 
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 

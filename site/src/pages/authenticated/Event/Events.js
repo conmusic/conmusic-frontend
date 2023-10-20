@@ -19,8 +19,12 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import FormHelperText from '@mui/material/FormHelperText';
+import dayjs from 'dayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import MuiAlert from '@mui/material/Alert';
+import Snackbar from '@mui/material/Snackbar';
 
 const style = {
     position: 'absolute',
@@ -38,15 +42,52 @@ const style = {
     justifyContent: 'space-between',
     height: 'auto',
     alignItems: 'center',
-    gap: 2
+    gap: 2,
+    overflowY: "scroll",
+    maxHeight: "100%"
 };
 
-export default function Events() {
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
+const fiveAM = dayjs().set('hour', 5).startOf('hour');
+const nineAM = dayjs().set('hour', 9).startOf('hour');
+
+export default function Events(onUpload) {
+
     const [cardData, setCardData] = useState([]);
 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
+    const [openToast, setOpenToast] = React.useState(false);
+    const handleClick = () => {
+        setOpenToast(true);
+        handleClose()
+    };
+
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    const handleCloseToast = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenToast(false);
+    };
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        setSelectedFile(file);
+    };
+
+    const handleUpload = () => {
+        if (selectedFile) {
+            onUpload(selectedFile);
+            setSelectedFile(null);
+        }
+    };
 
     useEffect(() => {
         const fetchCardData = async () => {
@@ -125,6 +166,7 @@ export default function Events() {
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
+                style={{ overflowY: "scroll" }}
             >
                 <Box sx={style} spacing={2}>
                     <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -166,21 +208,23 @@ export default function Events() {
                             <Grid item xs={6}>
                                 <FormControl fullWidth>
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DatePicker sx={{ width: '100%' }} helperText="Some important text" />
+                                        <DemoContainer components={['TimePicker', 'DateTimePicker']}>
+                                            <DemoItem label="Date de início">
+                                                <DateTimePicker defaultValue={fiveAM} minTime={nineAM} />
+                                            </DemoItem>
+                                        </DemoContainer>
                                     </LocalizationProvider>
-                                    <FormHelperText sx={{ marginTop: 0, alignSelf: 'flex-start' }}>
-                                        Data do inicio do evento
-                                    </FormHelperText>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={6}>
                                 <FormControl fullWidth>
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DatePicker sx={{ width: '100%' }} />
+                                        <DemoContainer components={['TimePicker', 'DateTimePicker']}>
+                                            <DemoItem label="Data de fim">
+                                                <DateTimePicker defaultValue={fiveAM} minTime={nineAM} />
+                                            </DemoItem>
+                                        </DemoContainer>
                                     </LocalizationProvider>
-                                    <FormHelperText sx={{ marginTop: 0, alignSelf: 'flex-start' }}>
-                                        Data do fim do evento
-                                    </FormHelperText>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={6}>
@@ -224,14 +268,57 @@ export default function Events() {
                                 </FormControl>
                             </Grid>
                         </Grid>
-                        <Grid item xs={12} >
-                            <TextField
-                                id="outlined-multiline-static"
-                                label="Descrição do Evento"
-                                fullWidth
-                                multiline
-                                rows={4}
-                            />
+                        <Grid item xs={12} sx={{ display: "flex", flexDirection: "row" }}>
+                            <div style={{ width: '50%' }}>
+                                <TextField
+                                    id="outlined-multiline-static"
+                                    label="Descrição do Evento"
+                                    multiline
+                                    rows={4}
+                                    fullWidth
+                                />
+                            </div>
+                            <div style={{ width: '50%', marginLeft: 25 }}>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    id="upload-button"
+                                    style={{ display: 'none' }}
+                                    onChange={handleFileChange}
+                                />
+                                <label htmlFor="upload-button">
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        component="span"
+                                        startIcon={<CloudUploadIcon />}
+                                        fullWidth
+                                        style={{ padding: '13px', fontSize: '1.0rem' }}
+                                    >
+                                        Upload de Imagem
+                                    </Button>
+                                </label>
+                                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        size="medium"
+                                        disabled={!selectedFile}
+                                        onClick={handleUpload}
+                                        fullWidth
+                                        sx={{
+                                            marginTop: 'auto',
+                                            borderColor: 'black',
+                                            backgroundColor: 'red',
+                                            color: 'white',
+                                            marginTop: 2,
+                                            height: 53,
+                                        }}
+                                    >
+                                        Enviar Imagem
+                                    </Button>
+                                </div>
+                            </div>
                         </Grid>
                         <Grid sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                             <Button variant="contained" color="success" style={{ width: "auto", height: "auto" }}>
@@ -245,6 +332,13 @@ export default function Events() {
                     </Box>
                 </Box>
             </Modal>
+            {selectedFile && (
+                <Snackbar open={openToast} autoHideDuration={6000} onClose={handleCloseToast}>
+                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                        Avaliação enviada!
+                    </Alert>
+                </Snackbar>
+            )}
         </Container>
     )
 }
@@ -357,3 +451,4 @@ const topEstilosMusicais = [
     { label: 'Música Tradicional Escocesa' },
     { label: 'Música Tradicional Árabe' },
 ];
+

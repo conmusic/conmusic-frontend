@@ -16,11 +16,14 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import FormHelperText from '@mui/material/FormHelperText';
 import StatusChip from './StatusChip';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs from 'dayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 
 const style = {
   position: 'absolute',
@@ -41,8 +44,11 @@ const style = {
   gap: 2
 };
 
-function CardEvent({ establishment, event, local, showStart, showEnd, id, status }) {
+const fiveAM = dayjs().set('hour', 5).startOf('hour');
+const nineAM = dayjs().set('hour', 9).startOf('hour');
 
+function CardEvent({ establishment, event, local, showStart, showEnd, id, status }) {
+  
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -151,22 +157,24 @@ function CardEvent({ establishment, event, local, showStart, showEnd, id, status
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <FormControl fullWidth>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DatePicker sx={{ width: '100%' }} helperText="Some important text" />
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DemoContainer components={['TimePicker', 'DateTimePicker']}>
+                                            <DemoItem label="Data de fim">
+                                                <DateTimePicker defaultValue={fiveAM} minTime={nineAM} />
+                                            </DemoItem>
+                                        </DemoContainer>
                                     </LocalizationProvider>
-                                    <FormHelperText sx={{ marginTop: 0, alignSelf: 'flex-start' }}>
-                                        Data do inicio do evento
-                                    </FormHelperText>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={6}>
                                 <FormControl fullWidth>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DatePicker sx={{ width: '100%' }} />
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DemoContainer components={['TimePicker', 'DateTimePicker']}>
+                                            <DemoItem label="Data de fim">
+                                                <DateTimePicker defaultValue={fiveAM} minTime={nineAM} />
+                                            </DemoItem>
+                                        </DemoContainer>
                                     </LocalizationProvider>
-                                    <FormHelperText sx={{ marginTop: 0, alignSelf: 'flex-start' }}>
-                                        Data do fim do evento
-                                    </FormHelperText>
                                 </FormControl>
                             </Grid>
                             <Grid item xs={6}>

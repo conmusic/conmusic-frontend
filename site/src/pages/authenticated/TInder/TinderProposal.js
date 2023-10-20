@@ -43,7 +43,10 @@ function Formulario() {
   };
 
   return (
-    <div style={{ width: '80%', margin: '0 auto', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <div style={{ width: '80%', margin: '0 auto', display: 'flex', flexDirection: 'column' }}>
+      <Typography variant="h5" component="h1" style={{ marginBottom: '1rem' }}>
+        Insira as informações para enviar a proposta para o candidato
+      </Typography>
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>

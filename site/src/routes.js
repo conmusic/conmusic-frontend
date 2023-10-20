@@ -15,8 +15,8 @@ import NegotiationDetails from './pages/authenticated/NegotiationDetails';
 import ManageEstablishment from './pages/authenticated/ManageEstablishment';
 import ProposalDetails from './pages/authenticated/ProposalDetails';
 import Proposals from './pages/authenticated/Proposals';
-import Tinder from './pages/authenticated/TInder/Tinder';
-import Form from './pages/authenticated/TInder/TinderProposal';
+import Tinder from './pages/authenticated/Tinder/Tinder';
+import Form from './pages/authenticated/Tinder/TinderProposal';
 
 export default function MainRoutes() {
   return (

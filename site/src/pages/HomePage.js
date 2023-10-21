@@ -22,6 +22,7 @@ import ImageMessage from '../assets/images/message.png';
 import ImageFooter from '../assets/images/logoConMusic-removebg-preview.png';
 import Footer2 from '../assets/images/footer_2-removebg-preview.png';
 import Footer1 from '../assets/images/footer_1-removebg-preview.png';
+import ButtonHour from '../components/ButtonHour';
 
 function HomePage() {
   const navigate = useNavigate();

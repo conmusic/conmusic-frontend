@@ -12,8 +12,9 @@ import {
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import Title from '../components/Title';
 
 
@@ -72,13 +73,10 @@ function ButtonHour() {
                                 <Grid item xs={12}>
                                     <Typography variant="h6">Formulário de Agendamento</Typography>
                                 </Grid>
-                                <Grid item xs={12} md={4}>
+                                <Grid item xs={12} md={6}>
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DatePicker
-                                            disableFuture
-                                            label="Data"
-                                            openTo="year"
-                                            views={['year', 'month', 'day']}
+                                        <DateTimePicker
+                                            label="Data e horário de Início"
                                             value={value}
                                             onChange={(newValue) => {
                                                 setValue(newValue);
@@ -87,22 +85,10 @@ function ButtonHour() {
                                         />
                                     </LocalizationProvider>
                                 </Grid>
-                                <Grid item xs={12} md={4}>
+                                <Grid item xs={12} md={6}>
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <TimePicker
-                                            label="Horário de Início"
-                                            value={value}
-                                            onChange={(newValue) => {
-                                                setValue(newValue);
-                                            }}
-                                            renderInput={(params) => <TextField {...params} />}
-                                        />
-                                    </LocalizationProvider>
-                                </Grid>
-                                <Grid item xs={12} md={4}>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <TimePicker
-                                            label="Horário de Fim"
+                                        <DateTimePicker
+                                            label="Data e horário de Fim"
                                             value={value}
                                             onChange={(newValue) => {
                                                 setValue(newValue);

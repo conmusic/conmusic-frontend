@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import {
     Typography,
@@ -10,6 +10,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import { useAuth } from '../../../hooks/auth';
+import api from "../../../services/api";
 
 const SmallImage = styled('img')({
     width: '150px',
@@ -22,6 +24,10 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default function UserFormArtist(onUpload) {
+    const { userId } = useAuth();
+
+    const [cardData, setCardData] = useState([]);
+
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = () => setOpen(true);
@@ -58,6 +64,42 @@ export default function UserFormArtist(onUpload) {
         'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
     ]
 
+    useEffect(() => {
+        const getArtistsData = async () => {
+            try {
+                var token = localStorage.getItem('@conmusic:token');
+                const config = {
+                    headers: { Authorization: `Bearer ${token}` }
+                };
+                console.log("userId:", userId)
+                const response = await api.get(`/artists/${userId}`, config)
+                console.log("data:", response)
+                var card = response.data
+                    .map(obj => {
+                        return {
+                            id: obj.id,
+                            name: obj.name,
+                            email: obj.email,
+                            cpf: obj.cpf,
+                            phoneNumber: obj.phoneNumber,
+                            birthDate: obj.birthDate,
+                            about: obj.about,
+                            instagram: obj.instagram,
+                        }
+                    })
+
+                setCardData(card);
+            } catch (error) {
+                console.error('Erro ao buscar os dados dos cards:', error);
+                console.error('Mensagem de erro do servidor:', error.response.data);
+            }
+        };
+        if (userId !== 0) {
+            getArtistsData();
+        }
+    }, [userId]);
+    
+
     return (
         <React.Fragment >
             <Grid maxWidth="lg" sx={{ mt: 4, mb: 4, marginLeft: 9, width: "85%" }}>
@@ -69,6 +111,7 @@ export default function UserFormArtist(onUpload) {
                     Dados do Usuário
                 </Typography>
                 <Grid container spacing={3}>
+                    
                     <Grid item xs={12} sm={6}>
                         <TextField
                             required
@@ -78,6 +121,7 @@ export default function UserFormArtist(onUpload) {
                             fullWidth
                             autoComplete="given-name"
                             variant="outlined"
+                            defaultValue={cardData.length > 0 ? cardData[0].name : ''}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>

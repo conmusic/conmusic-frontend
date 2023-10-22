@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import myImage from '../assets/images/image.png';
 import {
   Grid,
@@ -48,7 +48,7 @@ const style = {
 const fiveAM = dayjs().set('hour', 5).startOf('hour');
 const nineAM = dayjs().set('hour', 9).startOf('hour');
 
-function CardEvent({ establishment, event, local, showStart, showEnd, id, onUpload }) {
+function CardEvent({ establishment, event, local, showStart, showEnd, id, genero, onUpload }) {
   const [openToast, setOpenToast] = React.useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
@@ -94,17 +94,17 @@ function CardEvent({ establishment, event, local, showStart, showEnd, id, onUplo
             {local}
           </Typography>
         </CardContent>
-        {/* <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        <CardContent sx={{ flex: 1, display: "flex", flexDirection: "column", justifyContent: "center" }}>
           <Typography>
             {showStart}
           </Typography>
           <Typography variant="subtitle1" >
             {showEnd}
           </Typography>
-        </CardContent> */}
-        {/* <CardContent sx={{ display: "flex", flex: 0.5 }}>
-          <StatusChip label={status} />
-        </CardContent> */}
+        </CardContent>
+        <CardContent sx={{ display: "flex", flex: 0.5 }}>
+        Gêneros:<b>{genero}</b>
+        </CardContent>
         <CardContent sx={{ display: "flex" }}>
           <div style={{ display: "flex", flexDirection: 'column' }}>
             <Button

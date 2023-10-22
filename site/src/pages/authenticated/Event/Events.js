@@ -123,6 +123,7 @@ export default function Events(onUpload) {
                             local: establishment.establishment.address,
                             establishment: establishment.establishment.establishmentName,
                             event: establishment.name,
+                            genero: establishment.genre.name,
                             // showStart: `${showDate} - ${showStartDateTime}`,
                             // showEnd: `${showDate} - ${showEndDateTime}`,
                         }
@@ -192,6 +193,7 @@ export default function Events(onUpload) {
                         establishment={item.establishment}
                         event={item.event}
                         local={item.local}
+                        genero={item.genero}
                     // showStart={item.showStart}
                     // showEnd={item.showEnd}
                     />

@@ -1,6 +1,5 @@
 import CardEvent from "../../../components/CardEvent"
 import Title from "../../../components/Title"
-import { format } from 'date-fns';
 import React, { useState, useEffect } from 'react';
 import api from "../../../services/api";
 import {
@@ -12,19 +11,24 @@ import {
     Box,
     TextField,
 } from '@mui/material';
+// import { format } from 'date-fns';
+import { useAuth } from '../../../hooks/auth';
 import Autocomplete from '@mui/material/Autocomplete';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+// import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+// import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
+// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
+
+dayjs.extend(customParseFormat);
 
 const style = {
     position: 'absolute',
@@ -51,22 +55,32 @@ const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const fiveAM = dayjs().set('hour', 5).startOf('hour');
-const nineAM = dayjs().set('hour', 9).startOf('hour');
-
 export default function Events(onUpload) {
-
+    const { userId } = useAuth();
     const [cardData, setCardData] = useState([]);
+
+    const [eventData, setEventData] = useState({
+        name: '',
+        description: '',
+        value: 0,
+        coverCharge: 0,
+        establishmentId: userId,
+        genre: '',
+    });
+
+    const handleInputChange = (event) => {
+        const { name, value } = event.target;
+        setEventData({
+            ...eventData,
+            [name]: value,
+        });
+    };
 
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
     const [openToast, setOpenToast] = React.useState(false);
-    const handleClick = () => {
-        setOpenToast(true);
-        handleClose()
-    };
 
     const [selectedFile, setSelectedFile] = useState(null);
 
@@ -77,51 +91,74 @@ export default function Events(onUpload) {
 
         setOpenToast(false);
     };
-    const handleFileChange = (event) => {
-        const file = event.target.files[0];
-        setSelectedFile(file);
-    };
+    // const handleFileChange = (event) => {
+    //     const file = event.target.files[0];
+    //     setSelectedFile(file);
+    // };
 
-    const handleUpload = () => {
-        if (selectedFile) {
-            onUpload(selectedFile);
-            setSelectedFile(null);
-        }
-    };
+    // const handleUpload = () => {
+    //     if (selectedFile) {
+    //         onUpload(selectedFile);
+    //         setSelectedFile(null);
+    //     }
+    // };
 
     useEffect(() => {
-        const fetchCardData = async () => {
+        const getEstablishments = async () => {
             try {
                 var token = localStorage.getItem('@conmusic:token');
                 const config = {
                     headers: { Authorization: `Bearer ${token}` }
                 };
-                const response = await api.get('/shows/negotiations', config);
-                console.log(response);
+                const response = await api.get(`/events/establishment/${userId}`, config)
+                
                 var card = response.data
-                    .map(obj => {
-                        let showDate = format(new Date(obj.schedule.startDateTime), "dd/MM/yyyy");
-                        let showStartDateTime = format(new Date(obj.schedule.startDateTime), "HH:mm");
-                        let showEndDateTime = format(new Date(obj.schedule.endDateTime), "HH:mm");
+                    .map(establishment => {
+                        // let showDate = format(new Date(establishment.schedules.startDateTime), "dd/MM/yyyy");
+                        // let showStartDateTime = format(new Date(establishment.schedules.startDateTime), "HH:mm");
+                        // let showEndDateTime = format(new Date(establishment.schedules.endDateTime), "HH:mm");
 
                         return {
-                            establishment: obj.event.establishment.establishmentName,
-                            event: obj.event.name,
-                            local: obj.event.establishment.address,
-                            showStart: `${showDate} - ${showStartDateTime}`,
-                            showEnd: `${showDate} - ${showEndDateTime}`,
-                            id: obj.id,
-                            status: obj.status
+                            id: establishment.id,
+                            local: establishment.establishment.address,
+                            establishment: establishment.establishment.establishmentName,
+                            event: establishment.name,
+                            // showStart: `${showDate} - ${showStartDateTime}`,
+                            // showEnd: `${showDate} - ${showEndDateTime}`,
                         }
                     })
                 setCardData(card);
             } catch (error) {
                 console.error('Erro ao buscar os dados dos cards:', error);
+                console.error('Mensagem de erro do servidor:', error.response.data);
             }
         };
+        if (userId !== 0) {
+            getEstablishments();
+        }
+    }, [userId]);
 
-        fetchCardData();
-    }, []);
+    const handleCreateEvent = async () => {
+        try {
+            const token = localStorage.getItem('@conmusic:token');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` },
+            };
+            console.log("eventData:", eventData)
+            const response = await api.post('/events', eventData, config);
+
+            if (response.status === 201) {
+                setOpenToast(true);
+                handleClose();
+            } else {
+                console.error('Erro ao criar o evento:', response);
+            }
+            
+        } catch (error) {
+            console.error('Erro ao criar o evento:', error);
+            console.error('Mensagem de erro do servidor:', error.response.data);
+        }
+    };
 
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -150,13 +187,13 @@ export default function Events(onUpload) {
             {
                 cardData.map(item => (
                     <CardEvent
+                        key={item.id}
                         id={item.id}
                         establishment={item.establishment}
                         event={item.event}
                         local={item.local}
-                        showStart={item.showStart}
-                        showEnd={item.showEnd}
-                        status={item.status}
+                    // showStart={item.showStart}
+                    // showEnd={item.showEnd}
                     />
                 ))
             }
@@ -181,36 +218,47 @@ export default function Events(onUpload) {
                         <Grid item xs={12} sm={6}>
                             <TextField
                                 label="Nome do Evento"
-                                id="filled-size-normal"
-                                name="establishmentName"
+                                name="name"
+                                value={eventData.name}
+                                onChange={handleInputChange}
                                 fullWidth
                             />
 
                         </Grid>
-                        <Grid item xs={12} >
+                        {/* <Grid item xs={12} >
                             <Autocomplete
                                 fullWidth
                                 id="combo-box-demo"
                                 options={estabelecimentosExemplo}
                                 renderInput={(params) => <TextField {...params} label="Nome do Estabelecimento" />}
                             />
-                        </Grid>
-
-                        <Grid item xs={12} >
+                        </Grid> */}
+                        <Grid item xs={12}>
                             <Autocomplete
                                 fullWidth
                                 id="combo-box-demo"
                                 options={topEstilosMusicais}
-                                renderInput={(params) => <TextField {...params} label="Gênero Musical" />}
+                                getOptionLabel={(option) => option.label}
+                                value={topEstilosMusicais.find(option => option.label === eventData.genre) || null}
+                                onChange={(event, newValue) => {
+                                    setEventData({ ...eventData, genre: newValue ? newValue.label : '' });
+                                }}
+                                renderInput={(params) => (
+                                    <TextField {...params} label="Gênero Musical" />
+                                )}
                             />
                         </Grid>
-                        <Grid container spacing={2}>
-                            <Grid item xs={6}>
+                        {/* <Grid item xs={6}>
                                 <FormControl fullWidth>
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DemoContainer components={['TimePicker', 'DateTimePicker']}>
-                                            <DemoItem label="Date de início">
-                                                <DateTimePicker defaultValue={fiveAM} minTime={nineAM} />
+                                            <DemoItem label="Data de início">
+                                                <DateTimePicker
+                                                    onChange={(newValue) => {
+                                                        const formattedDate = formatCustomDate(newValue);
+                                                        console.log(formattedDate); // Use o valor formatado como necessário
+                                                    }}
+                                                />
                                             </DemoItem>
                                         </DemoContainer>
                                     </LocalizationProvider>
@@ -221,64 +269,48 @@ export default function Events(onUpload) {
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DemoContainer components={['TimePicker', 'DateTimePicker']}>
                                             <DemoItem label="Data de fim">
-                                                <DateTimePicker defaultValue={fiveAM} minTime={nineAM} />
+                                                <DateTimePicker
+                                                    onChange={(newValue) => {
+                                                        const formattedDate = formatCustomDate(newValue);
+                                                        console.log(formattedDate); // Use o valor formatado como necessário
+                                                    }}
+                                                />
                                             </DemoItem>
                                         </DemoContainer>
                                     </LocalizationProvider>
                                 </FormControl>
+                            </Grid> */}
+                        <Grid container spacing={2}>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Valor Proposto"
+                                    name="value"
+                                    value={eventData.value}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                />
                             </Grid>
                             <Grid item xs={6}>
-                                <FormControl fullWidth>
-                                    <InputLabel htmlFor="outlined-adornment-amount">Valor Proposto</InputLabel>
-                                    <OutlinedInput
-                                        id="outlined-adornment-amount"
-                                        startAdornment={<InputAdornment position="start">R$</InputAdornment>}
-                                        label="Valor Proposto"
-                                        onChange={(event) => {
-                                            let { value } = event.target;
-                                            value = value.replace(/\D/g, '');
-                                            if (value) {
-                                                value = parseFloat(value) / 100;
-                                                event.target.value = value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                                            } else {
-                                                event.target.value = value;
-                                            }
-                                        }}
-                                    />
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <FormControl fullWidth>
-                                    <InputLabel htmlFor="outlined-adornment-amount">Taxa de Couvert Artístico</InputLabel>
-                                    <OutlinedInput
-                                        id="outlined-adornment-amount"
-                                        startAdornment={<InputAdornment position="start">R$</InputAdornment>}
-                                        label="Taxa de Couvert Artístico"
-                                        onChange={(event) => {
-                                            let { value } = event.target;
-                                            value = value.replace(/\D/g, '');
-                                            if (value) {
-                                                value = parseFloat(value) / 100;
-                                                event.target.value = value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                                            } else {
-                                                event.target.value = value;
-                                            }
-                                        }}
-                                    />
-                                </FormControl>
+                                <TextField
+                                    label="Taxa de Couvert"
+                                    name="coverCharge"
+                                    value={eventData.coverCharge}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                />
                             </Grid>
                         </Grid>
                         <Grid item xs={12} sx={{ display: "flex", flexDirection: "row" }}>
-                            <div style={{ width: '50%' }}>
                                 <TextField
-                                    id="outlined-multiline-static"
                                     label="Descrição do Evento"
                                     multiline
+                                    name="description"
                                     rows={4}
                                     fullWidth
+                                    value={eventData.description}
+                                    onChange={handleInputChange}
                                 />
-                            </div>
-                            <div style={{ width: '50%', marginLeft: 25 }}>
+                            {/* <div style={{ width: '50%', marginLeft: 25 }}>
                                 <input
                                     type="file"
                                     accept="image/*"
@@ -318,10 +350,14 @@ export default function Events(onUpload) {
                                         Enviar Imagem
                                     </Button>
                                 </div>
-                            </div>
+                            </div> */}
                         </Grid>
                         <Grid sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                            <Button variant="contained" color="success" style={{ width: "auto", height: "auto" }}>
+                            <Button variant="contained"
+                                color="success"
+                                style={{ width: "auto", height: "auto" }}
+                                onClick={handleCreateEvent}
+                            >
                                 Criar Evento
                             </Button>
                             <Button variant="contained" color="error" style={{ width: "auto", height: "auto" }}

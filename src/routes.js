@@ -15,6 +15,7 @@ import NegotiationDetails from './pages/authenticated/NegotiationDetails';
 import ManageEstablishment from './pages/authenticated/ManageEstablishment';
 import ProposalDetails from './pages/authenticated/ProposalDetails';
 import Proposals from './pages/authenticated/Proposals';
+import Event from './pages/authenticated/Event/Events';
 
 export default function MainRoutes() {
   return (
@@ -28,6 +29,7 @@ export default function MainRoutes() {
         <Route path="/explore" element={<Explore />} /> 
         <Route path="/explore/:exploreId" element={<ExploreDetails />} /> 
         <Route path="/establishments" element={<ManageEstablishment />} />
+        <Route path="/events" element={<Event />} />
         <Route path="/negotiations" element={<Negotiations />} />
         <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
         <Route path="/proposals" element={<Proposals />} />

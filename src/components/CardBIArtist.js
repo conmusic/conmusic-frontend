@@ -29,17 +29,14 @@ const cardsData = [
   {
     title: 'Negociações vantajosas',
   },
-  {
-    title: 'Dia que recebe mais propostas',
-  },
 ];
 
 export default function CardBIArtist() {
   return (
-    <Grid container spacing={2} sx={{ marginLeft: 0, marginTop: 0 , justifyContent: 'center'}}>
+    <Grid container spacing={2} sx={{ justifyContent: 'space-evenly', marginTop: 2}}>
       {cardsData.map((card, index) => (
         <Grid item xs={2} md={2} key={index} >
-          <Card sx={{ minWidth: 100 ,height: 245, width: '11em', display: 'flex'}}>
+          <Card sx={{ minWidth: 100 ,height: 245, width: '14em', display: 'flex'}}>
             <CardContent >
               <Typography variant="h5" component="div" sx={{height: 80}}>
                 {card.title}

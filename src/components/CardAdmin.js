@@ -12,9 +12,10 @@ export default function CardAdmin() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: 300,
+                boxShadow: 0
             }}
         >
-            <Typography variant="h3" color="primary">
+            <Typography variant="h3" color="#0ba5ff">
                 80% 
             </Typography>
         </Paper>

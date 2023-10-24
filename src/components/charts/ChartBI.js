@@ -14,8 +14,6 @@ import {
 
 import Title from '../Title';
 
-
-
 export default function ChartBI() {
     const theme = useTheme();
     const [chartData, setChartData] = useState([]);
@@ -24,11 +22,17 @@ export default function ChartBI() {
       // Dados fictícios para o gráfico de rentabilidade mensal
       const data = [
         { month: 'Jan', profit: 5000 },
-        { month: 'Feb', profit: 6000 },
+        { month: 'Fev', profit: 6000 },
         { month: 'Mar', profit: 5500 },
-        { month: 'Apr', profit: 7000 },
-        { month: 'May', profit: 8000 },
-        { month: 'Jun', profit: 7500 },
+        { month: 'Abr', profit: 7000 },
+        { month: 'Mai', profit: 8000 },
+        { month: 'Jun', profit: 7000 },
+        { month: 'Jul', profit: 6000 },
+        { month: 'Ago', profit: 5000 },
+        { month: 'Set', profit: 5500 },
+        { month: 'Out', profit: 7800 },
+        { month: 'Nov', profit: 6000 },
+        { month: 'Dez', profit: 7500 },
       ];
   
       setChartData(data);
@@ -37,7 +41,6 @@ export default function ChartBI() {
     return (
       <React.Fragment>
         <Title>Rentabilidade Mensal</Title>
-       
         <ResponsiveContainer>
           <LineChart
             data={chartData}
@@ -75,19 +78,14 @@ export default function ChartBI() {
               isAnimationActive={true}
               type="monotone"
               dataKey="profit"
-              stroke="red"
+              stroke="blue"
               strokeWidth={2}
-              dot={{ stroke: "red", strokeWidth: 2, r: 4 }}
+              dot={{ stroke: "blue", strokeWidth: 2, r: 4 }}
               activeDot={{ r: 8 }}
               name="Rentabilidade Mensal"
             />
           </LineChart>
         </ResponsiveContainer>
-
-        
-
-
-
       </React.Fragment>
     );
   }

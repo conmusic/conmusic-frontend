@@ -1,5 +1,8 @@
 import React from "react";
+
 import Album from "./Album";
+import Tinder from "./Tinder";
+
 import { useAuth } from "../../../hooks/auth";
 
 export default function Explore() {
@@ -9,7 +12,7 @@ export default function Explore() {
         case 'Artist':
             return (<Album></Album>);
         case 'Manager':
-            return (<></>);        
+            return (<Tinder></Tinder>);        
         default:
             return (<h1>Unauthorized</h1>)
     }

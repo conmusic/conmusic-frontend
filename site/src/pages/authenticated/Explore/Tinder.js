@@ -169,7 +169,7 @@ export default function Tinder() {
       setCurrentArtist(selectedArtist)
       localStorage.setItem('@conmusic:explore-artists', JSON.stringify(artists))
 
-      if (artists.length > 0) {
+      if (artists.length <= 0) {
         getMoreArtists()
       }
     }
@@ -196,11 +196,14 @@ export default function Tinder() {
       console.log("from api: ", data)
 
       setArtists(artistsData)
-      setCurrentArtist(artistsData.pop())
     } catch (error) {
       console.error(error)
     }
   }, [])
+
+  const makeProposal = useCallback(() => {
+    navigate(`/make-proposal/${currentArtist.id}`)
+  }, [currentArtist.id, navigate])
 
   return (
     <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
@@ -241,6 +244,7 @@ export default function Tinder() {
             variant="contained"
             color="success"
             sx={{ marginTop: 1.5 }}
+            onClick={() => makeProposal()}
           >
             Enviar proposta
           </Button>

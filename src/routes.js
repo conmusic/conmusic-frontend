@@ -16,6 +16,7 @@ import ManageEstablishment from './pages/authenticated/ManageEstablishment';
 import ProposalDetails from './pages/authenticated/ProposalDetails';
 import Proposals from './pages/authenticated/Proposals';
 import BI from './pages/authenticated/BI';
+import Events from './pages/authenticated/Event/Events'
 
 export default function MainRoutes() {
   return (
@@ -27,6 +28,7 @@ export default function MainRoutes() {
       <Route element={<Layout />} >
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/BI" element={<BI />} />
+        <Route path="/event" element={<Events />} />
         <Route path="/explore" element={<Explore />} /> 
         <Route path="/explore/:exploreId" element={<ExploreDetails />} /> 
         <Route path="/establishments" element={<ManageEstablishment />} />

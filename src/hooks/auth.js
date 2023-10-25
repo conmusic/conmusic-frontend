@@ -51,6 +51,7 @@ const AuthProvider = ({ children }) => {
         localStorage.removeItem('@conmusic:user');
         localStorage.removeItem('@conmusic:type');
         localStorage.removeItem('@conmusic:id');
+        localStorage.removeItem('@conmusic:explore-artists');
 
         setData({ token: null, user: null, type: null, id: 0 })
     }, []);

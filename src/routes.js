@@ -28,7 +28,7 @@ export default function MainRoutes() {
       <Route element={<Layout />} >
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/BI" element={<BI />} />
-        <Route path="/event" element={<Events />} />
+        <Route path="/events" element={<Events />} />
         <Route path="/explore" element={<Explore />} /> 
         <Route path="/explore/:exploreId" element={<ExploreDetails />} /> 
         <Route path="/establishments" element={<ManageEstablishment />} />

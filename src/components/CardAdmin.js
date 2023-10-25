@@ -2,7 +2,7 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
 
-export default function CardAdmin() {
+export default function CardAdmin({valor}) {
     return (
         <Paper
             sx={{
@@ -12,11 +12,12 @@ export default function CardAdmin() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 height: 300,
-                boxShadow: 0
+                boxShadow: 0,
+                
             }}
         >
-            <Typography variant="h3" color="#0ba5ff">
-                80% 
+            <Typography variant="h3" color="black">
+                {valor}
             </Typography>
         </Paper>
     );

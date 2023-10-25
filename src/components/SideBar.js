@@ -24,7 +24,7 @@ import {
     PersonPin,
     MeetingRoom
 } from '@mui/icons-material'
-
+import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import SideBarOption from "./SideBarOption";
 
 import { useAuth } from '../hooks/auth';
@@ -135,6 +135,14 @@ export default function SideBar() {
                     setCurrentMenu={setCurrentMenu} 
                     icon={MapsHomeWork} 
                     destination={"/establishments"} 
+                />
+                <SideBarOption 
+                    isVisible={true} 
+                    text={"Desempenho"} 
+                    currentMenu={currentMenu} 
+                    setCurrentMenu={setCurrentMenu} 
+                    icon={QueryStatsIcon} 
+                    destination={"/BI"} 
                 />
                 <SideBarOption 
                     isVisible={true} 

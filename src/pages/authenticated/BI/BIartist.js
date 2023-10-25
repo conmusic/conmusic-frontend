@@ -14,6 +14,9 @@ import ChartAdmin from '../../../components/charts/ChartAdmin';
 import ChartAdminMonth from '../../../components/charts/ChartAdminMonth';
 import Title from '../../../components/Title';
 import CardAdmin from '../../../components/CardAdmin';
+import Select from '../../../components/Select';
+import styled from 'styled-components';
+
 
 const dataset = [
   {
@@ -48,6 +51,17 @@ const dataset = [
   },
 ];
 
+const CenteredTypography = styled(Typography)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.8rem;
+`;
+
+const cardStyle = {
+  height: 'fit-content',
+};
+
 const chartSetting = {
   xAxis: [
     {
@@ -63,6 +77,8 @@ const customColorScheme = {
   domain: ['#ff5733', '#3366ff', '#33ff33', '#ffcc33', '#9933ff', '#ff33cc'],
 };
 export default function DashboardAdmin() {
+
+  
 
   const [cardData, setCardData] = useState([]);
 
@@ -99,7 +115,9 @@ export default function DashboardAdmin() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-      <Title>Visão Geral</Title>
+     
+      <Title>Desempenho</Title>
+      <Select />
       <Box>
         <Grid container spacing={3} flexWrap={'nowrap'}>
           {/* Recent CardAdmin */}
@@ -115,7 +133,7 @@ export default function DashboardAdmin() {
               }}
             >
               <Typography component="p">Propostas Recebidas:</Typography>
-              <CardAdmin sx={{ height: '100%' }} />
+              <CardAdmin sx={{ height: '100%' }} valor='75' />
             </Paper>
           </Grid>
           <Grid item xs={12} md={4} lg={4}>
@@ -130,7 +148,8 @@ export default function DashboardAdmin() {
               }}
             >
               <Typography component="p">Shows Confirmados:</Typography>
-              <CardAdmin sx={{ height: '50%' }} />
+              <CardAdmin sx={{ height: '50%' }} valor='70%' />
+              <CenteredTypography component="p">Total de Shows: 10</CenteredTypography>
             </Paper>
           </Grid>
           <Grid item xs={12} md={4} lg={4}>
@@ -141,12 +160,14 @@ export default function DashboardAdmin() {
                 flexDirection: 'column',
                 height: 200,
                 marginBottom: 3,
-                width: 225
+                width: 225,
+                
               }}
             >
 
               <Typography component="p">Shows Cancelados:</Typography>
-              <CardAdmin sx={{ height: '50%' }} />
+              <CardAdmin sx={{ height: '50%' }} valor='10%' />
+              <CenteredTypography component="p">Total de cancelados: 7</CenteredTypography>
             </Paper>
           </Grid>
           <Grid item xs={12} md={4} lg={4}>
@@ -162,7 +183,8 @@ export default function DashboardAdmin() {
             >
 
               <Typography component="p">Negociações Vantajosas:</Typography>
-              <CardAdmin sx={{ height: '50%' }} />
+              <CardAdmin sx={{ height: '50%' }} valor='45%' />
+              <CenteredTypography component="p">Total de negociações: 12</CenteredTypography>
             </Paper>
           </Grid>
         </Grid>

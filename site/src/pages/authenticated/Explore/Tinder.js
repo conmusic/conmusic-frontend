@@ -202,7 +202,7 @@ export default function Tinder() {
   }, [])
 
   const makeProposal = useCallback(() => {
-    navigate(`/make-proposal/${currentArtist.id}`)
+    // navigate(`/make-proposal/${currentArtist.id}`)
   }, [currentArtist.id, navigate])
 
   return (

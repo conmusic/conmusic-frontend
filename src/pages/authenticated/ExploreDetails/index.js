@@ -9,9 +9,7 @@ export default function Explore() {
 
     switch (type) {
         case 'Artist':
-            return (<ExploreEventDetails></ExploreEventDetails>);
-        case 'Manager':
-            return (<></>);        
+            return (<ExploreEventDetails></ExploreEventDetails>);    
         default:
             return (<h1>Unauthorized</h1>)
     }

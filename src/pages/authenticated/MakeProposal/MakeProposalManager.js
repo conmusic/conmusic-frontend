@@ -5,7 +5,6 @@ import {
   Button, 
   Select, 
   MenuItem, 
-  InputLabel, 
   Grid, 
   Typography,
   Paper
@@ -15,7 +14,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import dayjs from 'dayjs';
 
-function MakeProposal() {
+export default function MakeProposalArtist() {
   const [formData, setFormData] = useState({
     estabelecimento: '',
     evento: '',
@@ -172,5 +171,3 @@ function MakeProposal() {
     </Grid>
   );
 }
-
-export default MakeProposal;

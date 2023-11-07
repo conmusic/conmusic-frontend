@@ -121,7 +121,7 @@ export default function MakeProposalArtist() {
 
     const a = uniqueDates.map(date => ({
       date,
-      numberOfSchedules: event.schedules.filter(s => dayjs(s.startDateTime) === date).length
+      numberOfSchedules: event.schedules.filter(s => dayjs(s.startDateTime).date() === date).length
     }))
 
     console.log(a)

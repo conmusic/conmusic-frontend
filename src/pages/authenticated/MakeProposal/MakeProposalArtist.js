@@ -117,11 +117,15 @@ export default function MakeProposalArtist() {
       return []
     }
 
-    const uniqueDates = [...new Set(event.schedules.map(s => dayjs(s.startDateTime).date()))]
+    const schedulesFromMonthYear = event.schedules
+      .filter(s => dayjs(s.startDateTime).year() === calendarValue.year() 
+        && dayjs(s.startDateTime).month() === calendarValue.month())
+
+    const uniqueDates = [...new Set(schedulesFromMonthYear.map(s => dayjs(s.startDateTime).date()))]
 
     const a = uniqueDates.map(date => ({
       date,
-      numberOfSchedules: event.schedules.filter(s => dayjs(s.startDateTime).date() === date).length
+      numberOfSchedules: schedulesFromMonthYear.filter(s => dayjs(s.startDateTime).date() === date).length
     }))
 
     console.log(a)

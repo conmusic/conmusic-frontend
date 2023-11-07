@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   FormControl,
   TextField,
@@ -9,12 +9,18 @@ import {
   Typography,
   Paper,
   Box,
-  styled
+  styled,
+  Badge
 } from '@mui/material';
+import {
+  LocalizationProvider,
+  PickersDay,
+  DateCalendar
+} from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+
 import dayjs from 'dayjs';
+import 'dayjs/locale/pt-br';
 import { useParams } from 'react-router';
 import api from '../../../services/api';
 import eventPropsHelper from '../../../helpers/eventPropsHelper';
@@ -30,6 +36,25 @@ const SmallImage = styled('img')({
   alignSelf: 'center'
 });
 
+function ServerDay(props) {
+  const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
+
+  const index = highlightedDays.map(d => d.date).indexOf(props.day.date());
+
+  const isSelected = !props.outsideCurrentMonth && index >= 0;
+
+  return (
+    <Badge
+      key={props.day.toString()}
+      overlap="circular"
+      color='primary'
+      badgeContent={isSelected ? highlightedDays[index].numberOfSchedules : undefined}
+    >
+      <PickersDay {...other} outsideCurrentMonth={outsideCurrentMonth} day={day} />
+    </Badge>
+  );
+}
+
 export default function MakeProposalArtist() {
   const { targetId } = useParams();
 
@@ -42,7 +67,8 @@ export default function MakeProposalArtist() {
       state: "",
       zipCode: "",
     },
-    eventName: ""
+    eventName: "",
+    schedules: []
   })
 
   const [formData, setFormData] = useState({
@@ -69,7 +95,8 @@ export default function MakeProposalArtist() {
             state: data.establishment.state,
             zipCode: data.establishment.zipCode,
           },
-          eventName: data.name
+          eventName: data.name,
+          schedules: data.schedules
         })
         setFormData(prev => ({
           ...prev,
@@ -85,16 +112,29 @@ export default function MakeProposalArtist() {
     getEventInformation()
   }, [targetId]);
 
+  const highlightedDays = useMemo(() => {
+    if (calendarValue == null || event.schedules == null || event.schedules.length === 0) {
+      return []
+    }
+
+    const uniqueDates = [...new Set(event.schedules.map(s => dayjs(s.startDateTime).date()))]
+
+    const a = uniqueDates.map(date => ({
+      date,
+      numberOfSchedules: event.schedules.filter(s => dayjs(s.startDateTime) === date).length
+    }))
+
+    console.log(a)
+
+    return a
+  }, [calendarValue]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
-  };
-
-  const handleDataChange = (date) => {
-    setCalendarValue(date)
   };
 
   const handleSubmit = (e) => {
@@ -124,15 +164,17 @@ export default function MakeProposalArtist() {
                     Calendário
                   </Typography>
                   <FormControl fullWidth>
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <StaticDatePicker
-                        displayStaticWrapperAs="desktop"
-                        openTo="day"
+                    <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
+                      <DateCalendar
                         value={calendarValue}
-                        onChange={(newValue) => {
-                          handleDataChange(newValue);
+                        slots={{ day: ServerDay }}
+                        slotProps={{
+                          day: { highlightedDays },
                         }}
-                        renderInput={(params) => <TextField {...params} />}
+                        onChange={(newValue) => {
+                          setCalendarValue(newValue);
+                        }}
+                        views={['year', 'month', 'day']}
                       />
                     </LocalizationProvider>
                   </FormControl>

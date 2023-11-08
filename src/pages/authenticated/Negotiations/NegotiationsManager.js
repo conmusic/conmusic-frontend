@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 
 import CardArtistNegotiation from "../../../components/CardArtistNegotiation"
 import Title from "../../../components/Title"
+import Pagina from "../../../components/PaginationForCards"
 
 import api from "../../../services/api";
 
@@ -61,6 +62,7 @@ export default function NegotiationsManager() {
                     />
                 ))
             }
+            <Pagina />
         </Container>
     )
 }

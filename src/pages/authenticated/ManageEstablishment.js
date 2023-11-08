@@ -18,6 +18,7 @@ import api from '../../services/api';
 import Title from '../../components/Title';
 import { useAuth } from '../../hooks/auth';
 import eventPropsHelper from '../../helpers/eventPropsHelper';
+import Pagina from '../../components/PaginationForCards';
 
 const style = {
     position: 'absolute',
@@ -71,8 +72,8 @@ export default function ManageEstablishment() {
                         city: establishment.city,
                         state: establishment.state
                     },
-                    fantasyName: establishment.fantasyName,                    
-                    establishmentName: establishment.establishmentName,                    
+                    fantasyName: establishment.fantasyName,
+                    establishmentName: establishment.establishmentName,
                     phoneNumber: establishment.phoneNumber,
                     cnpj: establishment.cnpj
                 })))
@@ -101,18 +102,18 @@ export default function ManageEstablishment() {
                     Criar Estabelecimento
                 </Button>
             </Stack>
-            <Grid container spacing={0.5} sx={{ mt: 3 }}>
+            <Grid container spacing={2} sx={{ mt: 3,  mb: 4}}>
                 {
                     establishments.map(establishment => (
-                        <Grid 
-                            key={`Grid#${establishment.id}`} 
-                            item 
-                            xs={12} 
-                            md={12} 
-                            lg={12} 
+                        <Grid
+                            key={`Grid#${establishment.id}`}
+                            item
+                            xs={12}
+                            md={12}
+                            lg={12}
                             sx={{ display: "flex" }}
                         >
-                            <Card key={`Card#${establishment.id}`} sx={{display: 'flex', width: 1300, gap: 10 }}>
+                            <Card key={`Card#${establishment.id}`} sx={{ display: 'flex', width: 1300, gap: 10 }}>
                                 <CardMedia
                                     key={`CardImage#${establishment.id}`}
                                     component="img"
@@ -126,7 +127,7 @@ export default function ManageEstablishment() {
                                     }}
                                     src="https://source.unsplash.com/random?wallpapers"
                                 />
-                                <CardContent key={`EstablishmentData#${establishment.id}`} sx={{  mt: 1, flex: 1 }}>
+                                <CardContent key={`EstablishmentData#${establishment.id}`} sx={{ mt: 1, flex: 1 }}>
                                     <Typography key={`EstablishmentName#${establishment.id}`} component="h2" variant="h5">
                                         {establishment.fantasyName}
                                     </Typography>
@@ -144,15 +145,15 @@ export default function ManageEstablishment() {
                                     </Typography>
                                 </CardContent>
                                 <CardContent key={`Manage#${establishment.id}`} xs={12} md={4} lg={4} style={{ display: 'flex', alignItems: 'center' }}>
-                                    <Button 
+                                    <Button
                                         key={`ManageButton#${establishment.id}`}
                                         variant="contained"
                                         style={{
-                                            display: 'flex', 
+                                            display: 'flex',
                                             backgroundColor: '#FB2D57',
-                                            color: 'white', 
-                                            width: 120, 
-                                            height: 40, 
+                                            color: 'white',
+                                            width: 120,
+                                            height: 40,
                                             marginRight: 15
                                         }}
                                     >
@@ -162,8 +163,9 @@ export default function ManageEstablishment() {
                             </Card>
                         </Grid>
                     ))
-                }                
+                }
             </Grid>
+            <Pagina />
             <Modal
                 open={openCreateModal}
                 onClose={() => setOpenCreateModal(false)}
@@ -176,7 +178,7 @@ export default function ManageEstablishment() {
                     </Typography>
                     <Box
                         component="form"
-                        sx={{ display: 'flex', flexDirection: 'column', gap: 2  }}
+                        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
                         noValidate
                         autoComplete="off"
                     >

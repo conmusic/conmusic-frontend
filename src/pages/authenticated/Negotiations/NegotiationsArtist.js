@@ -4,6 +4,7 @@ import { Container } from "@mui/material"
 import { format } from 'date-fns';
 import React, { useState, useEffect } from 'react';
 import api from "../../../services/api";
+import Pagina from "../../../components/PaginationForCards";
 
 export default function NegotiationsArtist() {
     const [cardData, setCardData] = useState([]);
@@ -59,6 +60,7 @@ export default function NegotiationsArtist() {
                     />
                 ))
             }
+            <Pagina />
         </Container>
     )
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   FormControl,
   TextField,
@@ -24,6 +24,7 @@ import 'dayjs/locale/pt-br';
 import { useParams } from 'react-router';
 import api from '../../../services/api';
 import eventPropsHelper from '../../../helpers/eventPropsHelper';
+import dateHelper from '../../../helpers/dateHelper';
 
 const image = [
   'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
@@ -72,12 +73,23 @@ export default function MakeProposalArtist() {
   })
 
   const [formData, setFormData] = useState({
-    scheduleId: 0,
-    paymentValue: 0,
-    coverCharge: 0,
+    scheduleId: {
+      value: 0,
+      error: false
+    },
+    paymentValue: {
+      value: eventPropsHelper.getFormattedPaymentValue(0),
+      error: false
+    },
+    couvertCharge: {
+      value: "0,00",
+      error: false
+    },
   });
 
   const [calendarValue, setCalendarValue] = useState(dayjs());
+  const [calendarMonth, setCalendarMonth] = useState(dayjs().month());
+  const [calendarYear, setCalendarYear] = useState(dayjs().year());
 
   useEffect(() => {
     const getEventInformation = async () => {
@@ -100,8 +112,14 @@ export default function MakeProposalArtist() {
         })
         setFormData(prev => ({
           ...prev,
-          paymentValue: data.value,
-          coverCharge: data.coverCharge
+          paymentValue: {
+            value: eventPropsHelper.getFormattedPaymentValue(data.value),
+            error: false
+          },
+          couvertCharge: {
+            value: String((data.coverCharge || 0.00).toFixed(2)).replace(".", ","),
+            error: false
+          }
         }))
       }
       catch (error) {
@@ -113,33 +131,78 @@ export default function MakeProposalArtist() {
   }, [targetId]);
 
   const highlightedDays = useMemo(() => {
-    if (calendarValue == null || event.schedules == null || event.schedules.length === 0) {
+    if (calendarMonth == null || calendarYear == null 
+      || event.schedules == null || event.schedules.length === 0) {
       return []
     }
 
     const schedulesFromMonthYear = event.schedules
-      .filter(s => dayjs(s.startDateTime).year() === calendarValue.year() 
-        && dayjs(s.startDateTime).month() === calendarValue.month())
+      .filter(s => dayjs(s.startDateTime).year() === calendarYear 
+        && dayjs(s.startDateTime).month() === calendarMonth)
 
     const uniqueDates = [...new Set(schedulesFromMonthYear.map(s => dayjs(s.startDateTime).date()))]
 
-    const a = uniqueDates.map(date => ({
+    return uniqueDates.map(date => ({
       date,
-      numberOfSchedules: schedulesFromMonthYear.filter(s => dayjs(s.startDateTime).date() === date).length
+      numberOfSchedules: schedulesFromMonthYear
+        .filter(s => dayjs(s.startDateTime).date() === date).length
     }))
+  }, [calendarMonth, calendarYear, event]);
 
-    console.log(a)
+  const schedulesFromDate = useMemo(() => {
+    if (calendarValue == null || event.schedules == null || event.schedules.length == 0) {
+      return []
+    }
 
-    return a
-  }, [calendarValue]);
+    return event.schedules
+      .filter(s => {
+        if (dayjs(s.startDateTime).format("DD/MM/YYYY") == calendarValue.format("DD/MM/YYYY")) {
+          return s
+        }
+      })
+      .map(s => ({
+        text: `${dateHelper.getFormattedScheduleDate(s.startDateTime)} até ${dateHelper.getFormattedScheduleDate(s.endDateTime)}`,
+        value: s.id
+      }))
+  }, [calendarValue, event.schedules])
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const handleScheduleChange = useCallback((event) => {
+    setFormData(prev => ({
+      ...prev,
+      scheduleId: {
+        value: event.target.value,
+        error: false
+      }
+    }))
+  }, [])
+
+  const handlePaymentValueChange = useCallback((event) => {
+    const value = Number(event.target.value.replace(/\D/gm, ""))
+
+    const formatted = eventPropsHelper.getFormattedPaymentValue(value / 100);
+
+    setFormData(prev => ({
+        ...prev,
+        paymentValue: {
+          value: formatted,
+          error: value < 20000
+        }
+    }))
+}, [])
+
+const handleCouvertChargeChange = useCallback((event) => {
+    const value = Number(event.target.value.replace(/\D/gm, ""))
+
+    const formatted = String((value / 100).toFixed(2)).replace(".", ",")
+
+    setFormData(prev => ({
+        ...prev,
+        couvertCharge: {
+          value: formatted,
+          error: value < 0 || value > 10000
+        }
+    }))
+}, [])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -172,13 +235,15 @@ export default function MakeProposalArtist() {
                       <DateCalendar
                         value={calendarValue}
                         slots={{ day: ServerDay }}
-                        slotProps={{
-                          day: { highlightedDays },
+                        slotProps={{ day: { highlightedDays } }}
+                        onChange={(newValue) => { 
+                          setCalendarValue(newValue)
+                          setFormData(prev => ({ ...prev, scheduleId: { value: 0, error: false } }))
                         }}
-                        onChange={(newValue) => {
-                          setCalendarValue(newValue);
-                        }}
+                        onMonthChange={(newValue) => { setCalendarMonth(newValue.month()) }}
+                        onYearChange={(newValue) => { setCalendarYear(newValue.year()) }}
                         views={['year', 'month', 'day']}
+                        disablePast
                       />
                     </LocalizationProvider>
                   </FormControl>
@@ -186,19 +251,21 @@ export default function MakeProposalArtist() {
 
                 <Grid item xs={12}>
                   <Typography variant="subtitle1" mb={1} fontWeight="bold">
-                    Horários do dia {"05/11/20223"}
+                    Horários do dia {calendarValue.format("DD/MM/YYYY")}
                   </Typography>
                   <FormControl fullWidth>
                     <Select
                       id="scheduleId"
                       name="scheduleId"
-                      value={formData.scheduleId}
-                      onChange={handleChange}
+                      value={formData.scheduleId.value}
+                      onChange={handleScheduleChange}
+                      error={formData.scheduleIds.error}
                       required
                     >
                       <MenuItem value={0}>Selecionar data</MenuItem>
-                      <MenuItem value={1}>Horários 1</MenuItem>
-                      <MenuItem value={2}>Horários 2</MenuItem>
+                      {
+                        schedulesFromDate.map(s => (<MenuItem key={s.value} value={s.value}>{s.text}</MenuItem>))
+                      }
                     </Select>
                   </FormControl>
                 </Grid>
@@ -210,9 +277,9 @@ export default function MakeProposalArtist() {
                     <TextField
                       id="paymentValue"
                       name="paymentValue"
-                      type="number"
-                      value={formData.paymentValue}
-                      onChange={handleChange}
+                      value={formData.paymentValue.value}
+                      onChange={handlePaymentValueChange}
+                      error={formData.paymentValue.error}
                       required
                     />
                   </FormControl>
@@ -223,11 +290,11 @@ export default function MakeProposalArtist() {
                   </Typography>
                   <FormControl fullWidth>
                     <TextField
-                      id="coverCharge"
-                      name="coverCharge"
-                      type="number"
-                      value={formData.coverCharge}
-                      onChange={handleChange}
+                      id="couvertCharge"
+                      name="couvertCharge"
+                      value={formData.couvertCharge.value}
+                      onChange={handleCouvertChargeChange}
+                      error={formData.couvertCharge.error}
                       required
                     />
                   </FormControl>
@@ -239,7 +306,7 @@ export default function MakeProposalArtist() {
                   color="error"
                   sx={{ marginTop: 4 }}
                 >
-                  Cancelar
+                  Voltar
                 </Button>
                 <Button
                   variant="contained"

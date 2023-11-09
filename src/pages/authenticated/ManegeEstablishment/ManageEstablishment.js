@@ -13,12 +13,12 @@ import {
     CardContent
 } from '@mui/material';
 
-import api from '../../services/api';
+import api from '../../../services/api';
 
-import Title from '../../components/Title';
-import { useAuth } from '../../hooks/auth';
-import eventPropsHelper from '../../helpers/eventPropsHelper';
-import Pagina from '../../components/PaginationForCards';
+import Title from '../../../components/Title';
+import { useAuth } from '../../../hooks/auth';
+import eventPropsHelper from '../../../helpers/eventPropsHelper';
+import Pagina from '../../../components/PaginationForCards';
 
 const style = {
     position: 'absolute',

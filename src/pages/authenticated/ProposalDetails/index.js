@@ -4,6 +4,7 @@ import { useAuth } from '../../../hooks/auth';
 
 import ProposalArtist from './ProposalArtist';
 import ProposalEvent from './ProposalEvent';
+import { Navigate } from "react-router-dom";
 
 export default function ProposalDetails() {
     const { type } = useAuth();
@@ -14,6 +15,6 @@ export default function ProposalDetails() {
         case "Manager":
             return (<ProposalArtist />);
         default:
-            return (<h1>Unauthorized</h1>);
+            return (<Navigate to="/forbiden" replace={true} />)
     }
 }

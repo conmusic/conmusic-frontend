@@ -10,7 +10,9 @@ import {
   Paper,
   Box,
   styled,
-  Badge
+  Badge,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import {
   LocalizationProvider,
@@ -21,10 +23,12 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import api from '../../../services/api';
 import eventPropsHelper from '../../../helpers/eventPropsHelper';
 import dateHelper from '../../../helpers/dateHelper';
+
+import { useAuth } from '../../../hooks/auth'
 
 const image = [
   'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
@@ -37,7 +41,7 @@ const SmallImage = styled('img')({
   alignSelf: 'center'
 });
 
-function ServerDay(props) {
+function HighlightedDay(props) {
   const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
   const index = highlightedDays.map(d => d.date).indexOf(props.day.date());
@@ -57,7 +61,9 @@ function ServerDay(props) {
 }
 
 export default function MakeProposalArtist() {
+  const { userId } = useAuth();
   const { targetId } = useParams();
+  const navigate = useNavigate()
 
   const [event, setEvent] = useState({
     establishmentName: "",
@@ -86,6 +92,12 @@ export default function MakeProposalArtist() {
       error: false
     },
   });
+
+  const [toast, setToast] = useState({
+    open: false,
+    message: "",
+    severity: "info"
+})
 
   const [calendarValue, setCalendarValue] = useState(dayjs());
   const [calendarMonth, setCalendarMonth] = useState(dayjs().month());
@@ -131,13 +143,13 @@ export default function MakeProposalArtist() {
   }, [targetId]);
 
   const highlightedDays = useMemo(() => {
-    if (calendarMonth == null || calendarYear == null 
+    if (calendarMonth == null || calendarYear == null
       || event.schedules == null || event.schedules.length === 0) {
       return []
     }
 
     const schedulesFromMonthYear = event.schedules
-      .filter(s => dayjs(s.startDateTime).year() === calendarYear 
+      .filter(s => dayjs(s.startDateTime).year() === calendarYear
         && dayjs(s.startDateTime).month() === calendarMonth)
 
     const uniqueDates = [...new Set(schedulesFromMonthYear.map(s => dayjs(s.startDateTime).date()))]
@@ -155,11 +167,7 @@ export default function MakeProposalArtist() {
     }
 
     return event.schedules
-      .filter(s => {
-        if (dayjs(s.startDateTime).format("DD/MM/YYYY") == calendarValue.format("DD/MM/YYYY")) {
-          return s
-        }
-      })
+      .filter(s => dayjs(s.startDateTime).format("DD/MM/YYYY") == calendarValue.format("DD/MM/YYYY"))
       .map(s => ({
         text: `${dateHelper.getFormattedScheduleDate(s.startDateTime)} até ${dateHelper.getFormattedScheduleDate(s.endDateTime)}`,
         value: s.id
@@ -182,32 +190,124 @@ export default function MakeProposalArtist() {
     const formatted = eventPropsHelper.getFormattedPaymentValue(value / 100);
 
     setFormData(prev => ({
-        ...prev,
-        paymentValue: {
-          value: formatted,
-          error: value < 20000
-        }
+      ...prev,
+      paymentValue: {
+        value: formatted,
+        error: value < 20000
+      }
     }))
-}, [])
+  }, [])
 
-const handleCouvertChargeChange = useCallback((event) => {
+  const handleCouvertChargeChange = useCallback((event) => {
     const value = Number(event.target.value.replace(/\D/gm, ""))
 
     const formatted = String((value / 100).toFixed(2)).replace(".", ",")
 
     setFormData(prev => ({
+      ...prev,
+      couvertCharge: {
+        value: formatted,
+        error: value < 0 || value > 10000
+      }
+    }))
+  }, [])
+
+  const handleGoBack = useCallback(() => {
+    navigate(`/explore/${targetId}`)
+  }, [navigate, targetId])
+
+  const handleSendProposal = useCallback(async () => {
+    if (formData.scheduleId.value <= 0) {
+      setFormData(prev => ({
+        ...prev,
+        scheduleId: {
+          value: formData.scheduleId.value,
+          error: true
+        }
+      }))
+      setToast({
+        open: true,
+        severity: "error",
+        message: "Horário escolhido é inválido"
+      })
+      return;
+    }
+
+    if (formData.paymentValue.error) {
+      setFormData(prev => ({
+        ...prev,
+        paymentValue: {
+          value: formData.paymentValue.value,
+          error: true
+        }
+      }))
+      setToast({
+        open: true,
+        severity: "error",
+        message: "Deve ser no minímo R$ 200,00"
+      })
+      return;
+    }
+
+    if (formData.couvertCharge.error) {
+      setFormData(prev => ({
         ...prev,
         couvertCharge: {
-          value: formatted,
-          error: value < 0 || value > 10000
+          value: formData.couvertCharge.value,
+          error: true
         }
-    }))
-}, [])
+      }))
+      setToast({
+        open: true,
+        severity: "error",
+        message: "Deve ser entre 0% e 100%"
+      })
+      return;
+    }
+
+    const body = {
+      value: Number(formData.paymentValue.value.replace(/\D/gm, "")) / 100,
+      coverCharge: Number(formData.couvertCharge.value.replace(/\D/gm, "")) / 100,
+      scheduleId: formData.scheduleId.value,
+      eventId: targetId,
+      artistId: userId
+    }
+    
+    try {
+      const { data } = await api.post(`/shows`, body)
+
+      console.log(data)
+
+      setToast({
+        open: true,
+        message: "Sua proposta foi enviada com sucesso!",
+        severity: "success"
+      })
+      setTimeout(() => {
+        navigate(`/explore`)
+      }, 6000)
+    }
+    catch (e) {
+      console.error(e)
+    }
+  }, [formData, targetId, userId])
 
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(formData);
   };
+
+  const handleCloseToast = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setToast({
+        open: false,
+        message: "",
+        severity: "info"
+    });
+};
 
   return (
     <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
@@ -234,9 +334,9 @@ const handleCouvertChargeChange = useCallback((event) => {
                     <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale="pt-br">
                       <DateCalendar
                         value={calendarValue}
-                        slots={{ day: ServerDay }}
+                        slots={{ day: HighlightedDay }}
                         slotProps={{ day: { highlightedDays } }}
-                        onChange={(newValue) => { 
+                        onChange={(newValue) => {
                           setCalendarValue(newValue)
                           setFormData(prev => ({ ...prev, scheduleId: { value: 0, error: false } }))
                         }}
@@ -259,7 +359,7 @@ const handleCouvertChargeChange = useCallback((event) => {
                       name="scheduleId"
                       value={formData.scheduleId.value}
                       onChange={handleScheduleChange}
-                      error={formData.scheduleIds.error}
+                      error={formData.scheduleId.error}
                       required
                     >
                       <MenuItem value={0}>Selecionar data</MenuItem>
@@ -305,6 +405,7 @@ const handleCouvertChargeChange = useCallback((event) => {
                   variant="contained"
                   color="error"
                   sx={{ marginTop: 4 }}
+                  onClick={handleGoBack}
                 >
                   Voltar
                 </Button>
@@ -312,6 +413,7 @@ const handleCouvertChargeChange = useCallback((event) => {
                   variant="contained"
                   color="success"
                   sx={{ marginTop: 4 }}
+                  onClick={handleSendProposal}
                 >
                   Enviar
                 </Button>
@@ -319,6 +421,11 @@ const handleCouvertChargeChange = useCallback((event) => {
             </form>
           </div>
         </Paper>
+        <Snackbar open={toast.open} autoHideDuration={6000} onClose={handleCloseToast}>
+          <Alert severity={toast.severity} sx={{ width: '100%' }}>
+              {toast.message}
+          </Alert>
+        </Snackbar>
       </Grid>
     </Grid>
   );

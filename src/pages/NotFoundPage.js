@@ -16,7 +16,7 @@ const NotFoundPage = () => {
         <Box maxWidth={550} display="flex" justifyContent="center" alignItems="center" flexDirection="column">
           <Typography variant="h3" mt={3}><b>Página não encontrada</b></Typography>
           <img src={notFoundImage} alt="404" />
-          <Typography variant="h5"  sx={{mb: 3}}>Volte para a <b><a href="/">home</a></b> apertando este link</Typography>
+          <Typography variant="h5"  sx={{mb: 3}}>Volte para a <b><a href="/">home</a></b> apertando este link!</Typography>
         </Box>
       </Paper>
   );

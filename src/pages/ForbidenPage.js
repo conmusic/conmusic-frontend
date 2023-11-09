@@ -16,7 +16,7 @@ const NotFoundPage = () => {
         <Box maxWidth={550} display="flex" justifyContent="center" alignItems="center" flexDirection="column">
           <Typography variant="h3" mt={3}><b>Proibido de entrar</b></Typography>
           <img src={ForbidenImage} alt="404" width={500} />
-          <Typography variant="h6"  sx={{mb: 3}}>Peça acesso para um administrador para acessar está guia. Volte para a <b><a href="/">home</a></b> apertando este link</Typography>
+          <Typography variant="h6"  sx={{mb: 3}}>Peça acesso para um administrador para acessar está guia. Volte para a <b><a href="/">home</a></b> apertando este link!</Typography>
         </Box>
       </Paper>
   );

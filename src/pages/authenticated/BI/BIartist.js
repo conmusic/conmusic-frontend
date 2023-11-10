@@ -10,8 +10,11 @@ import Typography from '@mui/material/Typography';
 import ChartBI from '../../../components/charts/ChartBI'
 import api from '../../../services/api';
 import { BarChart } from '@mui/x-charts/BarChart';
-import ChartAdmin from '../../../components/charts/ChartAdmin';
-import ChartAdminMonth from '../../../components/charts/ChartAdminMonth';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
+import { SingleInputDateRangeField } from '@mui/x-date-pickers-pro/SingleInputDateRangeField';
 import Title from '../../../components/Title';
 import CardAdmin from '../../../components/CardAdmin';
 import Select from '../../../components/Select';
@@ -69,7 +72,7 @@ const chartSetting = {
     },
   ],
   height: 320,
-  
+
 };
 
 const valueFormatter = (value) => `${value} Shows`;
@@ -78,7 +81,7 @@ const customColorScheme = {
 };
 export default function DashboardAdmin() {
 
-  
+
 
   const [cardData, setCardData] = useState([]);
 
@@ -115,9 +118,22 @@ export default function DashboardAdmin() {
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-     
+
       <Title>Desempenho</Title>
-      <Select />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DemoContainer
+        components={['MultiInputDateRangeField', 'SingleInputDateRangeField']}
+      >
+        <MultiInputDateRangeField
+          slotProps={{
+            textField: ({ position }) => ({
+              label: position === 'start' ? 'Departure' : 'Return',
+            }),
+          }}
+        />
+        <SingleInputDateRangeField label="Departure - Return" />
+      </DemoContainer>
+    </LocalizationProvider>
       <Box>
         <Grid container spacing={3} flexWrap={'nowrap'}>
           {/* Recent CardAdmin */}
@@ -129,11 +145,29 @@ export default function DashboardAdmin() {
                 flexDirection: 'column',
                 height: 200,
                 marginBottom: 3,
-                width: 225
+                width: "auto",
+                background: 'linear-gradient(to right, #2D75FB, #4D9CFF, #4D9CFF, #6CB6FF, #A7E9FF, #A7E9FF)',
+                color: "white"
               }}
             >
-              <Typography component="p">Propostas Recebidas:</Typography>
-              <CardAdmin sx={{ height: '100%' }} valor='75' />
+              <Typography component="p" color={"black"}>Faturamento:</Typography>
+              <Paper
+                sx={{
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  height: 300,
+                  boxShadow: 0,
+                  background: 'transparent'
+                }}
+              >
+                <Typography variant="h3" color="#15005A">
+                  R$ 650
+                </Typography>
+              </Paper>
+
             </Paper>
           </Grid>
           <Grid item xs={12} md={4} lg={4}>
@@ -144,7 +178,7 @@ export default function DashboardAdmin() {
                 flexDirection: 'column',
                 height: 200,
                 marginBottom: 3,
-                width: 225
+                width: "auto"
               }}
             >
               <Typography component="p">Shows Confirmados:</Typography>
@@ -160,8 +194,7 @@ export default function DashboardAdmin() {
                 flexDirection: 'column',
                 height: 200,
                 marginBottom: 3,
-                width: 225,
-                
+                width: "auto"
               }}
             >
 
@@ -178,7 +211,8 @@ export default function DashboardAdmin() {
                 flexDirection: 'column',
                 height: 200,
                 marginBottom: 3,
-                width: 225
+                width: "auto"
+
               }}
             >
 
@@ -189,39 +223,55 @@ export default function DashboardAdmin() {
           </Grid>
         </Grid>
       </Box>
-
+      <Select />
       <Grid container spacing={3}>
-        <Grid item xs={12} md={6} lg={6}>
+        <Grid item xs={12} md={9} lg={9}>
           <Paper
             sx={{
               p: 2,
               display: 'flex',
               flexDirection: 'column',
-              height: 350,
+              height: 300,
             }}
           >
             <Title>Gêneros Musicais que mais Tiveram Shows</Title>
             <BarChart
               dataset={dataset}
               yAxis={[{ scaleType: 'band', dataKey: 'genre' }]}
-              series={[{ dataKey: 'value', label: 'Gêneros Musicais mais tocados', valueFormatter, color: 'blue' }]}
+              series={[{ dataKey: 'value', label: 'Gêneros Musicais mais tocados', valueFormatter, color: '#2D75FB' }]}
               layout="horizontal"
               {...chartSetting}
-              
             />
           </Paper>
         </Grid>
-        <Grid item xs={6} md={6} lg={6}>
+
+        <Grid item xs={3} md={3} lg={3}>
           <Paper
             sx={{
               p: 2,
               display: 'flex',
               flexDirection: 'column',
-              height: 350,
+              height: 300,
+              width: "auto"
             }}
           >
-            <div style={{display: 'flex', alignSelf: 'center'}}>
-            <Title>Faturamento</Title>
+            <Typography component="p">Propostas Recebidas::</Typography>
+            <CardAdmin sx={{ height: '50%' }} valor='70%' />
+            <CenteredTypography component="p">Total de Shows: 10</CenteredTypography>
+          </Paper>
+        </Grid>
+
+        <Grid item xs={12} md={12} lg={12}>
+          <Paper
+            sx={{
+              p: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              height: 300,
+            }}
+          >
+            <div style={{ display: 'flex', alignSelf: 'center' }}>
+              <Title>Faturamento</Title>
             </div>
             <ChartBI sx={{ height: '50%' }} />
           </Paper>

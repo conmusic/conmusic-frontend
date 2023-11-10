@@ -41,7 +41,7 @@ export default function ChartBI() {
     return (
       <React.Fragment>
         <Title>Rentabilidade Mensal</Title>
-        <ResponsiveContainer>
+        <ResponsiveContainer width="100%" height={200}>
           <LineChart
             data={chartData}
             margin={{
@@ -78,9 +78,9 @@ export default function ChartBI() {
               isAnimationActive={true}
               type="monotone"
               dataKey="profit"
-              stroke="blue"
+              stroke="#2D75FB"
               strokeWidth={2}
-              dot={{ stroke: "blue", strokeWidth: 2, r: 4 }}
+              dot={{ stroke: "#2D75FB", strokeWidth: 2, r: 4 }}
               activeDot={{ r: 8 }}
               name="Rentabilidade Mensal"
             />

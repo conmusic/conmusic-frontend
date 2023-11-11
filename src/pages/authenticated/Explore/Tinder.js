@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { styled } from '@mui/material/styles';
 import {
@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import eventPropsHelper from '../../../helpers/eventPropsHelper';
 import api from '../../../services/api';
-import { differenceInYears } from 'date-fns';
+import dateHelper from '../../../helpers/dateHelper';
 
 const CarouselContainer = styled('div')({
   display: 'flex',
@@ -90,8 +90,6 @@ const itemData = [
 ];
 
 export default function Tinder() {
-  const [selectedImage, setSelectedImage] = useState(0);
-
   const image = [
     'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
   ]
@@ -116,7 +114,7 @@ export default function Tinder() {
         const artistsCache = localStorage.getItem('@conmusic:explore-artists');
         let artistsData;
 
-        if (!artistsCache || artistsCache == "" || artistsCache == null) {
+        if (!artistsCache || artistsCache === "" || artistsCache == null) {
           const { data } = await api.get(`/artists`)
 
           artistsData = data.map(artist => ({
@@ -152,29 +150,6 @@ export default function Tinder() {
     getArtists()
   }, [setArtists, setCurrentArtist])
 
-  const formattedBirthDateAndAge = useMemo(() => {
-    if (currentArtist.birthDate != null) {
-      const birthDate = new Date(currentArtist.birthDate)
-      const age = differenceInYears(new Date(), birthDate)
-
-      return `${birthDate.toLocaleDateString('pt-BR')} - ${age} anos`
-    }
-
-    return ''
-  }, [currentArtist.birthDate])
-
-  const nextArtist = useCallback(() => {
-    if (artists.length > 0) {
-      const selectedArtist = artists.pop()
-      setCurrentArtist(selectedArtist)
-      localStorage.setItem('@conmusic:explore-artists', JSON.stringify(artists))
-
-      if (artists.length <= 0) {
-        getMoreArtists()
-      }
-    }
-  }, [artists])
-
   const getMoreArtists = useCallback(async () => {
     try {
       const { data } = await api.get(`/artists`)
@@ -201,15 +176,27 @@ export default function Tinder() {
     }
   }, [])
 
+  const nextArtist = useCallback(() => {
+    if (artists.length > 0) {
+      const selectedArtist = artists.pop()
+      setCurrentArtist(selectedArtist)
+      localStorage.setItem('@conmusic:explore-artists', JSON.stringify(artists))
+
+      if (artists.length <= 0) {
+        getMoreArtists()
+      }
+    }
+  }, [artists, getMoreArtists])
+
   const makeProposal = useCallback(() => {
-    // navigate(`/make-proposal/${currentArtist.id}`)
+    navigate(`/make-proposal/${currentArtist.id}`)
   }, [currentArtist.id, navigate])
 
   return (
     <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
       <Grid item xs={12} md={4}>
         <Paper sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: 4, gap: 1, my: 2 }}>
-          <SmallImage src={image[0] == undefined ? `data:image/jpeg;base64,` : image[0]} alt="Profile" />
+          <SmallImage src={image[0] === undefined ? `data:image/jpeg;base64,` : image[0]} alt="Profile" />
           <Typography variant="h5" fontWeight='bold' style={{ color: '#FB2D57', marginTop: 2 }}>
             {currentArtist.name}
           </Typography>
@@ -218,7 +205,7 @@ export default function Tinder() {
             (<Typography variant='caption' fontWeight='bold'>@{currentArtist.instagram}</Typography>)
           }
           <Typography variant='body1'>
-            {formattedBirthDateAndAge}
+            {dateHelper.getFormattedAge(currentArtist.birthDate)}
           </Typography>
           <Typography variant='body1'>
             {eventPropsHelper.getFormattedPhoneNumber(currentArtist.phoneNumber)}
@@ -244,7 +231,7 @@ export default function Tinder() {
             variant="contained"
             color="success"
             sx={{ marginTop: 1.5 }}
-            onClick={() => makeProposal()}
+            onClick={makeProposal}
           >
             Enviar proposta
           </Button>

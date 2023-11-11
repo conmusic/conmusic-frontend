@@ -15,7 +15,7 @@ import NegotiationDetails from './pages/authenticated/NegotiationDetails';
 import ManageEstablishment from './pages/authenticated/ManageEstablishment';
 import ProposalDetails from './pages/authenticated/ProposalDetails';
 import Proposals from './pages/authenticated/Proposals';
-import Form from './pages/authenticated/MakeProposal';
+import MakeProposal from './pages/authenticated/MakeProposal';
 import BI from './pages/authenticated/BI';
 import Events from './pages/authenticated/Event/Events'
 
@@ -37,7 +37,7 @@ export default function MainRoutes() {
         <Route path="/negotiations/:showId" element={<NegotiationDetails />} />
         <Route path="/proposals" element={<Proposals />} />
         <Route path="/proposals/:proposalId" element={<ProposalDetails />} /> 
-        <Route path="/make-proposal/:targetId" element={<Form />} />
+        <Route path="/make-proposal/:targetId" element={<MakeProposal />} />
       </Route>
       <Route path="*" element={<h1>Not Found</h1>} />
     </Routes>

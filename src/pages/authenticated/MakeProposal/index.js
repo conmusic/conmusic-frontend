@@ -1,14 +1,18 @@
 import React from "react";
 
 import { useAuth } from "../../../hooks/auth";
-import MakeProposal from "./MakeProposal";
+import MakeProposalArtist from "./MakeProposalArtist";
+import MakeProposalManager from "./MakeProposalManager";
 
 export default function MakeProposalIndex() {
     const { type } = useAuth();
     
-    if (type != "Admin") {
-        return (<MakeProposal />)
-    } else {
-        return (<h1>Unauthorized</h1>)
+    switch (type) {
+        case "Artist":
+            return (<MakeProposalArtist />)
+        case "Manager":
+            return (<MakeProposalManager />)
+        default:
+            return (<h1>Unauthorized</h1>)
     }
 }

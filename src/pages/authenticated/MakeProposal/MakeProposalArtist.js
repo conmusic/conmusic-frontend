@@ -162,12 +162,12 @@ export default function MakeProposalArtist() {
   }, [calendarMonth, calendarYear, event]);
 
   const schedulesFromDate = useMemo(() => {
-    if (calendarValue == null || event.schedules == null || event.schedules.length == 0) {
+    if (calendarValue == null || event.schedules == null || event.schedules.length === 0) {
       return []
     }
 
     return event.schedules
-      .filter(s => dayjs(s.startDateTime).format("DD/MM/YYYY") == calendarValue.format("DD/MM/YYYY"))
+      .filter(s => dayjs(s.startDateTime).format("DD/MM/YYYY") === calendarValue.format("DD/MM/YYYY"))
       .map(s => ({
         text: `${dateHelper.getFormattedScheduleDate(s.startDateTime)} até ${dateHelper.getFormattedScheduleDate(s.endDateTime)}`,
         value: s.id
@@ -290,7 +290,7 @@ export default function MakeProposalArtist() {
     catch (e) {
       console.error(e)
     }
-  }, [formData, targetId, userId])
+  }, [formData, targetId, userId, navigate])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -307,7 +307,7 @@ export default function MakeProposalArtist() {
         message: "",
         severity: "info"
     });
-};
+  };
 
   return (
     <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>

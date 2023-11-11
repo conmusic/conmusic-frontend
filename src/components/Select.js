@@ -16,6 +16,14 @@ const currencies = [
     value: 'Anual',
     label: 'Anual',
   },
+  {
+    value: 'Semanal',
+    label: 'Semanal',
+  },
+  {
+    value: 'Diário',
+    label: 'Diário',
+  },
  
 ];
 

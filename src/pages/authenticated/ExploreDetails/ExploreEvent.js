@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
 import { styled } from '@mui/material/styles';
 import { 
   Button, 
@@ -91,9 +91,9 @@ const itemData = [
 ];
 
 export default function ExploreEventDetails() {
+  const navigate = useNavigate();
   const { exploreId } = useParams();
 
-  const [selectedImage, setSelectedImage] = useState(0);
   const [event, setEvent] = useState({
     name: '',
     genre: '',
@@ -148,6 +148,10 @@ export default function ExploreEventDetails() {
     getEventData()
   }, [exploreId])
 
+  const handleMakeProposal = useCallback(() => {
+    navigate(`/make-proposal/${exploreId}`)
+  }, [navigate, exploreId])
+
 
   const image = [
     'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
@@ -157,7 +161,7 @@ export default function ExploreEventDetails() {
     <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
       <Grid item xs={12} md={4}>
         <Paper sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: 4, gap: 1, my: 2 }}>
-          <SmallImage src={image[selectedImage]} alt="Profile" />
+          <SmallImage src={image[0]} alt="Profile" />
           <Typography variant="h5" fontWeight='bold' style={{ color: '#FB2D57', marginTop: 2 }}>
             {event.name}
           </Typography>
@@ -177,7 +181,12 @@ export default function ExploreEventDetails() {
             </Box>
           </Box>
           <Divider orientation="horizontal" flexItem />
-          <Button variant="contained" color="success" sx={{ marginY: 1.5 }}>
+          <Button 
+            variant="contained" 
+            color="success" 
+            sx={{ marginY: 1.5 }}
+            onClick={handleMakeProposal}
+          >
             Propor Serviço
           </Button>
           <Divider orientation="horizontal" flexItem />

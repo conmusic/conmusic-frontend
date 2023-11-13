@@ -103,7 +103,7 @@ export default function Album() {
                       </MenuItem>
                     ))
                   }
-                </Select>                
+                </Select>
               </FormControl>
               <Button sx={{ marginLeft: 6 }}>
                 Filtrar

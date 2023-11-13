@@ -22,7 +22,8 @@ import {
     WorkspacePremium,
     MapsHomeWork,
     PersonPin,
-    MeetingRoom
+    MeetingRoom,
+    ChevronRight
 } from '@mui/icons-material'
 import QueryStatsIcon from '@mui/icons-material/QueryStats';
 import SideBarOption from "./SideBarOption";
@@ -170,7 +171,11 @@ export default function SideBar() {
                     }}
                 >
                     <IconButton sx={{ color: '#FB2D57'}} onClick={toggleDrawer}>
-                        <ChevronLeft />
+                        {
+                            open
+                                ? (<ChevronLeft />)
+                                : (<ChevronRight />)
+                        }
                     </IconButton>
                 </Toolbar>
             </List>

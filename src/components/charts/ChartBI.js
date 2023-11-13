@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useTheme } from '@mui/material';
+import { Paper, useTheme } from '@mui/material';
 import { 
   LineChart, 
   Line, 
@@ -39,9 +39,17 @@ export default function ChartBI() {
     }, []);
   
     return (
-      <React.Fragment>
-        <Title>Rentabilidade Mensal</Title>
-        <ResponsiveContainer width="100%" height={200}>
+      <Paper
+        sx={{
+          p: 2,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between',
+          height: 350,
+        }}
+      >
+        <Title>Valor total recebido para todos shows em período</Title>
+        <ResponsiveContainer width="100%" height={200} >
           <LineChart
             data={chartData}
             margin={{
@@ -86,6 +94,6 @@ export default function ChartBI() {
             />
           </LineChart>
         </ResponsiveContainer>
-      </React.Fragment>
+      </Paper>
     );
   }

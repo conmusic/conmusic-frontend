@@ -27,10 +27,6 @@ const currencies = [
  
 ];
 
-const divStyle = {
-    height: '45px',
-  };
-
 export default function Select() {
   return (
     <Box 

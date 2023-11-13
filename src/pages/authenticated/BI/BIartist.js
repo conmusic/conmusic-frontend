@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { format, isAfter } from 'date-fns';
+import React, { useCallback, useState } from 'react';
 import {
   Container,
   Grid,
   Paper,
-  Box
+  Box,
+  Typography,
+  Select,
+  OutlinedInput,
+  MenuItem,
+  InputLabel,
+  FormControl
 } from '@mui/material';
-import Typography from '@mui/material/Typography';
 import ChartBI from '../../../components/charts/ChartBI'
-import api from '../../../services/api';
 import { BarChart } from '@mui/x-charts/BarChart';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { MultiInputDateRangeField } from '@mui/x-date-pickers-pro/MultiInputDateRangeField';
 import { makeStyles } from '@material-ui/core/styles';
 import Title from '../../../components/Title';
 import CardAdmin from '../../../components/CardAdmin';
 import styled from 'styled-components';
-import Select from '../../../components/Select';
+import { DatePicker } from '@mui/x-date-pickers';
+import dayjs from 'dayjs';
 
 const useStyles = makeStyles({
   input: {
@@ -88,59 +90,45 @@ const customColorScheme = {
 export default function DashboardAdmin() {
   const classes = useStyles();
 
-  const [cardData, setCardData] = useState([]);
+  const [dateRange, setDateRange] = useState({
+    startDate: dayjs().subtract(1, 'month'),
+    endDate: dayjs()
+  })
 
-  useEffect(() => {
-    const fetchCardData = async () => {
-      try {
-        var token = localStorage.getItem('@conmusic:token');
-        const config = {
-          headers: { Authorization: `Bearer ${token}` }
-        };
-        const response = await api.get('/shows/confirmed', config);
-        var card = response.data
-          .filter(obj => isAfter(new Date(obj.schedule.startDateTime), new Date()))
-          .map(obj => {
-            let showDate = format(new Date(obj.schedule.startDateTime), "dd/MM/yyyy");
-            let showStartDateTime = format(new Date(obj.schedule.startDateTime), "HH:mm");
-            let showEndDateTime = format(new Date(obj.schedule.endDateTime), "HH:mm");
-
-            return {
-              establishment: obj.event.establishment.establishmentName,
-              event: obj.event.name,
-              date: showDate,
-              time: `${showStartDateTime} - ${showEndDateTime}`,
-            }
-          })
-        setCardData(card);
-      } catch (error) {
-        console.error('Erro ao buscar os dados dos cards:', error);
-      }
-    };
-
-    fetchCardData();
-  }, []);
+  const [period, setPeriod] = useState(0)
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
 
       <Title>Desempenho</Title>
-      <LocalizationProvider dateAdapter={AdapterDayjs} >
-        <DemoContainer
-          components={['MultiInputDateRangeField', 'SingleInputDateRangeField']}
-        >
-          <MultiInputDateRangeField
-            slotProps={{
-              textField: ({ position }) => ({
-                label: position === 'Data inicial' ? 'Departure' : 'Data final',
-                className: classes.input
-              }),
-            }}
-          />
-        </DemoContainer>
-      </LocalizationProvider>
+      <Paper
+        sx={{
+          padding: 2,
+          maxWidth: 'fit-content',
+          marginBottom: 1
+        }}
+      >
+        <LocalizationProvider dateAdapter={AdapterDayjs} >
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+            <DatePicker
+              label="Data Início"
+              disableFuture
+              views={['year', 'month', 'day']}
+              value={dateRange.startDate}
+              onChange={(newValue) => setDateRange(prev => ({ ...prev, startDate: newValue }))}
+            />
+            <DatePicker
+              label="Data Termino"
+              disableFuture
+              views={['year', 'month', 'day']}
+              value={dateRange.endDate}
+              onChange={(newValue) => setDateRange(prev => ({ ...prev, endDate: newValue }))}
+            />
+          </Box>
+        </LocalizationProvider>
+      </Paper>
       <Box>
-        <Grid container spacing={3} flexWrap={'nowrap'} marginTop={1}>
+        <Grid container spacing={3} flexWrap={'nowrap'}>
           {/* Recent CardAdmin */}
           <Grid item xs={12} md={4} lg={4}>
             <Paper
@@ -150,28 +138,12 @@ export default function DashboardAdmin() {
                 flexDirection: 'column',
                 height: 200,
                 marginBottom: 3,
-                width: "auto",
-                background: 'linear-gradient(to right, #2D75FB, #4D9CFF, #4D9CFF, #6CB6FF, #A7E9FF, #A7E9FF)',
-                color: "white",
+                width: "auto"
               }}
             >
-              <Typography component="p" color={"black"}>Faturamento:</Typography>
-              <Paper
-                sx={{
-                  p: 2,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: 300,
-                  boxShadow: 0,
-                  background: 'transparent'
-                }}
-              >
-                <Typography variant="h3" color="#15005A">
-                  R$ 650
-                </Typography>
-              </Paper>
+
+              <Typography component="p" fontWeight="bold">Propostas Recebidas:</Typography>
+              <CardAdmin sx={{ height: '50%' }} valor='45' />
             </Paper>
           </Grid>
           <Grid item xs={12} md={4} lg={4}>
@@ -185,9 +157,25 @@ export default function DashboardAdmin() {
                 width: "auto"
               }}
             >
-              <Typography component="p">Shows Confirmados:</Typography>
+              <Typography component="p" fontWeight="bold">Negociações iniciadas</Typography>
+              <CardAdmin sx={{ height: '50%' }} valor='70' />
+              <CenteredTypography component="p">Por você: 10</CenteredTypography>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={4} lg={4}>
+            <Paper
+              sx={{
+                p: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                height: 200,
+                marginBottom: 3,
+                width: "auto"
+              }}
+            >
+              <Typography component="p" fontWeight="bold">Shows Confirmados</Typography>
               <CardAdmin sx={{ height: '50%' }} valor='70%' />
-              <CenteredTypography component="p">Total de Shows: 10</CenteredTypography>
+              <CenteredTypography component="p">Total de confirmados: 10</CenteredTypography>
             </Paper>
           </Grid>
           <Grid item xs={12} md={4} lg={4}>
@@ -203,31 +191,38 @@ export default function DashboardAdmin() {
               }}
             >
 
-              <Typography component="p">Shows Cancelados:</Typography>
+              <Typography component="p" fontWeight="bold">Shows Cancelados</Typography>
               <CardAdmin sx={{ height: '50%' }} valor='10%' />
               <CenteredTypography component="p">Total de cancelados: 7</CenteredTypography>
             </Paper>
           </Grid>
-          <Grid item xs={12} md={4} lg={4}>
-            <Paper
-              sx={{
-                p: 2,
-                display: 'flex',
-                flexDirection: 'column',
-                height: 200,
-                marginBottom: 3,
-                width: "auto"
-              }}
-            >
-
-              <Typography component="p">Propostas Recebidas:</Typography>
-              <CardAdmin sx={{ height: '50%' }} valor='45%' />
-              <CenteredTypography component="p">Total de negociações: 12</CenteredTypography>
-            </Paper>
-          </Grid>
         </Grid>
       </Box>
-      <Select />
+      <Paper
+        sx={{
+          padding: 2,
+          width: '50%',
+          marginTop: 2,
+          marginBottom: 2
+        }}
+      >
+        <FormControl sx={{ width: '100%' }}>
+          <InputLabel id='chart-period-label'>Período</InputLabel>
+          <Select
+            id='chart-period'
+            labelId='chart-period-label'
+            value={period}
+            input={<OutlinedInput id="select-period" label="Período" />}
+          >
+            <MenuItem value={0}>Selecionar período</MenuItem>
+            <MenuItem value={1}>Diário</MenuItem>
+            <MenuItem value={2}>Semanal</MenuItem>
+            <MenuItem value={3}>Mensal</MenuItem>
+            <MenuItem value={4}>Trimestral</MenuItem>
+            <MenuItem value={5}>Anual</MenuItem>
+          </Select>
+        </FormControl>
+      </Paper>
       <Grid container spacing={3}>
         <Grid item xs={12} md={6} lg={6}>
           <Paper
@@ -245,24 +240,11 @@ export default function DashboardAdmin() {
               series={[{ dataKey: 'value', label: 'Gêneros Musicais mais tocados', valueFormatter, color: 'blue' }]}
               layout="horizontal"
               {...chartSetting}
-
             />
           </Paper>
         </Grid>
         <Grid item xs={6} md={6} lg={6}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              height: 350,
-            }}
-          >
-            <div style={{ display: 'flex', alignSelf: 'center' }}>
-              <Title>Faturamento</Title>
-            </div>
-            <ChartBI sx={{ height: '50%' }} />
-          </Paper>
+          <ChartBI sx={{ height: '50%' }} />
         </Grid>
       </Grid>
     </Container>

@@ -16,6 +16,8 @@ import Rating from '@mui/material/Rating';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import StatusChip from './StatusChip';
+import api from '../services/api';
+import { getValue } from '@testing-library/user-event/dist/utils';
 
 const style = {
   position: 'absolute',
@@ -43,9 +45,29 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function CardEventNegotiation({ establishment, event, local, showStart, showEnd, id, status }) {
+function CardEventNegotiation({ establishment, event, local, showStart, showEnd, id, status, establishmentId}) {
   const navigate = useNavigate();
 
+  const handleClick = async () => {
+    const getValue = value;
+    const getEstablishmentId = establishmentId;
+    const data = {
+      rating: getValue,
+      comentary: comentario,
+      artistId: localStorage.getItem('@conmusic:id'),
+      establishmentId: getEstablishmentId,
+    };
+
+    try {
+      await api.post('/avaliation', data);
+    } catch (error) {
+      console.error(error);
+    }
+    setOpenToast(true);  
+    handleClose();
+  };
+
+  const [comentario, setComentario] = useState(null);
   const [value, setValue] = React.useState(2);
   const [open, setOpen] = React.useState(false);
 
@@ -53,11 +75,6 @@ function CardEventNegotiation({ establishment, event, local, showStart, showEnd,
   const handleClose = () => setOpen(false);
   const [showConfirmationButton, setShowConfirmationButton] = useState(false);
   const [openToast, setOpenToast] = React.useState(false);
-
-  const handleClick = () => {
-    setOpenToast(true);
-    handleClose()
-  };
 
   const handleNavigation = useCallback(() => {
     navigate(`/negotiations/${id}`)
@@ -72,7 +89,7 @@ function CardEventNegotiation({ establishment, event, local, showStart, showEnd,
   };
 
   useEffect(() => {
-    if (status === 'CONCLUDED') {
+    if (status === 'CONFIRMED') {
       setShowConfirmationButton(true);
     }
   }, [status]);
@@ -174,17 +191,22 @@ function CardEventNegotiation({ establishment, event, local, showStart, showEnd,
                   name="simple-controlled"
                   value={value}
                   classes={{ icon: 'custom-rating-icon' }}
+                  precision={0.5}
                   style={{ display: "flex", marginLeft: "-7px" }}
-                  onChange={(event, newValue) => {
+                  onChange={(getValue, newValue) => {
                     setValue(newValue);
                   }}
                 />
                 <TextField
-                  id="outlined-multiline-static"
+                  id="commentSection"
                   label="Comentário"
                   multiline
                   rows={4}
                   style={{ display: "flex", width: "auto", marginTop: 15 }}
+                  value={comentario}
+                  onChange={(event) => {
+                    setComentario(event.target.value);
+                  }}
                 />
 
               </Box>

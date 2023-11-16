@@ -51,17 +51,18 @@ export default function ManageEstablishment() {
 
     const [openCreateModal, setOpenCreateModal] = useState(false);
     const [newEstablishment, setNewEstablishment] = useState({
-        establishmentName: "",
-        fantasyName: "",
-        phoneNumber: "",
-        cnpj: "",
+        cnpj: '',
+        fantasyName: '',
+        establishmentName: '',
+        phoneNumber: '',
         amount110Outlets: 0,
         amount220Outlets: 0,
-        address: "",
-        city: "",
-        state: "",
-        zipCode: "",
-        capacity: 0
+        capacity: 0,
+        address: '',
+        city: '',
+        state: '',
+        zipCode: '',
+        managerId: userId
     });
 
     useEffect(() => {
@@ -100,49 +101,51 @@ export default function ManageEstablishment() {
     }
 
     const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
+    const [skipped, setSkipped] = React.useState(new Set());
 
-  const isStepOptional = (step) => {
-    return step === 1;
-  };
+    const isStepSkipped = (step) => {
+        return skipped.has(step);
+    };
 
-  const isStepSkipped = (step) => {
-    return skipped.has(step);
-  };
+    const handleNext = () => {
+        let newSkipped = skipped;
+        if (isStepSkipped(activeStep)) {
+            newSkipped = new Set(newSkipped.values());
+            newSkipped.delete(activeStep);
+        }
 
-  const handleNext = () => {
-    let newSkipped = skipped;
-    if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
-    }
+        setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        setSkipped(newSkipped);
+    };
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
-  };
+    const handleReset = () => {
+        setActiveStep(0);
+    };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+    const handleCreateEstablishment = async () => {
+        try {
+            const token = localStorage.getItem('@conmusic:token');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` },
+            };
+            console.log("newEstablishment:", newEstablishment)
+            const response = await api.post('/establishments', newEstablishment, config);
 
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
+            if (response.status === 201) {
+                setOpenCreateModal(false);
+                
+            } else {
+                console.error('Erro ao criar o estabelecimento:', response);
+            }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+        } catch (error) {
+            console.error('Erro ao criar o estabelecimento:', error);
+            console.error('Mensagem de erro do servidor:', error.response.data);
+        }
+    };
 
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
@@ -242,7 +245,7 @@ export default function ManageEstablishment() {
                                 );
                             })}
                         </Stepper>
-                        
+
                     </Box>
                     <Box
                         component="form"
@@ -250,140 +253,166 @@ export default function ManageEstablishment() {
                         noValidate
                         autoComplete="off"
                     >
-                        <div style={{ display: 'flex', gap: 20 }}>
-                            <TextField
-                                label="Razão Social"
-                                id="filled-size-normal"
-                                variant="filled"
-                                name="establishmentName"
-                                value={newEstablishment.establishmentName}
-                                onChange={handleCreateEstablishmentChange}
-                            />
-                            <TextField
-                                label="Nome Fantasia"
-                                id="filled-size-normal"
-                                variant="filled"
-                                name="fantasyName"
-                                value={newEstablishment.fantasyName}
-                                onChange={handleCreateEstablishmentChange}
-                            />
-                        </div>
-                        <div style={{ display: 'flex', gap: 20 }}>
-                            <TextField
-                                label="Número de Telefone"
-                                id="filled-size-normal"
-                                variant="filled"
-                                name="phoneNumber"
-                                value={newEstablishment.phoneNumber}
-                                onChange={handleCreateEstablishmentChange}
-                            />
+                        {activeStep === 0 && (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+                                <TextField
+                                    label="Nome do Estabelecimneto"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="establishmentName"
+                                    value={newEstablishment.establishmentName}
+                                    onChange={handleCreateEstablishmentChange}
+                                />
+                                <TextField
+                                    label="Nome Fantasia"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="fantasyName"
+                                    value={newEstablishment.fantasyName}
+                                    onChange={handleCreateEstablishmentChange}
+                                />
+                                <TextField
+                                    label="Número de Telefone"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="phoneNumber"
+                                    value={newEstablishment.phoneNumber}
+                                    onChange={handleCreateEstablishmentChange}
+                                    inputProps={{
+                                        maxLength: 15,
+                                        pattern: "\\d{2} \\d{5}-\\d{4}",
+                                    }}
+                                />
 
-                            <TextField
-                                label="CNPJ"
-                                id="filled-size-normal"
-                                variant="filled"
-                                name="cnpj"
-                                value={newEstablishment.cnpj}
-                                onChange={handleCreateEstablishmentChange}
-                            />
-                        </div>
-                        <div style={{ display: 'flex', gap: 20 }}>
-                            <TextField
-                                label="Quantidade de tomadas 110"
-                                id="filled-size-normal"
-                                variant="filled"
-                                name="amount110Outlets"
-                                value={newEstablishment.amount110Outlets}
-                                onChange={handleCreateEstablishmentChange}
-                            />
-                            <TextField
-                                label="Quantidade de tomadas 220"
-                                id="filled-size-normal"
-                                variant="filled"
-                                name="amount220Outlets"
-                                value={newEstablishment.amount220Outlets}
-                                onChange={handleCreateEstablishmentChange}
-                            />
-                        </div>
-                        <div style={{ display: 'flex', gap: 20 }}>
-                            <TextField
-                                label="Endereço"
-                                id="filled-size-normal"
-                                variant="filled"
-                                name="address"
-                                value={newEstablishment.address}
-                                onChange={handleCreateEstablishmentChange}
-                            />
-                            <TextField
-                                label="Cidade"
-                                id="filled-size-normal"
-                                variant="filled"
-                                name="city"
-                                value={newEstablishment.city}
-                                onChange={handleCreateEstablishmentChange}
-                            />
-                        </div>
-                        <div style={{ display: 'flex', gap: 20 }}>
-                            <TextField
-                                label="Estado"
-                                id="filled-size-normal"
-                                variant="filled"
-                                name="state"
-                                value={newEstablishment.state}
-                                onChange={handleCreateEstablishmentChange}
-                            />
-                            <TextField
-                                label="CEP"
-                                id="filled-size-normal"
-                                variant="filled"
-                                name="zipCode"
-                                value={newEstablishment.zipCode}
-                                onChange={handleCreateEstablishmentChange}
-                            />
-                        </div>
-                        <div style={{ display: 'flex', gap: 20 }}>
-                            <TextField
-                                label="Capacidade"
-                                id="filled-size-normal"
-                                variant="filled"
-                                name="capacity"
-                                value={newEstablishment.capacity}
-                                onChange={handleCreateEstablishmentChange}
-                            />
-                        </div>
+                                <TextField
+                                    label="CNPJ"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="cnpj"
+                                    value={newEstablishment.cnpj}
+                                    onChange={handleCreateEstablishmentChange}
+                                    inputProps={{
+                                        maxLength: 18,
+                                        pattern: "\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}",
+                                    }}
+                                />
+                            </div>
+                        )}
+
+                        {activeStep === 1 && (
+                            <div style={{ display: 'flex', gap: 20, flexDirection: 'column' }}>
+                                <TextField
+                                    label="Quantidade de tomadas 110"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="amount110Outlets"
+                                    value={newEstablishment.amount110Outlets}
+                                    onChange={handleCreateEstablishmentChange}
+                                />
+                                <TextField
+                                    label="Quantidade de tomadas 220"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="amount220Outlets"
+                                    value={newEstablishment.amount220Outlets}
+                                    onChange={handleCreateEstablishmentChange}
+                                />
+                                <TextField
+                                    label="Capacidade"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="capacity"
+                                    value={newEstablishment.capacity}
+                                    onChange={handleCreateEstablishmentChange}
+                                />
+                            </div>
+                        )}
+
+                        {activeStep === 2 && (
+                            <div style={{ display: 'flex', gap: 20, flexDirection: 'column' }}>
+                                <TextField
+                                    label="Endereço"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="address"
+                                    value={newEstablishment.address}
+                                    onChange={handleCreateEstablishmentChange}
+                                />
+                                <TextField
+                                    label="Cidade"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="city"
+                                    value={newEstablishment.city}
+                                    onChange={handleCreateEstablishmentChange}
+                                />
+                                <TextField
+                                    label="Estado"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="state"
+                                    value={newEstablishment.state}
+                                    onChange={handleCreateEstablishmentChange}
+                                />
+                                <TextField
+                                    label="CEP"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="zipCode"
+                                    value={newEstablishment.zipCode}
+                                    onChange={handleCreateEstablishmentChange}
+                                />
+                            </div>
+                        )}
+
+
                     </Box>
                     {activeStep === steps.length ? (
-                            <React.Fragment>
-                                <Typography sx={{ mt: 2, mb: 1 }}>
-                                    Todos os passos foram concluidos!
-                                </Typography>
-                                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                                    <Box sx={{ flex: '1 1 auto' }} />
-                                </Box>
-                            </React.Fragment>
-                        ) : (
-                            <React.Fragment>
-                                <Typography sx={{ mt: 1, mb: 1 }}>Passo {activeStep + 1}</Typography>
-                                <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                                    <Button
-                                        color="inherit"
-                                        disabled={activeStep === 0}
-                                        onClick={handleBack}
-                                        sx={{ mr: 1 }}
-                                    >
-                                        Voltar
-                                    </Button>
-                                    <Box sx={{ flex: '1 1 auto' }} />
+                        <React.Fragment>
+                            <Typography sx={{ mt: 2, mb: 1 }}>
+                                Todos os passos foram concluídos!
+                            </Typography>
+                            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                                <Box sx={{ flex: '1 1 auto' }} />
+                            </Box>
+                        </React.Fragment>
+                    ) : (
+                        <React.Fragment>
+                            <Typography sx={{ mt: 1, mb: 1 }}>Etapa {activeStep + 1}</Typography>
+                            <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                                <Button
+                                    color="inherit"
+                                    disabled={activeStep === 0}
+                                    onClick={handleBack}
+                                    sx={{ mr: 1 }}
+                                >
+                                    Voltar
+                                </Button>
+                                <Box sx={{ flex: '1 1 auto' }} />
 
-                                    <Button onClick={handleNext}>
-                                        {activeStep === steps.length - 1 ? 'Finalizar' : 'Próximo'}
-                                    </Button>
-                                </Box>
-                            </React.Fragment>
-                        )}
-                    <Button variant="contained" color="success" style={{ width: 250, height: 40 }}>
-                        Criar Estabelecimento
-                    </Button>
+                                <Button onClick={handleNext}>
+                                    {activeStep === steps.length - 1
+                                        ? 'Finalizar Etapas'
+                                        : 'Próximo'}
+                                </Button>
+                            </Box>
+                        </React.Fragment>
+                    )}
+
+                    {activeStep === steps.length && (
+                        <Button
+                            variant="contained"
+                            color="success"
+                            style={{ width: 250, height: 40 }}
+                            onClick={() => {
+                                handleCreateEstablishment();
+                                setOpenCreateModal(false); // Adiciona esta linha para fechar o modal
+                                handleReset()
+                            }}
+                        >
+                            Criar Estabelecimento
+                        </Button>
+                    )}
                 </Box>
             </Modal>
         </Container>

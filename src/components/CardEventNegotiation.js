@@ -89,7 +89,7 @@ function CardEventNegotiation({ establishment, event, local, showStart, showEnd,
   };
 
   useEffect(() => {
-    if (status === 'CONFIRMED') {
+    if (status === 'CONCLUDED') {
       setShowConfirmationButton(true);
     }
   }, [status]);

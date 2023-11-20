@@ -11,10 +11,30 @@ import {
   Divider
 } from '@mui/material';
 
+import api from '../services/api';
+
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 
-export default function CardShows({ mode, name, eventName, showDate, showTime, ...rest }) {
+export default function CardShows({ mode, name, id, eventName, showDate, showTime, ...rest }) {
+
+  const getImage = async () => {
+    try {
+      var token = localStorage.getItem('@conmusic:token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` }
+      };
+
+      var url = mode === 'Artist' ? `/artists/image/perfil` : `/establishments/${id}/image`;
+
+      const response = await api.get(`/${url}/image/perfil/${id}`, config);
+
+      return response.data.url;
+    } catch (error) {
+      console.error('Erro ao buscar imagem:', error);
+    }
+  }
+
   return (
     <Container sx={{ py: 2 }} maxWidth="md">
       {/* End hero unit */}
@@ -34,7 +54,7 @@ export default function CardShows({ mode, name, eventName, showDate, showTime, .
                 // 16:9
                 pt: '95.25%',
               }}
-              image="https://source.unsplash.com/random?wallpapers"
+              image={getImage()}
             />
             <CardContent sx={{ flexGrow: 1, justifyContent: 'space-between', display: 'flex', flexDirection: 'column' }}>
               <Typography gutterBottom variant="h6" component="h2" style={{ display: "flex", 

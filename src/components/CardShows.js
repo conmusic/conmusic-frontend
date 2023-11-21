@@ -15,25 +15,33 @@ import api from '../services/api';
 
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import { useEffect } from 'react';
 
 export default function CardShows({ mode, name, id, eventName, showDate, showTime, ...rest }) {
 
-  const getImage = async () => {
-    try {
-      var token = localStorage.getItem('@conmusic:token');
-      const config = {
-        headers: { Authorization: `Bearer ${token}` }
-      };
+  const [imageURL, setImageURL] = useState('');
 
-      var url = mode === 'Artist' ? "establishments" : "artists";
+  useEffect(() => {
+    const getImage = async () => {
+      try {
+        var token = localStorage.getItem('@conmusic:token');
+        const config = {
+          headers: { Authorization: `Bearer ${token}` }
+        };
 
-      const response = await api.get(`/${url}/image/perfil/${id}`, config);
+        var url = mode === 'Artist' ? "establishments" : "artists";
 
-      return response.data.url;
-    } catch (error) {
-      console.error('Erro ao buscar imagem:', error);
+        const response = await api.get(`/${url}/image/perfil/${id}`, config);
+
+        console.log(response.data.url);
+
+        setImageURL(response.data.url);
+      } catch (error) {
+        console.error('Erro ao buscar imagem:', error);
+      }
     }
-  }
+
+  }, []);
 
   return (
     <Container sx={{ py: 2 }} maxWidth="md">
@@ -41,12 +49,13 @@ export default function CardShows({ mode, name, id, eventName, showDate, showTim
       <Grid container spacing={4}>
         <Grid item xs={12} sm={12} md={12} lg={12}>
           <Card
-            sx={{ height: '100%', 
-            display: 'flex', 
-            flexDirection: 'column', 
-            justifyContent: 'space-between', 
-            boxShadow: 0
-          }}
+            sx={{
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxShadow: 0
+            }}
           >
             <CardMedia
               component="div"
@@ -54,11 +63,13 @@ export default function CardShows({ mode, name, id, eventName, showDate, showTim
                 // 16:9
                 pt: '95.25%',
               }}
-              image={getImage()}
+              image={imageURL}
             />
             <CardContent sx={{ flexGrow: 1, justifyContent: 'space-between', display: 'flex', flexDirection: 'column' }}>
-              <Typography gutterBottom variant="h6" component="h2" style={{ display: "flex", 
-              alignItems: "center", fontWeight: 'bold' }}>
+              <Typography gutterBottom variant="h6" component="h2" style={{
+                display: "flex",
+                alignItems: "center", fontWeight: 'bold'
+              }}>
                 {name}
               </Typography>
               <Divider orientation="horizontal" flexItem sx={{ my: 1 }} />
@@ -66,14 +77,18 @@ export default function CardShows({ mode, name, id, eventName, showDate, showTim
                 {eventName}
               </Typography>
               <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', marginBottom: 1 }}>
-                <Typography sx={{ display: 'flex', marginBottom: 1, flexDirection: 'row', justifyContent: "flex-start", 
-              alignItems: "center"}}>
-                  <CalendarMonthIcon sx={{ color: '#FB2D57', marginRight: "4px"}} />
+                <Typography sx={{
+                  display: 'flex', marginBottom: 1, flexDirection: 'row', justifyContent: "flex-start",
+                  alignItems: "center"
+                }}>
+                  <CalendarMonthIcon sx={{ color: '#FB2D57', marginRight: "4px" }} />
                   {showDate}
                 </Typography>
-                <Typography sx={{ display: 'flex', marginBottom: 1, flexDirection: 'row', justifyContent: "flex-start", 
-              alignItems: "center"}}>
-                  <AccessTimeIcon sx={{ color: '#FB2D57', marginRight: "4px"}} />
+                <Typography sx={{
+                  display: 'flex', marginBottom: 1, flexDirection: 'row', justifyContent: "flex-start",
+                  alignItems: "center"
+                }}>
+                  <AccessTimeIcon sx={{ color: '#FB2D57', marginRight: "4px" }} />
                   {showTime}
                 </Typography>
               </Box>

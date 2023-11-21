@@ -66,6 +66,8 @@ export default function Tinder() {
     genres: [],
   })
 
+  const [imagesLoaded, setImagesLoaded] = useState(false); // Marca se as imagens já foram carregadas
+
   useEffect(() => {
     async function fetchData() {
       try {

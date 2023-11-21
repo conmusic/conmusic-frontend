@@ -15,7 +15,6 @@ import api from '../services/api';
 
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { useEffect } from 'react';
 
 export default function CardShows({ mode, name, id, eventName, showDate, showTime, ...rest }) {
 

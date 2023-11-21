@@ -149,44 +149,43 @@ export default function Tinder() {
 
     async function getPerfilImage() {
       try {
-        var token = localStorage.getItem('@conmusic:token');
-        const config = {
-          headers: { Authorization: `Bearer ${token}` }
-        };
+        if (currentArtist && currentArtist.id) {
+          var token = localStorage.getItem('@conmusic:token');
+          const config = {
+            headers: { Authorization: `Bearer ${token}` },
+          };
+  
+          const response = await api.get(`/artists/image/perfil/${currentArtist.id}`, config);
 
-        const response = await api.get(`/artists/image/perfil/${currentArtist.id}`, config);
-
-        // console.log(response.data.url);
-
-        setPerfilImage(response.data.url);
+          setPerfilImage(response.data.url);
+        }
       } catch (error) {
         console.error('Erro ao buscar imagem:', error);
       }
     }
-
+  
     async function getImages() {
       try {
-        var token = localStorage.getItem('@conmusic:token');
-        const config = {
-          headers: { Authorization: `Bearer ${token}` }
-        };
-
-        const response = await api.get(`/artists/images/${currentArtist.id}`, config);
-
-        setImages(response.data);
+        if (currentArtist && currentArtist.id) {
+          var token = localStorage.getItem('@conmusic:token');
+          const config = {
+            headers: { Authorization: `Bearer ${token}` },
+          };
+  
+          const response = await api.get(`/artists/images/${currentArtist.id}`, config);
+  
+          setImages(response.data);
+        }
       } catch (error) {
         console.error('Erro ao buscar imagens:', error);
       }
     }
 
+    console.log("currentArtist: ", currentArtist.id)
+
     getArtists()
-
-    console.log("Artist: " + JSON.parse(currentArtist))
-
-    if (currentArtist.id != null) {
-      getPerfilImage()
-      getImages()
-    }
+    getPerfilImage()
+    getImages()
   }, [setArtists, setCurrentArtist])
 
   const getMoreArtists = useCallback(async () => {

@@ -15,7 +15,6 @@ import {
 import eventPropsHelper from '../../../helpers/eventPropsHelper';
 import api from '../../../services/api';
 import dateHelper from '../../../helpers/dateHelper';
-import { async } from 'q';
 
 const CarouselContainer = styled('div')({
   display: 'flex',
@@ -27,9 +26,10 @@ const CarouselContainer = styled('div')({
 });
 
 const SmallImage = styled('img')({
-  width: '150px',
-  height: '150px',
+  width: '250px',
+  height: '250px',
   borderRadius: '50%',
+  objectFit: 'cover',
 });
 
 const SubtitleContainer = styled('div')({
@@ -41,10 +41,23 @@ const SubtitleContainer = styled('div')({
 })
 
 function srcset(image, size, rows = 1, cols = 1) {
+  const originalWidth = size * cols;
+  const originalHeight = size * rows;
+  const aspectRatio = originalWidth / originalHeight;
+
+  // Definindo nova largura e altura com base na proporção original
+  let newWidth = originalWidth;
+  let newHeight = originalHeight;
+
+  if (cols > rows) {
+    newHeight = Math.round(originalWidth / aspectRatio);
+  } else if (cols < rows) {
+    newWidth = Math.round(originalHeight * aspectRatio);
+  }
+
   return {
-    src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-    srcSet: `${image}?w=${size * cols}&h=${size * rows
-      }&fit=crop&auto=format&dpr=2 2x`,
+    src: `${image}?w=${newWidth}&h=${newHeight}&fit=crop&auto=format`,
+    srcSet: `${image}?w=${newWidth}&h=${newHeight}&fit=crop&auto=format&dpr=2 2x`,
   };
 }
 
@@ -64,19 +77,68 @@ export default function Tinder() {
     instagram: null,
     phoneNumber: null,
     genres: [],
-  })
+  });
 
-  const [imagesLoaded, setImagesLoaded] = useState(false); // Marca se as imagens já foram carregadas
+  async function getPerfilImage(artistId) {
+    try {
+      var token = localStorage.getItem('@conmusic:token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+  
+      const response = await api.get(`/artists/image/perfil/${artistId}`, config);
+  
+      if (response.data.url) {
+        setPerfilImage(response.data.url);
+      } else {
+        // Caso o artista não tenha imagem de perfil cadastrada, limpar a imagem anterior
+        setPerfilImage('');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar imagem:', error);
+    }
+  }
+
+  async function getImages(artistId) {
+    try {
+      var token = localStorage.getItem('@conmusic:token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      const response = await api.get(`/artists/images/${artistId}`, config);
+
+      const patternMapping = {
+        0: { cols: 2, rows: 2 },
+        1: { cols: 1, rows: 1 },
+        2: { cols: 1, rows: 1 },
+        3: { cols: 2, rows: 1 },
+        4: { cols: 2, rows: 1 },
+        5: { cols: 2, rows: 2 },
+        6: { cols: 1, rows: 1 },
+        7: { cols: 1, rows: 1 },
+      };
+
+      const updatedImages = response.data.map((image, index) => ({
+        ...image,
+        ...patternMapping[index],
+      }));
+
+      setImages(updatedImages);
+    } catch (error) {
+      console.error('Erro ao buscar imagens:', error);
+    }
+  }
 
   useEffect(() => {
     async function fetchData() {
       try {
         const artistsCache = localStorage.getItem('@conmusic:explore-artists');
         let artistsData;
-  
+
         if (!artistsCache || artistsCache === "" || artistsCache == null) {
           const { data } = await api.get(`/artists`);
-  
+
           artistsData = data.map((artist) => ({
             id: artist.id,
             name: artist.name,
@@ -88,65 +150,33 @@ export default function Tinder() {
             phoneNumber: artist.phoneNumber,
             genres: artist.musicalGenres,
           })).reverse();
-  
+
           localStorage.setItem('@conmusic:explore-artists', JSON.stringify(artistsData));
-  
+
           console.log("from api: ", data);
         } else {
           artistsData = JSON.parse(artistsCache);
           console.log("from cache: ", artistsCache);
         }
-  
+
         console.log(artistsData);
-  
+
         setArtists(artistsData);
-        setCurrentArtist(artistsData.pop());
+        const nextArtist = artistsData.pop();
+        setCurrentArtist(nextArtist);
+
+        // Após configurar o currentArtist, chama os métodos restantes
+        if (nextArtist && nextArtist.id) {
+          await getPerfilImage(nextArtist.id);
+          await getImages(nextArtist.id);
+        }
       } catch (error) {
         console.error(error);
       }
     }
-  
-    async function getPerfilImage() {
-      try {
-        if (currentArtist && currentArtist.id) {
-          var token = localStorage.getItem('@conmusic:token');
-          const config = {
-            headers: { Authorization: `Bearer ${token}` },
-          };
-  
-          const response = await api.get(`/artists/image/perfil/${currentArtist.id}`, config);
-  
-          // console.log(response.data.url);
-  
-          setPerfilImage(response.data.url);
-        }
-      } catch (error) {
-        console.error('Erro ao buscar imagem:', error);
-      }
-    }
-  
-    async function getImages() {
-      try {
-        if (currentArtist && currentArtist.id && !imagesLoaded) {
-          var token = localStorage.getItem('@conmusic:token');
-          const config = {
-            headers: { Authorization: `Bearer ${token}` },
-          };
-  
-          const response = await api.get(`/artists/images/${currentArtist.id}`, config);
-  
-          setImages(response.data);
-          setImagesLoaded(true); // Marca que as imagens foram carregadas
-        }
-      } catch (error) {
-        console.error('Erro ao buscar imagens:', error);
-      }
-    }
-  
+
     fetchData(); // Renomeado para fetchData
-    getPerfilImage();
-    getImages();
-  }, [setArtists, setCurrentArtist, currentArtist, imagesLoaded, setImagesLoaded]);  
+  }, [setArtists, setCurrentArtist]);
 
   const getMoreArtists = useCallback(async () => {
     try {
@@ -163,7 +193,7 @@ export default function Tinder() {
         phoneNumber: artist.phoneNumber,
         genres: artist.musicalGenres,
       })).reverse();
-      
+
       localStorage.setItem('@conmusic:explore-artists', JSON.stringify(artistsData))
 
       console.log("from api: ", data)
@@ -174,17 +204,28 @@ export default function Tinder() {
     }
   }, [])
 
-  const nextArtist = useCallback(() => {
+  const nextArtist = useCallback(async () => {
     if (artists.length > 0) {
-      const selectedArtist = artists.pop()
-      setCurrentArtist(selectedArtist)
-      localStorage.setItem('@conmusic:explore-artists', JSON.stringify(artists))
-
+      const selectedArtist = artists.pop();
+      setCurrentArtist(selectedArtist);
+      localStorage.setItem('@conmusic:explore-artists', JSON.stringify(artists));
+  
+      // Limpar as imagens antes de obter as do próximo artista
+      setImages([]);
+      setPerfilImage('');
+  
+      // Se não houver mais artistas, buscar mais
       if (artists.length <= 0) {
-        getMoreArtists()
+        getMoreArtists();
+      }
+  
+      // Obter as imagens e imagem de perfil do próximo artista
+      if (selectedArtist && selectedArtist.id) {
+        await getPerfilImage(selectedArtist.id);
+        await getImages(selectedArtist.id);
       }
     }
-  }, [artists, getMoreArtists])
+  }, [artists, getMoreArtists]);
 
   const makeProposal = useCallback(() => {
     navigate(`/make-proposal/${currentArtist.id}`)
@@ -255,7 +296,7 @@ export default function Tinder() {
               {images.map((item, index) => (
                 <ImageListItem key={item.url} cols={item.cols || 1} rows={item.rows || 1}>
                   <img
-                    {...srcset(item.url, 121)}
+                    {...srcset(item.url, 121, item.rows, item.cols)}
                     alt={index}
                     loading="lazy"
                   />

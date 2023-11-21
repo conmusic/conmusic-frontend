@@ -40,6 +40,7 @@ export default function CardShows({ mode, name, id, eventName, showDate, showTim
       }
     }
 
+    getImage();
   }, []);
 
   return (

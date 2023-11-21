@@ -48,48 +48,6 @@ function srcset(image, size, rows = 1, cols = 1) {
   };
 }
 
-const itemData = [
-  {
-    img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: 'Breakfast',
-    rows: 2,
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-    title: 'Camera',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: 'Coffee',
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-    title: 'Hats',
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-    title: 'Honey',
-    author: '@arwinneil',
-    rows: 2,
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-    title: 'Basketball',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: 'Fern',
-  },
-];
-
 export default function Tinder() {
   const navigate = useNavigate();
 
@@ -113,11 +71,11 @@ export default function Tinder() {
       try {
         const artistsCache = localStorage.getItem('@conmusic:explore-artists');
         let artistsData;
-
+  
         if (!artistsCache || artistsCache === "" || artistsCache == null) {
-          const { data } = await api.get(`/artists`)
-
-          artistsData = data.map(artist => ({
+          const { data } = await api.get(`/artists`);
+  
+          artistsData = data.map((artist) => ({
             id: artist.id,
             name: artist.name,
             about: artist.about,
@@ -128,37 +86,42 @@ export default function Tinder() {
             phoneNumber: artist.phoneNumber,
             genres: artist.musicalGenres,
           })).reverse();
-
-          localStorage.setItem('@conmusic:explore-artists', JSON.stringify(artistsData))
-          
-          console.log("from api: ", data)
-
+  
+          localStorage.setItem('@conmusic:explore-artists', JSON.stringify(artistsData));
+  
+          console.log("from api: ", data);
         } else {
-          artistsData = JSON.parse(artistsCache)
-          console.log("from cache: ", artistsCache)
+          artistsData = JSON.parse(artistsCache);
+          console.log("from cache: ", artistsCache);
         }
-
-        console.log(artistsData)
-
-        setArtists(artistsData)
-        setCurrentArtist(artistsData.pop())
+  
+        console.log(artistsData);
+  
+        setArtists(artistsData);
+        setCurrentArtist(artistsData.pop());
+  
+        // Após configurar o currentArtist, chama os métodos restantes
+        if (currentArtist && currentArtist.id) {
+          await getPerfilImage();
+          await getImages();
+        }
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     }
-
+  
     async function getPerfilImage() {
       try {
-        if (currentArtist && currentArtist.id) {
-          var token = localStorage.getItem('@conmusic:token');
-          const config = {
-            headers: { Authorization: `Bearer ${token}` },
-          };
+        var token = localStorage.getItem('@conmusic:token');
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
   
-          const response = await api.get(`/artists/image/perfil/${currentArtist.id}`, config);
-
-          setPerfilImage(response.data.url);
-        }
+        const response = await api.get(`/artists/image/perfil/${currentArtist.id}`, config);
+  
+        // console.log(response.data.url);
+  
+        setPerfilImage(response.data.url);
       } catch (error) {
         console.error('Erro ao buscar imagem:', error);
       }
@@ -166,27 +129,21 @@ export default function Tinder() {
   
     async function getImages() {
       try {
-        if (currentArtist && currentArtist.id) {
-          var token = localStorage.getItem('@conmusic:token');
-          const config = {
-            headers: { Authorization: `Bearer ${token}` },
-          };
+        var token = localStorage.getItem('@conmusic:token');
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
   
-          const response = await api.get(`/artists/images/${currentArtist.id}`, config);
+        const response = await api.get(`/artists/images/${currentArtist.id}`, config);
   
-          setImages(response.data);
-        }
+        setImages(response.data);
       } catch (error) {
         console.error('Erro ao buscar imagens:', error);
       }
     }
-
-    console.log("currentArtist: ", currentArtist.id)
-
-    getArtists()
-    getPerfilImage()
-    getImages()
-  }, [setArtists, setCurrentArtist])
+  
+    getArtists();
+  }, [setArtists, setCurrentArtist, currentArtist]);
 
   const getMoreArtists = useCallback(async () => {
     try {

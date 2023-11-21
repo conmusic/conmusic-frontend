@@ -15,6 +15,7 @@ import {
 import eventPropsHelper from '../../../helpers/eventPropsHelper';
 import api from '../../../services/api';
 import dateHelper from '../../../helpers/dateHelper';
+import { async } from 'q';
 
 const CarouselContainer = styled('div')({
   display: 'flex',
@@ -90,11 +91,10 @@ const itemData = [
 ];
 
 export default function Tinder() {
-  const image = [
-    'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
-  ]
   const navigate = useNavigate();
 
+  const [perfilImage, setPerfilImage] = useState('');
+  const [images, setImages] = useState([]);
   const [artists, setArtists] = useState([]);
   const [currentArtist, setCurrentArtist] = useState({
     id: null,
@@ -147,7 +147,41 @@ export default function Tinder() {
       }
     }
 
+    async function getPerfilImage() {
+      try {
+        var token = localStorage.getItem('@conmusic:token');
+        const config = {
+          headers: { Authorization: `Bearer ${token}` }
+        };
+
+        const response = await api.get(`/artists/image/perfil/${currentArtist.id}`, config);
+
+        // console.log(response.data.url);
+
+        setPerfilImage(response.data.url);
+      } catch (error) {
+        console.error('Erro ao buscar imagem:', error);
+      }
+    }
+
+    async function getImages() {
+      try {
+        var token = localStorage.getItem('@conmusic:token');
+        const config = {
+          headers: { Authorization: `Bearer ${token}` }
+        };
+
+        const response = await api.get(`/artists/images/${currentArtist.id}`, config);
+
+        setImages(response.data);
+      } catch (error) {
+        console.error('Erro ao buscar imagens:', error);
+      }
+    }
+
     getArtists()
+    getPerfilImage()
+    getImages()
   }, [setArtists, setCurrentArtist])
 
   const getMoreArtists = useCallback(async () => {
@@ -196,7 +230,7 @@ export default function Tinder() {
     <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
       <Grid item xs={12} md={4}>
         <Paper sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: 4, gap: 1, my: 2 }}>
-          <SmallImage src={image[0] === undefined ? `data:image/jpeg;base64,` : image[0]} alt="Profile" />
+          <SmallImage src={perfilImage} alt="Profile" />
           <Typography variant="h5" fontWeight='bold' style={{ color: '#FB2D57', marginTop: 2 }}>
             {currentArtist.name}
           </Typography>
@@ -254,11 +288,11 @@ export default function Tinder() {
               cols={4}
               rowHeight={121}
             >
-              {itemData.map((item) => (
-                <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
+              {images.map((item, index) => (
+                <ImageListItem key={item.url} cols={item.cols || 1} rows={item.rows || 1}>
                   <img
-                    {...srcset(item.img, 121, item.rows, item.cols)}
-                    alt={item.title}
+                    {...srcset(item.url, 121)}
+                    alt={index}
                     loading="lazy"
                   />
                 </ImageListItem>

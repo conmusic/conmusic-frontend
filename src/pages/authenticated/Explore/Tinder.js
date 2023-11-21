@@ -180,8 +180,10 @@ export default function Tinder() {
     }
 
     getArtists()
-    getPerfilImage()
-    getImages()
+    if (currentArtist.id != null) {
+      getPerfilImage()
+      getImages()
+    }
   }, [setArtists, setCurrentArtist])
 
   const getMoreArtists = useCallback(async () => {

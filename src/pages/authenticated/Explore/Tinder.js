@@ -181,7 +181,7 @@ export default function Tinder() {
 
     getArtists()
 
-    console.log("Artist: " + currentArtist)
+    console.log("Artist: " + JSON.parse(currentArtist))
 
     if (currentArtist.id != null) {
       getPerfilImage()

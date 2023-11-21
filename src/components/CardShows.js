@@ -25,7 +25,7 @@ export default function CardShows({ mode, name, id, eventName, showDate, showTim
         headers: { Authorization: `Bearer ${token}` }
       };
 
-      var url = mode === 'Artist' ? `/artists/image/perfil` : `/establishments/${id}/image`;
+      var url = mode === 'Artist' ? "/establishments" : "/artists";
 
       const response = await api.get(`/${url}/image/perfil/${id}`, config);
 

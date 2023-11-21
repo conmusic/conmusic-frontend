@@ -67,7 +67,7 @@ export default function Tinder() {
   })
 
   useEffect(() => {
-    async function getArtists() {
+    async function fetchData() {
       try {
         const artistsCache = localStorage.getItem('@conmusic:explore-artists');
         let artistsData;
@@ -99,12 +99,6 @@ export default function Tinder() {
   
         setArtists(artistsData);
         setCurrentArtist(artistsData.pop());
-  
-        // Após configurar o currentArtist, chama os métodos restantes
-        if (currentArtist && currentArtist.id) {
-          await getPerfilImage();
-          await getImages();
-        }
       } catch (error) {
         console.error(error);
       }
@@ -112,16 +106,18 @@ export default function Tinder() {
   
     async function getPerfilImage() {
       try {
-        var token = localStorage.getItem('@conmusic:token');
-        const config = {
-          headers: { Authorization: `Bearer ${token}` },
-        };
+        if (currentArtist && currentArtist.id) {
+          var token = localStorage.getItem('@conmusic:token');
+          const config = {
+            headers: { Authorization: `Bearer ${token}` },
+          };
   
-        const response = await api.get(`/artists/image/perfil/${currentArtist.id}`, config);
+          const response = await api.get(`/artists/image/perfil/${currentArtist.id}`, config);
   
-        // console.log(response.data.url);
+          // console.log(response.data.url);
   
-        setPerfilImage(response.data.url);
+          setPerfilImage(response.data.url);
+        }
       } catch (error) {
         console.error('Erro ao buscar imagem:', error);
       }
@@ -129,21 +125,26 @@ export default function Tinder() {
   
     async function getImages() {
       try {
-        var token = localStorage.getItem('@conmusic:token');
-        const config = {
-          headers: { Authorization: `Bearer ${token}` },
-        };
+        if (currentArtist && currentArtist.id && !imagesLoaded) {
+          var token = localStorage.getItem('@conmusic:token');
+          const config = {
+            headers: { Authorization: `Bearer ${token}` },
+          };
   
-        const response = await api.get(`/artists/images/${currentArtist.id}`, config);
+          const response = await api.get(`/artists/images/${currentArtist.id}`, config);
   
-        setImages(response.data);
+          setImages(response.data);
+          setImagesLoaded(true); // Marca que as imagens foram carregadas
+        }
       } catch (error) {
         console.error('Erro ao buscar imagens:', error);
       }
     }
   
-    getArtists();
-  }, [setArtists, setCurrentArtist, currentArtist]);
+    fetchData(); // Renomeado para fetchData
+    getPerfilImage();
+    getImages();
+  }, [setArtists, setCurrentArtist, currentArtist, imagesLoaded, setImagesLoaded]);  
 
   const getMoreArtists = useCallback(async () => {
     try {

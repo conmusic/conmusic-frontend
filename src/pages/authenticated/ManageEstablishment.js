@@ -136,7 +136,7 @@ export default function ManageEstablishment() {
 
             if (response.status === 201) {
                 setOpenCreateModal(false);
-                
+
             } else {
                 console.error('Erro ao criar o estabelecimento:', response);
             }
@@ -262,6 +262,10 @@ export default function ManageEstablishment() {
                                     name="establishmentName"
                                     value={newEstablishment.establishmentName}
                                     onChange={handleCreateEstablishmentChange}
+                                    inputProps={{
+                                        maxLength: 45,
+                                        minLength: 3,
+                                    }}
                                 />
                                 <TextField
                                     label="Nome Fantasia"
@@ -270,6 +274,10 @@ export default function ManageEstablishment() {
                                     name="fantasyName"
                                     value={newEstablishment.fantasyName}
                                     onChange={handleCreateEstablishmentChange}
+                                    inputProps={{
+                                        maxLength: 45,
+                                        minLength: 3,
+                                    }}
                                 />
                                 <TextField
                                     label="Número de Telefone"
@@ -277,10 +285,20 @@ export default function ManageEstablishment() {
                                     variant="filled"
                                     name="phoneNumber"
                                     value={newEstablishment.phoneNumber}
-                                    onChange={handleCreateEstablishmentChange}
+                                    onChange={(event) => {
+                                        const { value } = event.target;
+                                        const numericValue = value.replace(/\D/g, '');
+
+
+                                        handleCreateEstablishmentChange(event)
+                                        setNewEstablishment({
+                                            ...newEstablishment,
+                                            phoneNumber: numericValue,
+                                        });
+                                    }}
                                     inputProps={{
-                                        maxLength: 15,
-                                        pattern: "\\d{2} \\d{5}-\\d{4}",
+                                        maxLength: 11,
+                                        pattern: "\\d*",
                                     }}
                                 />
 
@@ -290,10 +308,18 @@ export default function ManageEstablishment() {
                                     variant="filled"
                                     name="cnpj"
                                     value={newEstablishment.cnpj}
-                                    onChange={handleCreateEstablishmentChange}
+                                    onChange={(event) => {
+                                        const { value } = event.target;
+                                        const numericValue = value.replace(/\D/g, '');
+
+                                        handleCreateEstablishmentChange(event)
+                                        setNewEstablishment({
+                                            ...newEstablishment,
+                                            cnpj: numericValue,
+                                        });
+                                    }}
                                     inputProps={{
-                                        maxLength: 18,
-                                        pattern: "\\d{2}\\.\\d{3}\\.\\d{3}/\\d{4}-\\d{2}",
+                                        maxLength: 14,
                                     }}
                                 />
                             </div>
@@ -307,7 +333,21 @@ export default function ManageEstablishment() {
                                     variant="filled"
                                     name="amount110Outlets"
                                     value={newEstablishment.amount110Outlets}
-                                    onChange={handleCreateEstablishmentChange}
+                                    onChange={(event) => {
+                                        const { value } = event.target;
+                                        const numericValue = value.replace(/\D/g, '');
+
+                                        handleCreateEstablishmentChange(event)
+                                        setNewEstablishment({
+                                            ...newEstablishment,
+                                            amount110Outlets: numericValue,
+                                        });
+                                    }}
+                                    inputProps={{
+                                        pattern: '[0-9]*',
+                                        min: 0,
+                                        maxLength: 2,
+                                    }}
                                 />
                                 <TextField
                                     label="Quantidade de tomadas 220"
@@ -315,7 +355,21 @@ export default function ManageEstablishment() {
                                     variant="filled"
                                     name="amount220Outlets"
                                     value={newEstablishment.amount220Outlets}
-                                    onChange={handleCreateEstablishmentChange}
+                                    onChange={(event) => {
+                                        const { value } = event.target;
+                                        const numericValue = value.replace(/\D/g, '');
+
+                                        handleCreateEstablishmentChange(event)
+                                        setNewEstablishment({
+                                            ...newEstablishment,
+                                            amount220Outlets: numericValue,
+                                        });
+                                    }}
+                                    inputProps={{
+                                        min: 0,
+                                        maxLength: 2,
+                                        pattern: '[0-9]*',
+                                    }}
                                 />
                                 <TextField
                                     label="Capacidade"
@@ -323,7 +377,19 @@ export default function ManageEstablishment() {
                                     variant="filled"
                                     name="capacity"
                                     value={newEstablishment.capacity}
-                                    onChange={handleCreateEstablishmentChange}
+                                    onChange={(event) => {
+                                        const { value } = event.target;
+                                        const numericValue = value.replace(/\D/g, '');
+
+                                        handleCreateEstablishmentChange(event)
+                                        setNewEstablishment({
+                                            ...newEstablishment,
+                                            capacity: numericValue,
+                                        });
+                                    }}
+                                    inputProps={{
+                                        pattern: '[0-9]*',
+                                    }}
                                 />
                             </div>
                         )}
@@ -337,6 +403,10 @@ export default function ManageEstablishment() {
                                     name="address"
                                     value={newEstablishment.address}
                                     onChange={handleCreateEstablishmentChange}
+                                    inputProps={{
+                                        maxLength: 45,
+                                        minLength: 5,
+                                    }}
                                 />
                                 <TextField
                                     label="Cidade"
@@ -344,7 +414,22 @@ export default function ManageEstablishment() {
                                     variant="filled"
                                     name="city"
                                     value={newEstablishment.city}
-                                    onChange={handleCreateEstablishmentChange}
+                                    onChange={(event) => {
+                                        const { value } = event.target;
+                                        const alphabeticValue = value.replace(/[^A-Za-z]/g, '');
+                                        if (alphabeticValue !== '') {
+                                          setNewEstablishment({
+                                            ...newEstablishment,
+                                            city: alphabeticValue,
+                                          });
+                                          handleCreateEstablishmentChange(event);
+                                        }
+                                      }}
+                                    inputProps={{
+                                        maxLength: 45,
+                                        minLength: 2,
+                                        pattern: '[A-Za-z]*'
+                                    }}
                                 />
                                 <TextField
                                     label="Estado"
@@ -352,7 +437,23 @@ export default function ManageEstablishment() {
                                     variant="filled"
                                     name="state"
                                     value={newEstablishment.state}
-                                    onChange={handleCreateEstablishmentChange}
+                                    onChange={(event) => {
+                                        const { value } = event.target;
+                                    
+                                        const alphabeticValue = value.replace(/[^A-Za-z]/g, '');
+                                        if (alphabeticValue !== '') {
+                                          setNewEstablishment({
+                                            ...newEstablishment,
+                                            state: alphabeticValue,
+                                          });
+                                          handleCreateEstablishmentChange(event);
+                                        }
+                                      }}
+                                    inputProps={{
+                                        maxLength: 2,
+                                        minLength: 2,
+                                        pattern: '[A-Za-z]*'
+                                    }}
                                 />
                                 <TextField
                                     label="CEP"
@@ -360,7 +461,21 @@ export default function ManageEstablishment() {
                                     variant="filled"
                                     name="zipCode"
                                     value={newEstablishment.zipCode}
-                                    onChange={handleCreateEstablishmentChange}
+                                    onChange={(event) => {
+                                        const { value } = event.target;
+                                        const numericValue = value.replace(/\D/g, '');
+
+                                        handleCreateEstablishmentChange(event)
+                                        setNewEstablishment({
+                                            ...newEstablishment,
+                                            zipCode: numericValue,
+                                        });
+                                    }}
+                                    inputProps={{
+                                        maxLength: 8,
+                                        minLength: 8,
+                                        pattern: '[0-9]*',
+                                    }}
                                 />
                             </div>
                         )}

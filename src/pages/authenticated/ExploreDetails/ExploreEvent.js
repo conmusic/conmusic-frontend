@@ -1,13 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { styled } from '@mui/material/styles';
-import { 
-  Button, 
-  Typography, 
-  Paper, 
-  Grid, 
-  ImageList, 
-  ImageListItem, 
+import {
+  Button,
+  Typography,
+  Paper,
+  Grid,
+  ImageList,
+  ImageListItem,
   Box,
   Chip,
   Divider
@@ -94,7 +94,62 @@ export default function ExploreEventDetails() {
   const navigate = useNavigate();
   const { exploreId } = useParams();
 
+  const [perfilImage, setPerfilImage] = useState('');
+  const [images, setImages] = useState([]);
+
+  async function getPerfilImage(artistId) {
+    try {
+      var token = localStorage.getItem('@conmusic:token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      const response = await api.get(`/artists/image/perfil/${artistId}`, config);
+
+      if (response.data.url) {
+        setPerfilImage(response.data.url);
+      } else {
+        // Caso o artista não tenha imagem de perfil cadastrada, limpar a imagem anterior
+        setPerfilImage('');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar imagem:', error);
+    }
+  }
+
+  async function getImages(artistId) {
+    try {
+      var token = localStorage.getItem('@conmusic:token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      const response = await api.get(`/artists/images/${artistId}`, config);
+
+      const patternMapping = {
+        0: { cols: 2, rows: 2 },
+        1: { cols: 1, rows: 1 },
+        2: { cols: 1, rows: 1 },
+        3: { cols: 2, rows: 1 },
+        4: { cols: 2, rows: 1 },
+        5: { cols: 2, rows: 2 },
+        6: { cols: 1, rows: 1 },
+        7: { cols: 1, rows: 1 },
+      };
+
+      const updatedImages = response.data.map((image, index) => ({
+        ...image,
+        ...patternMapping[index],
+      }));
+
+      setImages(updatedImages);
+    } catch (error) {
+      console.error('Erro ao buscar imagens:', error);
+    }
+  }
+
   const [event, setEvent] = useState({
+    establishmentId: '',
     name: '',
     genre: '',
     paymentValue: '',
@@ -121,6 +176,7 @@ export default function ExploreEventDetails() {
         const { data } = await api.get(`/events/${exploreId}`)
 
         setEvent({
+          establishmentId: data.establishment.id,
           name: data.name,
           genre: data.genre.name,
           paymentValue: data.value,
@@ -172,18 +228,18 @@ export default function ExploreEventDetails() {
           <Box>
             <Typography variant="h6" mb={1} fontWeight="bold">Pagamento</Typography>
             <Box variant="body1" display='flex' flexDirection="row">
-                <Typography fontWeight="bold" mr={0.5}>Valor fixo:</Typography>
-                <Typography>{eventPropsHelper.getFormattedPaymentValue(event.paymentValue)}</Typography>
+              <Typography fontWeight="bold" mr={0.5}>Valor fixo:</Typography>
+              <Typography>{eventPropsHelper.getFormattedPaymentValue(event.paymentValue)}</Typography>
             </Box>
             <Box variant="body1" display='flex' flexDirection="row">
-                <Typography fontWeight="bold" mr={0.5}>Taxa de Couvert:</Typography>
-                <Typography>{eventPropsHelper.getFormattedCouvertCharge(event.couvertCharge)}</Typography>
+              <Typography fontWeight="bold" mr={0.5}>Taxa de Couvert:</Typography>
+              <Typography>{eventPropsHelper.getFormattedCouvertCharge(event.couvertCharge)}</Typography>
             </Box>
           </Box>
           <Divider orientation="horizontal" flexItem />
-          <Button 
-            variant="contained" 
-            color="success" 
+          <Button
+            variant="contained"
+            color="success"
             sx={{ marginY: 1.5 }}
             onClick={handleMakeProposal}
           >
@@ -211,14 +267,14 @@ export default function ExploreEventDetails() {
             <Typography textTransform='capitalize'>{event.infrastructure.capacity} pessoas</Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Chip 
-              icon={<PowerIcon color='#F2F2F2' />} 
-              label={`110V: ${event.infrastructure.outlet110}`} 
+            <Chip
+              icon={<PowerIcon color='#F2F2F2' />}
+              label={`110V: ${event.infrastructure.outlet110}`}
               sx={{ backgroundColor: '#FB2D57', color: '#F2F2F2' }}
             />
-            <Chip 
-              icon={<PowerIcon color='#F2F2F2' />} 
-              label={`220V: ${event.infrastructure.outlet220}`} 
+            <Chip
+              icon={<PowerIcon color='#F2F2F2' />}
+              label={`220V: ${event.infrastructure.outlet220}`}
               sx={{ backgroundColor: '#FB2D57', color: '#F2F2F2' }}
             />
           </Box>

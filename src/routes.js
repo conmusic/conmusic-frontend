@@ -18,6 +18,7 @@ import Proposals from './pages/authenticated/Proposals';
 import Form from './pages/authenticated/MakeProposal';
 import BI from './pages/authenticated/BI';
 import Events from './pages/authenticated/Event/Events'
+import EventDetail from './pages/authenticated/EventDetail/Index'
 
 export default function MainRoutes() {
   return (
@@ -30,6 +31,7 @@ export default function MainRoutes() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/BI" element={<BI />} />
         <Route path="/events" element={<Events />} />
+        <Route path="/events/:eventId" element={<EventDetail />} />
         <Route path="/explore" element={<Explore />} /> 
         <Route path="/explore/:exploreId" element={<ExploreDetails />} /> 
         <Route path="/establishments" element={<ManageEstablishment />} />

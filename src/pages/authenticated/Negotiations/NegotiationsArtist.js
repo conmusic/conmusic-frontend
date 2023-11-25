@@ -25,6 +25,7 @@ export default function NegotiationsArtist() {
                         let showEndDateTime = format(new Date(obj.schedule.endDateTime), "HH:mm");
 
                         return {
+                            establishmentId: obj.event.establishment.id,
                             establishment: obj.event.establishment.establishmentName,
                             event: obj.event.name,
                             local: obj.event.establishment.address,
@@ -52,6 +53,7 @@ export default function NegotiationsArtist() {
                         key={`Negotiation#${item.id}`}
                         id={item.id}
                         establishment={item.establishment}
+                        establishmentId={item.establishmentId}
                         event={item.event}
                         local={item.local}
                         showStart={item.showStart}

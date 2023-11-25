@@ -14,10 +14,10 @@ import {
 // import { format } from 'date-fns';
 import { useAuth } from '../../../hooks/auth';
 import Autocomplete from '@mui/material/Autocomplete';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
+// import OutlinedInput from '@mui/material/OutlinedInput';
+// import InputLabel from '@mui/material/InputLabel';
+// import InputAdornment from '@mui/material/InputAdornment';
+// import FormControl from '@mui/material/FormControl';
 // import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 // import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
@@ -124,6 +124,7 @@ export default function Events(onUpload) {
                             establishment: establishment.establishment.establishmentName,
                             event: establishment.name,
                             genero: establishment.genre.name,
+                            establishmentId: establishment.establishment.id,
                             // showStart: `${showDate} - ${showStartDateTime}`,
                             // showEnd: `${showDate} - ${showEndDateTime}`,
                         }
@@ -194,6 +195,7 @@ export default function Events(onUpload) {
                         event={item.event}
                         local={item.local}
                         genero={item.genero}
+                        establishmentId={item.establishmentId}
                     // showStart={item.showStart}
                     // showEnd={item.showEnd}
                     />

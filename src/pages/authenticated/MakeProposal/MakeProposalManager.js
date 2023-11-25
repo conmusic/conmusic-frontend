@@ -39,7 +39,8 @@ const SmallImage = styled('img')({
   width: '200px',
   height: '200px',
   borderRadius: '50%',
-  alignSelf: 'center'
+  alignSelf: 'center',
+  objectFit: 'cover'
 });
 
 function HighlightedDay(props) {
@@ -113,6 +114,8 @@ export default function MakeProposalManager() {
   const [calendarMonth, setCalendarMonth] = useState(dayjs().month());
   const [calendarYear, setCalendarYear] = useState(dayjs().year());
 
+  const [perfilImage, setPerfilImage] = useState('');
+
   useEffect(() => {
     const getEestablishments = async () => {
       try {
@@ -129,6 +132,22 @@ export default function MakeProposalManager() {
     getEestablishments()
   }, [userId])
 
+  async function getPerfilImage(artistId) {
+    try {
+      var token = localStorage.getItem('@conmusic:token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      const response = await api.get(`/artists/image/perfil/${artistId}`, config);
+
+      setPerfilImage(response.data.url);
+
+    } catch (error) {
+      console.error('Erro ao buscar imagem:', error);
+    }
+  }
+
   useEffect(() => {
     const getArtistInformation = async () => {
       try {
@@ -142,6 +161,8 @@ export default function MakeProposalManager() {
           birthDate: data.birthDate,
           phoneNumber: data.phoneNumber
         })
+
+        getPerfilImage(targetId)
       }
       catch (error) {
         console.log(error)
@@ -447,7 +468,7 @@ export default function MakeProposalManager() {
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Grid container spacing={2}>
                 <Grid item xs={12} display='flex' flexDirection='column'>
-                  <SmallImage src={image[0]} alt="Profile" />
+                  <SmallImage src={perfilImage} alt="Profile" />
                   <Typography variant="subtitle1" mb={1} fontWeight="bold">Informações</Typography>
                   {
                     artist.instagram &&

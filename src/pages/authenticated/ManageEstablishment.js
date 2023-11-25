@@ -58,6 +58,42 @@ export default function ManageEstablishment() {
         capacity: 0
     });
 
+    const [establishmentImages, setEstablishmentImages] = useState({});
+
+    useEffect(() => {
+        const fetchEstablishmentImages = async () => {
+            const imageUrls = {};
+            for (const establishment of establishments) {
+                try {
+                    const imageUrl = await getPerfilImage(establishment.id);
+                    imageUrls[establishment.id] = imageUrl;
+                } catch (error) {
+                    console.error(`Erro ao buscar imagem para o estabelecimento ${establishment.id}:`, error);
+                }
+            }
+            setEstablishmentImages(imageUrls);
+        };
+
+        if (establishments.length > 0) {
+            fetchEstablishmentImages();
+        }
+    }, [establishments]);
+
+    async function getPerfilImage(establishmentId) {
+        try {
+            var token = localStorage.getItem('@conmusic:token');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` },
+            };
+
+            const response = await api.get(`/establishments/image/perfil/${establishmentId}`, config);
+
+            return response.data.url;
+        } catch (error) {
+            console.error('Erro ao buscar imagem:', error);
+        }
+    }
+
     useEffect(() => {
         const getEstablishments = async () => {
             try {
@@ -71,8 +107,8 @@ export default function ManageEstablishment() {
                         city: establishment.city,
                         state: establishment.state
                     },
-                    fantasyName: establishment.fantasyName,                    
-                    establishmentName: establishment.establishmentName,                    
+                    fantasyName: establishment.fantasyName,
+                    establishmentName: establishment.establishmentName,
                     phoneNumber: establishment.phoneNumber,
                     cnpj: establishment.cnpj
                 })))
@@ -103,30 +139,32 @@ export default function ManageEstablishment() {
             </Stack>
             <Grid container spacing={0.5} sx={{ mt: 3 }}>
                 {
-                    establishments.map(establishment => (
-                        <Grid 
-                            key={`Grid#${establishment.id}`} 
-                            item 
-                            xs={12} 
-                            md={12} 
-                            lg={12} 
+                    establishments.map((establishment) => (
+                        <Grid
+                            key={`Grid#${establishment.id}`}
+                            item
+                            xs={12}
+                            md={12}
+                            lg={12}
                             sx={{ display: "flex" }}
                         >
-                            <Card key={`Card#${establishment.id}`} sx={{display: 'flex', width: 1300, gap: 10 }}>
-                                <CardMedia
-                                    key={`CardImage#${establishment.id}`}
-                                    component="img"
-                                    sx={{
-                                        width: 120,
-                                        height: 120,
-                                        display: { xs: 'none', sm: 'block' },
-                                        alignSelf: "center",
-                                        borderRadius: 10,
-                                        ml: 3,
-                                    }}
-                                    src="https://source.unsplash.com/random?wallpapers"
-                                />
-                                <CardContent key={`EstablishmentData#${establishment.id}`} sx={{  mt: 1, flex: 1 }}>
+                            <Card key={`Card#${establishment.id}`} sx={{ display: 'flex', width: 1300, gap: 10 }}>
+                                {establishmentImages[establishment.id] && (
+                                    <CardMedia
+                                        key={`CardImage#${establishment.id}`}
+                                        component="img"
+                                        sx={{
+                                            width: 180,
+                                            height: 150,
+                                            display: { xs: 'none', sm: 'block' },
+                                            alignSelf: 'center',
+                                            borderRadius: 10,
+                                            ml: 3,
+                                        }}
+                                        src={establishmentImages[establishment.id]}
+                                    />
+                                )}
+                                <CardContent key={`EstablishmentData#${establishment.id}`} sx={{ mt: 1, flex: 1 }}>
                                     <Typography key={`EstablishmentName#${establishment.id}`} component="h2" variant="h5">
                                         {establishment.fantasyName}
                                     </Typography>
@@ -144,15 +182,15 @@ export default function ManageEstablishment() {
                                     </Typography>
                                 </CardContent>
                                 <CardContent key={`Manage#${establishment.id}`} xs={12} md={4} lg={4} style={{ display: 'flex', alignItems: 'center' }}>
-                                    <Button 
+                                    <Button
                                         key={`ManageButton#${establishment.id}`}
                                         variant="contained"
                                         style={{
-                                            display: 'flex', 
+                                            display: 'flex',
                                             backgroundColor: '#FB2D57',
-                                            color: 'white', 
-                                            width: 120, 
-                                            height: 40, 
+                                            color: 'white',
+                                            width: 120,
+                                            height: 40,
                                             marginRight: 15
                                         }}
                                     >
@@ -162,7 +200,7 @@ export default function ManageEstablishment() {
                             </Card>
                         </Grid>
                     ))
-                }                
+                }
             </Grid>
             <Modal
                 open={openCreateModal}
@@ -176,7 +214,7 @@ export default function ManageEstablishment() {
                     </Typography>
                     <Box
                         component="form"
-                        sx={{ display: 'flex', flexDirection: 'column', gap: 2  }}
+                        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
                         noValidate
                         autoComplete="off"
                     >

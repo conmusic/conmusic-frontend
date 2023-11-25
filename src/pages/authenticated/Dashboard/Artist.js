@@ -6,7 +6,6 @@ import {
 } from '@mui/material';
 import api from '../../../services/api';
 
-import Chart from '../../../components/charts/Chart';
 import CardShows from '../../../components/CardShows';
 import CurrentNegotiationsTable from '../../../components/CurrentNegotiationsTable';
 import Title from '../../../components/Title';
@@ -121,19 +120,6 @@ export default function DashboardArtist() {
         <Grid item xs={12}>
           <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
             <CurrentNegotiationsTable mode="Artist" />
-          </Paper>
-        </Grid>
-        {/* Chart */}
-        <Grid item xs={12} md={12} lg={12}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              height: 350,
-            }}
-          >
-            <Chart sx={{ height: '50%' }} />
           </Paper>
         </Grid>
       </Grid>

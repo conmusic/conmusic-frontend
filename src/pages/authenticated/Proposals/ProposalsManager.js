@@ -6,6 +6,7 @@ import CardArtistProposal from "../../../components/CardArtistProposal"
 import Title from "../../../components/Title"
 
 import api from "../../../services/api"
+import Pagina from "../../../components/PaginationForCards"
 
 export default function ProposalsManager(){
     const [proposals, setProposals] = useState([])
@@ -56,6 +57,7 @@ export default function ProposalsManager(){
                     />
                 ))
             }
+            <Pagina />
         </Container>
     )
 }

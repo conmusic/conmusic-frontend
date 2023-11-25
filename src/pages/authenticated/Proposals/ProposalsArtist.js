@@ -6,6 +6,7 @@ import CardEventProposal from "../../../components/CardEventProposal"
 import Title from "../../../components/Title"
 
 import api from "../../../services/api"
+import Pagina from "../../../components/PaginationForCards"
 
 export default function ProposalsArtist(){
     const [proposals, setProposals] = useState([])
@@ -56,6 +57,7 @@ export default function ProposalsArtist(){
                     />
                 ))
             }
+            <Pagina />
         </Container>
     )
 }

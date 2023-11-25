@@ -13,11 +13,12 @@ import {
     CardContent
 } from '@mui/material';
 
-import api from '../../services/api';
+import api from '../../../services/api';
 
-import Title from '../../components/Title';
-import { useAuth } from '../../hooks/auth';
-import eventPropsHelper from '../../helpers/eventPropsHelper';
+import Title from '../../../components/Title';
+import { useAuth } from '../../../hooks/auth';
+import eventPropsHelper from '../../../helpers/eventPropsHelper';
+import Pagina from '../../../components/PaginationForCards';
 
 const style = {
     position: 'absolute',
@@ -137,7 +138,7 @@ export default function ManageEstablishment() {
                     Criar Estabelecimento
                 </Button>
             </Stack>
-            <Grid container spacing={0.5} sx={{ mt: 3 }}>
+            <Grid container spacing={2} sx={{ mt: 3,  mb: 4}}>
                 {
                     establishments.map((establishment) => (
                         <Grid
@@ -202,6 +203,7 @@ export default function ManageEstablishment() {
                     ))
                 }
             </Grid>
+            <Pagina />
             <Modal
                 open={openCreateModal}
                 onClose={() => setOpenCreateModal(false)}

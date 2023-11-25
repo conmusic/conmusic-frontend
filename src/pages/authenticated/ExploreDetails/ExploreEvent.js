@@ -41,54 +41,25 @@ const SubtitleContainer = styled('div')({
 })
 
 function srcset(image, size, rows = 1, cols = 1) {
+  const originalWidth = size * cols;
+  const originalHeight = size * rows;
+  const aspectRatio = originalWidth / originalHeight;
+
+  // Definindo nova largura e altura com base na proporção original
+  let newWidth = originalWidth;
+  let newHeight = originalHeight;
+
+  if (cols > rows) {
+    newHeight = Math.round(originalWidth / aspectRatio);
+  } else if (cols < rows) {
+    newWidth = Math.round(originalHeight * aspectRatio);
+  }
+
   return {
-    src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-    srcSet: `${image}?w=${size * cols}&h=${size * rows
-      }&fit=crop&auto=format&dpr=2 2x`,
+    src: `${image}?w=${newWidth}&h=${newHeight}&fit=crop&auto=format`,
+    srcSet: `${image}?w=${newWidth}&h=${newHeight}&fit=crop&auto=format&dpr=2 2x`,
   };
 }
-
-const itemData = [
-  {
-    img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: 'Breakfast',
-    rows: 2,
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-    title: 'Camera',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: 'Coffee',
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-    title: 'Hats',
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-    title: 'Honey',
-    author: '@arwinneil',
-    rows: 2,
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-    title: 'Basketball',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: 'Fern',
-  },
-];
 
 export default function ExploreEventDetails() {
   const navigate = useNavigate();
@@ -97,34 +68,30 @@ export default function ExploreEventDetails() {
   const [perfilImage, setPerfilImage] = useState('');
   const [images, setImages] = useState([]);
 
-  async function getPerfilImage(artistId) {
+  async function getPerfilImage(establishmentId) {
     try {
       var token = localStorage.getItem('@conmusic:token');
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
 
-      const response = await api.get(`/artists/image/perfil/${artistId}`, config);
+      const response = await api.get(`/establishments/image/perfil/${establishmentId}`, config);
 
-      if (response.data.url) {
-        setPerfilImage(response.data.url);
-      } else {
-        // Caso o artista não tenha imagem de perfil cadastrada, limpar a imagem anterior
-        setPerfilImage('');
-      }
+      setPerfilImage(response.data.url);
+
     } catch (error) {
       console.error('Erro ao buscar imagem:', error);
     }
   }
 
-  async function getImages(artistId) {
+  async function getImages(establishmentId) {
     try {
       var token = localStorage.getItem('@conmusic:token');
       const config = {
         headers: { Authorization: `Bearer ${token}` },
       };
 
-      const response = await api.get(`/artists/images/${artistId}`, config);
+      const response = await api.get(`/establishments/images/${establishmentId}`, config);
 
       const patternMapping = {
         0: { cols: 2, rows: 2 },
@@ -175,27 +142,37 @@ export default function ExploreEventDetails() {
       try {
         const { data } = await api.get(`/events/${exploreId}`)
 
-        setEvent({
-          establishmentId: data.establishment.id,
-          name: data.name,
-          genre: data.genre.name,
-          paymentValue: data.value,
-          couvertCharge: data.coverCharge,
-          establishmentName: data.establishment.fantasyName,
-          address: {
-            address: data.establishment.address,
-            city: data.establishment.city,
-            state: data.establishment.state,
-            zipCode: data.establishment.zipCode,
-          },
-          phoneNumber: data.establishment.phoneNumber,
-          infrastructure: {
-            capacity: data.establishment.capacity,
-            outlet110: data.establishment.amount110Outlets,
-            outlet220: data.establishment.amount220Outlets,
-          },
-          description: data.description
-        });
+        if (data) {
+          setEvent({
+            establishmentId: data.establishment.id,
+            name: data.name,
+            genre: data.genre.name,
+            paymentValue: data.value,
+            couvertCharge: data.coverCharge,
+            establishmentName: data.establishment.fantasyName,
+            address: {
+              address: data.establishment.address,
+              city: data.establishment.city,
+              state: data.establishment.state,
+              zipCode: data.establishment.zipCode,
+            },
+            phoneNumber: data.establishment.phoneNumber,
+            infrastructure: {
+              capacity: data.establishment.capacity,
+              outlet110: data.establishment.amount110Outlets,
+              outlet220: data.establishment.amount220Outlets,
+            },
+            description: data.description
+          });
+
+          if (data.establishment.id) {
+            console.log("Test: " + data.establishment.id);
+            await Promise.all([
+              getPerfilImage(data.establishment.id),
+              getImages(data.establishment.id)
+            ]);
+          }
+        }
       } catch (error) {
         console.error(error)
       }
@@ -209,15 +186,11 @@ export default function ExploreEventDetails() {
   }, [navigate, exploreId])
 
 
-  const image = [
-    'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
-  ]
-
   return (
     <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
       <Grid item xs={12} md={4}>
         <Paper sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: 4, gap: 1, my: 2 }}>
-          <SmallImage src={image[0]} alt="Profile" />
+          <SmallImage src={perfilImage} alt="Profile" />
           <Typography variant="h5" fontWeight='bold' style={{ color: '#FB2D57', marginTop: 2 }}>
             {event.name}
           </Typography>
@@ -289,10 +262,10 @@ export default function ExploreEventDetails() {
               cols={4}
               rowHeight={121}
             >
-              {itemData.map((item) => (
-                <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
+              {images.map((item) => (
+                <ImageListItem key={item.url} cols={item.cols || 1} rows={item.rows || 1}>
                   <img
-                    {...srcset(item.img, 121, item.rows, item.cols)}
+                    {...srcset(item.url, 121, item.rows, item.cols)}
                     alt={item.title}
                     loading="lazy"
                   />

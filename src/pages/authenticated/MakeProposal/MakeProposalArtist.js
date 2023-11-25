@@ -97,11 +97,28 @@ export default function MakeProposalArtist() {
     open: false,
     message: "",
     severity: "info"
-})
+  })
 
   const [calendarValue, setCalendarValue] = useState(dayjs());
   const [calendarMonth, setCalendarMonth] = useState(dayjs().month());
   const [calendarYear, setCalendarYear] = useState(dayjs().year());
+  const [perfilImage, setPerfilImage] = useState('');
+
+  async function getPerfilImage(establishmentId) {
+    try {
+      var token = localStorage.getItem('@conmusic:token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      const response = await api.get(`/establishments/image/perfil/${establishmentId}`, config);
+
+      setPerfilImage(response.data.url);
+
+    } catch (error) {
+      console.error('Erro ao buscar imagem:', error);
+    }
+  }
 
   useEffect(() => {
     const getEventInformation = async () => {
@@ -133,6 +150,8 @@ export default function MakeProposalArtist() {
             error: false
           }
         }))
+
+        getPerfilImage(data.establishment.id);
       }
       catch (error) {
         console.log(error)
@@ -272,7 +291,7 @@ export default function MakeProposalArtist() {
       eventId: targetId,
       artistId: userId
     }
-    
+
     try {
       const { data } = await api.post(`/shows`, body)
 
@@ -303,9 +322,9 @@ export default function MakeProposalArtist() {
     }
 
     setToast({
-        open: false,
-        message: "",
-        severity: "info"
+      open: false,
+      message: "",
+      severity: "info"
     });
   };
 
@@ -320,7 +339,7 @@ export default function MakeProposalArtist() {
             <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
               <Grid container spacing={2}>
                 <Grid item xs={12} display='flex' flexDirection='column'>
-                  <SmallImage src={image[0]} alt="Profile" />
+                  <SmallImage src={perfilImage} alt="Profile" />
                   <Typography variant="subtitle1" mb={1} fontWeight="bold">Local</Typography>
                   <Typography variant="body1">{event.establishmentName}</Typography>
                   <Typography variant="body1">{eventPropsHelper.getFormattedAddress(event.address)}</Typography>
@@ -423,7 +442,7 @@ export default function MakeProposalArtist() {
         </Paper>
         <Snackbar open={toast.open} autoHideDuration={6000} onClose={handleCloseToast}>
           <Alert severity={toast.severity} sx={{ width: '100%' }}>
-              {toast.message}
+            {toast.message}
           </Alert>
         </Snackbar>
       </Grid>

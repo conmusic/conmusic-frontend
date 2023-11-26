@@ -66,7 +66,7 @@ export default function BiArtist() {
   useEffect(() => {
     const getKpi = async () => {
       try {
-        const { data } = await api.get(`/artists/kpis?lastDays=${period}`)
+        const { data } = await api.get(`/managers/kpis?lastDays=${period}`)
 
         setKpi({
           receivedProposals: data.receivedProposals,
@@ -85,7 +85,7 @@ export default function BiArtist() {
 
     const getGenreChartData = async () => {
       try {
-        const { data } = await api.get(`/artists/events-chart?lastDays=${period}`)
+        const { data } = await api.get(`/managers/events-chart?lastDays=${period}`)
 
         setEventChartData(data)
       }
@@ -96,7 +96,7 @@ export default function BiArtist() {
 
     const getValuesChartData = async () => {
       try {
-        const { data } = await api.get(`/artists/value-chart?lastDays=${period}`)
+        const { data } = await api.get(`/managers/value-chart?lastDays=${period}`)
 
         console.log(data)
 

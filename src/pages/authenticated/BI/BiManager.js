@@ -60,7 +60,7 @@ export default function BiArtist() {
     canceled: 0,
     percentageCanceled: 0,
   })
-  const [genreChartData, setGenreChartData] = useState([])
+  const [eventsChartData, setEventChartData] = useState([])
   const [valuesChartData, setValuesChartData] = useState([])
 
   useEffect(() => {
@@ -85,9 +85,9 @@ export default function BiArtist() {
 
     const getGenreChartData = async () => {
       try {
-        const { data } = await api.get(`/artists/genres-chart?lastDays=${period}`)
+        const { data } = await api.get(`/artists/events-chart?lastDays=${period}`)
 
-        setGenreChartData(data)
+        setEventChartData(data)
       }
       catch (e) {
         console.error(e)
@@ -242,15 +242,15 @@ export default function BiArtist() {
               height: 350,
             }}
           >
-            <Title>Gêneros Musicais que mais Tiveram Shows</Title>
+            <Title>Eventos com mais Propostas Recebidas</Title>
             {
-              genreChartData.length > 0
+              eventsChartData.length > 0
               &&
               (
                 <BarChart
-                  dataset={genreChartData}
-                  yAxis={[{ scaleType: 'band', dataKey: 'genre' }]}
-                  series={[{ dataKey: 'count', valueFormatter, color: "#FF3E3A" }]}
+                  dataset={eventsChartData}
+                  yAxis={[{ scaleType: 'band', dataKey: 'eventName' }]}
+                  series={[{ dataKey: 'count', label: 'Propostas Recebidas', valueFormatter, color: '#2D75FB' }]}
                   layout="horizontal"
                   {...chartSetting}
                 />

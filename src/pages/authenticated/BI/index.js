@@ -1,8 +1,8 @@
 import React from "react";
 
 import { useAuth } from "../../../hooks/auth";
-import BIartist from "./BIartist";
-import BImaneger from "./BImaneger";
+import BiArtist from "./BiArtist";
+import BiManager from "./BiManager";
 
 
 export default function BI() {
@@ -10,10 +10,9 @@ export default function BI() {
 
     switch (type) {
         case 'Artist':
-            return (<BIartist />);
+            return (<BiArtist />);
         case 'Manager':
-            return (<BImaneger />);
-     
+            return (<BiManager />);
         default:
             return (<h1>Unathorized</h1>)
     }

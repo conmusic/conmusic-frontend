@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { styled } from '@mui/material/styles';
 import {
@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 import eventPropsHelper from '../../../helpers/eventPropsHelper';
 import api from '../../../services/api';
-import { differenceInYears } from 'date-fns';
+import dateHelper from '../../../helpers/dateHelper';
 
 const CarouselContainer = styled('div')({
   display: 'flex',
@@ -26,9 +26,10 @@ const CarouselContainer = styled('div')({
 });
 
 const SmallImage = styled('img')({
-  width: '150px',
-  height: '150px',
+  width: '250px',
+  height: '250px',
   borderRadius: '50%',
+  objectFit: 'cover',
 });
 
 const SubtitleContainer = styled('div')({
@@ -40,63 +41,31 @@ const SubtitleContainer = styled('div')({
 })
 
 function srcset(image, size, rows = 1, cols = 1) {
+  const originalWidth = size * cols;
+  const originalHeight = size * rows;
+  const aspectRatio = originalWidth / originalHeight;
+
+  // Definindo nova largura e altura com base na proporção original
+  let newWidth = originalWidth;
+  let newHeight = originalHeight;
+
+  if (cols > rows) {
+    newHeight = Math.round(originalWidth / aspectRatio);
+  } else if (cols < rows) {
+    newWidth = Math.round(originalHeight * aspectRatio);
+  }
+
   return {
-    src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-    srcSet: `${image}?w=${size * cols}&h=${size * rows
-      }&fit=crop&auto=format&dpr=2 2x`,
+    src: `${image}?w=${newWidth}&h=${newHeight}&fit=crop&auto=format`,
+    srcSet: `${image}?w=${newWidth}&h=${newHeight}&fit=crop&auto=format&dpr=2 2x`,
   };
 }
 
-const itemData = [
-  {
-    img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: 'Breakfast',
-    rows: 2,
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-    title: 'Camera',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: 'Coffee',
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-    title: 'Hats',
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-    title: 'Honey',
-    author: '@arwinneil',
-    rows: 2,
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-    title: 'Basketball',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: 'Fern',
-  },
-];
-
 export default function Tinder() {
-  const [selectedImage, setSelectedImage] = useState(0);
-
-  const image = [
-    'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
-  ]
   const navigate = useNavigate();
 
+  const [perfilImage, setPerfilImage] = useState('');
+  const [images, setImages] = useState([]);
   const [artists, setArtists] = useState([]);
   const [currentArtist, setCurrentArtist] = useState({
     id: null,
@@ -108,18 +77,69 @@ export default function Tinder() {
     instagram: null,
     phoneNumber: null,
     genres: [],
-  })
+  });
+
+  async function getPerfilImage(artistId) {
+    try {
+      var token = localStorage.getItem('@conmusic:token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+  
+      const response = await api.get(`/artists/image/perfil/${artistId}`, config);
+  
+      if (response.data.url) {
+        setPerfilImage(response.data.url);
+      } else {
+        // Caso o artista não tenha imagem de perfil cadastrada, limpar a imagem anterior
+        setPerfilImage('');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar imagem:', error);
+    }
+  }
+
+  async function getImages(artistId) {
+    try {
+      var token = localStorage.getItem('@conmusic:token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      const response = await api.get(`/artists/images/${artistId}`, config);
+
+      const patternMapping = {
+        0: { cols: 2, rows: 2 },
+        1: { cols: 1, rows: 1 },
+        2: { cols: 1, rows: 1 },
+        3: { cols: 2, rows: 1 },
+        4: { cols: 2, rows: 1 },
+        5: { cols: 2, rows: 2 },
+        6: { cols: 1, rows: 1 },
+        7: { cols: 1, rows: 1 },
+      };
+
+      const updatedImages = response.data.map((image, index) => ({
+        ...image,
+        ...patternMapping[index],
+      }));
+
+      setImages(updatedImages);
+    } catch (error) {
+      console.error('Erro ao buscar imagens:', error);
+    }
+  }
 
   useEffect(() => {
-    async function getArtists() {
+    async function fetchData() {
       try {
         const artistsCache = localStorage.getItem('@conmusic:explore-artists');
         let artistsData;
 
-        if (!artistsCache || artistsCache == "" || artistsCache == null) {
-          const { data } = await api.get(`/artists`)
+        if (!artistsCache || artistsCache === "" || artistsCache == null) {
+          const { data } = await api.get(`/artists`);
 
-          artistsData = data.map(artist => ({
+          artistsData = data.map((artist) => ({
             id: artist.id,
             name: artist.name,
             about: artist.about,
@@ -131,49 +151,32 @@ export default function Tinder() {
             genres: artist.musicalGenres,
           })).reverse();
 
-          localStorage.setItem('@conmusic:explore-artists', JSON.stringify(artistsData))
-          
-          console.log("from api: ", data)
+          localStorage.setItem('@conmusic:explore-artists', JSON.stringify(artistsData));
 
+          console.log("from api: ", data);
         } else {
-          artistsData = JSON.parse(artistsCache)
-          console.log("from cache: ", artistsCache)
+          artistsData = JSON.parse(artistsCache);
+          console.log("from cache: ", artistsCache);
         }
 
-        console.log(artistsData)
+        console.log(artistsData);
 
-        setArtists(artistsData)
-        setCurrentArtist(artistsData.pop())
+        setArtists(artistsData);
+        const nextArtist = artistsData.pop();
+        setCurrentArtist(nextArtist);
+
+        // Após configurar o currentArtist, chama os métodos restantes
+        if (nextArtist && nextArtist.id) {
+          await getPerfilImage(nextArtist.id);
+          await getImages(nextArtist.id);
+        }
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
     }
 
-    getArtists()
-  }, [setArtists, setCurrentArtist])
-
-  const formattedBirthDateAndAge = useMemo(() => {
-    if (currentArtist.birthDate != null) {
-      const birthDate = new Date(currentArtist.birthDate)
-      const age = differenceInYears(new Date(), birthDate)
-
-      return `${birthDate.toLocaleDateString('pt-BR')} - ${age} anos`
-    }
-
-    return ''
-  }, [currentArtist.birthDate])
-
-  const nextArtist = useCallback(() => {
-    if (artists.length > 0) {
-      const selectedArtist = artists.pop()
-      setCurrentArtist(selectedArtist)
-      localStorage.setItem('@conmusic:explore-artists', JSON.stringify(artists))
-
-      if (artists.length <= 0) {
-        getMoreArtists()
-      }
-    }
-  }, [artists])
+    fetchData(); // Renomeado para fetchData
+  }, [setArtists, setCurrentArtist]);
 
   const getMoreArtists = useCallback(async () => {
     try {
@@ -190,7 +193,7 @@ export default function Tinder() {
         phoneNumber: artist.phoneNumber,
         genres: artist.musicalGenres,
       })).reverse();
-      
+
       localStorage.setItem('@conmusic:explore-artists', JSON.stringify(artistsData))
 
       console.log("from api: ", data)
@@ -201,15 +204,38 @@ export default function Tinder() {
     }
   }, [])
 
+  const nextArtist = useCallback(async () => {
+    if (artists.length > 0) {
+      const selectedArtist = artists.pop();
+      setCurrentArtist(selectedArtist);
+      localStorage.setItem('@conmusic:explore-artists', JSON.stringify(artists));
+  
+      // Limpar as imagens antes de obter as do próximo artista
+      setImages([]);
+      setPerfilImage('');
+  
+      // Se não houver mais artistas, buscar mais
+      if (artists.length <= 0) {
+        getMoreArtists();
+      }
+  
+      // Obter as imagens e imagem de perfil do próximo artista
+      if (selectedArtist && selectedArtist.id) {
+        await getPerfilImage(selectedArtist.id);
+        await getImages(selectedArtist.id);
+      }
+    }
+  }, [artists, getMoreArtists]);
+
   const makeProposal = useCallback(() => {
-    // navigate(`/make-proposal/${currentArtist.id}`)
+    navigate(`/make-proposal/${currentArtist.id}`)
   }, [currentArtist.id, navigate])
 
   return (
     <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
       <Grid item xs={12} md={4}>
         <Paper sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: 4, gap: 1, my: 2 }}>
-          <SmallImage src={image[0] == undefined ? `data:image/jpeg;base64,` : image[0]} alt="Profile" />
+          <SmallImage src={perfilImage} alt="Profile" />
           <Typography variant="h5" fontWeight='bold' style={{ color: '#FB2D57', marginTop: 2 }}>
             {currentArtist.name}
           </Typography>
@@ -218,7 +244,7 @@ export default function Tinder() {
             (<Typography variant='caption' fontWeight='bold'>@{currentArtist.instagram}</Typography>)
           }
           <Typography variant='body1'>
-            {formattedBirthDateAndAge}
+            {dateHelper.getFormattedAge(currentArtist.birthDate)}
           </Typography>
           <Typography variant='body1'>
             {eventPropsHelper.getFormattedPhoneNumber(currentArtist.phoneNumber)}
@@ -244,7 +270,7 @@ export default function Tinder() {
             variant="contained"
             color="success"
             sx={{ marginTop: 1.5 }}
-            onClick={() => makeProposal()}
+            onClick={makeProposal}
           >
             Enviar proposta
           </Button>
@@ -267,11 +293,11 @@ export default function Tinder() {
               cols={4}
               rowHeight={121}
             >
-              {itemData.map((item) => (
-                <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
+              {images.map((item, index) => (
+                <ImageListItem key={item.url} cols={item.cols || 1} rows={item.rows || 1}>
                   <img
-                    {...srcset(item.img, 121, item.rows, item.cols)}
-                    alt={item.title}
+                    {...srcset(item.url, 121, item.rows, item.cols)}
+                    alt={index}
                     loading="lazy"
                   />
                 </ImageListItem>

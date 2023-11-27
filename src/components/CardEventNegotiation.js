@@ -8,7 +8,6 @@ import {
   CardContent,
   Button,
 } from '@mui/material';
-import myImage from '../assets/images/image.png';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -16,6 +15,7 @@ import Rating from '@mui/material/Rating';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import StatusChip from './StatusChip';
+import api from '../services/api';
 
 const style = {
   position: 'absolute',
@@ -43,7 +43,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function CardEventNegotiation({ establishment, event, local, showStart, showEnd, id, status }) {
+function CardEventNegotiation({ establishment, event, local, showStart, showEnd, id, establishmentId, status }) {
   const navigate = useNavigate();
 
   const [value, setValue] = React.useState(2);
@@ -53,6 +53,28 @@ function CardEventNegotiation({ establishment, event, local, showStart, showEnd,
   const handleClose = () => setOpen(false);
   const [showConfirmationButton, setShowConfirmationButton] = useState(false);
   const [openToast, setOpenToast] = React.useState(false);
+
+  const [perfilImage, setPerfilImage] = useState('');
+
+  useEffect(() => {
+    async function getPerfilImage(establishmentId) {
+      try {
+        var token = localStorage.getItem('@conmusic:token');
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
+
+        const response = await api.get(`/establishments/image/perfil/${establishmentId}`, config);
+
+        setPerfilImage(response.data.url);
+
+      } catch (error) {
+        console.error('Erro ao buscar imagem:', error);
+      }
+    }
+
+    getPerfilImage(establishmentId);
+  }, []);
 
   const handleClick = () => {
     setOpenToast(true);
@@ -90,7 +112,7 @@ function CardEventNegotiation({ establishment, event, local, showStart, showEnd,
             borderRadius: 10,
             ml: 3,
           }}
-          src={myImage}
+          src={perfilImage}
         />
         <CardContent sx={{ flex: 1, mt: 1 }}>
           <Typography component="h2" variant="h5" fontWeight="bold">

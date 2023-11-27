@@ -6,6 +6,7 @@ import CardArtistProposal from "../../../components/CardArtistProposal"
 import Title from "../../../components/Title"
 
 import api from "../../../services/api"
+import Pagina from "../../../components/PaginationForCards"
 
 export default function ProposalsManager(){
     const [proposals, setProposals] = useState([])
@@ -25,6 +26,7 @@ export default function ProposalsManager(){
                         establishment: proposal.event.establishment.establishmentName,
                         event: proposal.event.name,
                         artist: proposal.artist.name,
+                        artistId: proposal.artist.id,
                         showStart: `${showDate} - ${showStartDateTime}`,
                         showEnd: `${showDate} - ${showEndDateTime}`,
                         id: proposal.id
@@ -51,9 +53,11 @@ export default function ProposalsManager(){
                         artist={item.artist}
                         showStart={item.showStart}
                         showEnd={item.showEnd}
+                        artistId={item.artistId}
                     />
                 ))
             }
+            <Pagina />
         </Container>
     )
 }

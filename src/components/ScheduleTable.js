@@ -10,11 +10,11 @@ import {
 } from '@mui/material';
 
 import api from '../services/api';
-import showStatusHelper from '../helpers/showStatusHelper';
+import scheduleConfirmationHelper from '../helpers/schedulesConfirmationHelper';
 
 import Title from './Title';
 
-export default function CurrentNegotiationsTable({eventId, ...rest }) {
+export default function ScheduleTable({eventId, ...rest }) {
   const [tableData, setTableData] = useState([]);
 
   useEffect(() => {
@@ -28,19 +28,20 @@ export default function CurrentNegotiationsTable({eventId, ...rest }) {
        
 
         var TableData = response.data
-          .filter(obj => isAfter(new Date(obj.schedule.startDateTime), new Date()))
+          .filter(obj => isAfter(new Date(obj.startDateTime), new Date()))
           .map(row => {
-            let showDate = format(new Date(row.schedule.startDateTime), "dd/MM/yyyy - HH:mm");
+            let showIniDate = format(new Date(row.startDateTime), "dd/MM/yyyy - HH:mm");
+            let showEndDate = format(new Date(row.endDateTime), "dd/MM/yyyy - HH:mm");
+            let conf = scheduleConfirmationHelper.getConfirmationName(row.confirmed);
             return {
               id: row.id,
-              artist: row.artist.name,
-              establishment: row.event.establishment.establishmentName,
-              event: row.event.name,
-              dateShow: showDate,
-              status: showStatusHelper.getDisplayName(row.status)
+              startDateTime: showIniDate,
+              endDateTime: showEndDate,
+              status: conf
             }
           })
         setTableData(TableData);
+        console.log(TableData);
       } catch (error) {
         console.error('Erro ao buscar os dados da tabela:', error);
       }
@@ -57,19 +58,17 @@ export default function CurrentNegotiationsTable({eventId, ...rest }) {
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell style={{ textAlign: 'left' }}>Nome do { mode === 'Artist' ? "Estabelecimento" : "Artista" }</TableCell>
-                <TableCell style={{ textAlign: 'left' }}>Evento</TableCell>
-                <TableCell style={{ textAlign: 'left' }}>Data do Show</TableCell>
-                <TableCell style={{ textAlign: 'left' }}>Status de negociação</TableCell>
+                <TableCell style={{ textAlign: 'left' }}>Data de inicio</TableCell>
+                <TableCell style={{ textAlign: 'left' }}>Data de fim</TableCell>
+                <TableCell style={{ textAlign: 'left' }}>Status</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {tableData.map((row) => (
                 <TableRow key={row.id}>
-                  <TableCell style={{ textAlign: 'left' }}>{ mode === 'Artist' ? row.establishment : row.artist }</TableCell>
-                  <TableCell style={{ textAlign: 'left' }}>{row.event}</TableCell>
-                  <TableCell style={{ textAlign: 'left' }}>{row.dateShow}</TableCell>
-                  <TableCell style={{ textAlign: 'left' }}>{row.status}</TableCell>
+                  <TableCell style={{ textAlign: 'left' }}>{row.startDateTime}</TableCell>
+                  <TableCell style={{ textAlign: 'left' }}>{row.endDateTime}</TableCell>
+                  <TableCell style={{ textAlign: 'left' }}>{}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

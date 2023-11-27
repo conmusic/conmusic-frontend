@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
 import { styled } from '@mui/material/styles';
-import { 
-  Button, 
-  Typography, 
-  Paper, 
-  Grid, 
-  ImageList, 
-  ImageListItem, 
+import {
+  Button,
+  Typography,
+  Paper,
+  Grid,
+  ImageList,
+  ImageListItem,
   Box,
   Chip,
   Modal,
@@ -29,9 +29,7 @@ import dayjs from 'dayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import MuiAlert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
-
+import ScheduleTable from '../../../components/ScheduleTable';
 
 const CarouselContainer = styled('div')({
   display: 'flex',
@@ -125,9 +123,9 @@ const itemData = [
 ];
 
 
-export default function EventDetail(onUpload  ) {
+export default function EventDetail(onUpload) {
   const [open, setOpen] = React.useState(false);
-  
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -154,10 +152,10 @@ export default function EventDetail(onUpload  ) {
     },
     description: '',
   })
-  
+
   const fiveAM = dayjs().set('hour', 5).startOf('hour');
   const nineAM = dayjs().set('hour', 9).startOf('hour');
-  
+
   const [selectedFile, setSelectedFile] = useState(null);
 
   const handleFileChange = (event) => {
@@ -209,6 +207,23 @@ export default function EventDetail(onUpload  ) {
   const image = [
     'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
   ]
+  const data = [
+    {
+      horarioInicio: "10:00",
+      horarioFim: "12:00",
+      confirmado: true,
+    },
+    {
+      horarioInicio: "13:00",
+      horarioFim: "15:00",
+      confirmado: false,
+    },
+    {
+      horarioInicio: "16:00",
+      horarioFim: "18:00",
+      confirmado: true,
+    },
+  ];
 
   return (
     <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
@@ -225,12 +240,12 @@ export default function EventDetail(onUpload  ) {
           <Box>
             <Typography variant="h6" mb={1} fontWeight="bold">Pagamento</Typography>
             <Box variant="body1" display='flex' flexDirection="row">
-                <Typography fontWeight="bold" mr={0.5}>Valor fixo:</Typography>
-                <Typography>{eventPropsHelper.getFormattedPaymentValue(event.paymentValue)}</Typography>
+              <Typography fontWeight="bold" mr={0.5}>Valor fixo:</Typography>
+              <Typography>{eventPropsHelper.getFormattedPaymentValue(event.paymentValue)}</Typography>
             </Box>
             <Box variant="body1" display='flex' flexDirection="row">
-                <Typography fontWeight="bold" mr={0.5}>Taxa de Couvert:</Typography>
-                <Typography>{eventPropsHelper.getFormattedCouvertCharge(event.couvertCharge)}</Typography>
+              <Typography fontWeight="bold" mr={0.5}>Taxa de Couvert:</Typography>
+              <Typography>{eventPropsHelper.getFormattedCouvertCharge(event.couvertCharge)}</Typography>
             </Box>
           </Box>
           <Divider orientation="horizontal" flexItem />
@@ -255,14 +270,14 @@ export default function EventDetail(onUpload  ) {
             <Typography textTransform='capitalize'>{event.infrastructure.capacity} pessoas</Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Chip 
-              icon={<PowerIcon color='#F2F2F2' />} 
-              label={`110V: ${event.infrastructure.outlet110}`} 
+            <Chip
+              icon={<PowerIcon color='#F2F2F2' />}
+              label={`110V: ${event.infrastructure.outlet110}`}
               sx={{ backgroundColor: '#FB2D57', color: '#F2F2F2' }}
             />
-            <Chip 
-              icon={<PowerIcon color='#F2F2F2' />} 
-              label={`220V: ${event.infrastructure.outlet220}`} 
+            <Chip
+              icon={<PowerIcon color='#F2F2F2' />}
+              label={`220V: ${event.infrastructure.outlet220}`}
               sx={{ backgroundColor: '#FB2D57', color: '#F2F2F2' }}
             />
           </Box>
@@ -270,22 +285,22 @@ export default function EventDetail(onUpload  ) {
       </Grid>
       <Grid item xs={12} md={6} mt={2}>
         <Grid display={'flex'} justifyContent={'flex-end'}>
-        <Button
-              variant="outlined"
-              color="inherit"
-              onClick={handleOpen}
-              sx={{
-                alignSelf: "center",
-                borderColor: 'black',
-                backgroundColor: '#006ab5',
-                color: 'white',
-                '&:hover': {
-                  backgroundColor: 'white',
-                  color: 'black',
-                },
-              }}
-            >
-              Atualizar
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={handleOpen}
+            sx={{
+              alignSelf: "center",
+              borderColor: 'black',
+              backgroundColor: '#006ab5',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: 'white',
+                color: 'black',
+              },
+            }}
+          >
+            Atualizar
           </Button>
           <Modal
             open={open}
@@ -484,9 +499,12 @@ export default function EventDetail(onUpload  ) {
             </Typography>
           </Paper>
         </SubtitleContainer>
+        <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
+          <ScheduleTable eventId={eventId} />
+        </Paper>
       </Grid>
 
-      
+
     </Grid>
   );
 }

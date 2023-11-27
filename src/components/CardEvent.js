@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import myImage from '../assets/images/image.png';
 import { useNavigate } from "react-router";
 import { useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   Button,
@@ -13,6 +14,7 @@ import {
   Card,
 } from '@mui/material';
 import dayjs from 'dayjs';
+import api from '../services/api';
 
 
 const style = {

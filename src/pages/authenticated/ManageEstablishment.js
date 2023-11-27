@@ -12,9 +12,8 @@ import {
     CardMedia,
     CardContent
 } from '@mui/material';
-
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import api from '../../services/api';
-
 import Title from '../../components/Title';
 import { useAuth } from '../../hooks/auth';
 import eventPropsHelper from '../../helpers/eventPropsHelper';
@@ -23,7 +22,6 @@ import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 
 const steps = ['Informações gerais', 'Infraestrutura', 'Localização'];
-
 const style = {
     position: 'absolute',
     display: 'flex',
@@ -45,7 +43,7 @@ const style = {
     maxHeight: "100%"
 };
 
-export default function ManageEstablishment() {
+export default function ManageEstablishment(onUpload) {
     const { userId } = useAuth();
     const [establishments, setEstablishments] = useState([])
     const [openGerenciarModal, setOpenGerenciarModal] = useState(false);
@@ -64,11 +62,45 @@ export default function ManageEstablishment() {
         zipCode: '',
         managerId: userId
     });
+    const [openToast, setOpenToast] = React.useState(false);
+    const [open, setOpen] = React.useState(false);
+    const handleClose = () => setOpen(false);
+    const [selectedFile, setSelectedFile] = useState(null);
+    const handleUpload = async () => {
+        try {
+            if (selectedFile) {
+                const formData = new FormData();
+                formData.append('file', selectedFile);
+    
+                const response = await api.post(`/establishments/upload/${newEstablishment.id}`, formData);
+                console.log("response:", response)
+                if (response.status === 200) {
+                    setOpenToast(true);
+                } else {
+                    console.error('Erro no upload da imagem:', response);
+                }
+    
+                setSelectedFile(null);
+            }
+        } catch (error) {
+            console.error('Erro no upload da imagem:', error);
+            console.error('Mensagem de erro do servidor:', error.response.data);
+        }
+    };
+    
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        setSelectedFile(file);
+    };
 
     useEffect(() => {
         const getEstablishments = async () => {
             try {
                 const { data } = await api.get(`/establishments/manager/${userId}`)
+                console.log("userId:", userId);
+
+                console.log('Chamando a API para buscar dados do usuário...');
 
                 setEstablishments(data.map(establishment => ({
                     id: establishment.id,
@@ -83,6 +115,34 @@ export default function ManageEstablishment() {
                     phoneNumber: establishment.phoneNumber,
                     cnpj: establishment.cnpj
                 })))
+
+                console.log(data)
+
+                if (data) {
+                    console.log('Dados recebidos:', data);
+
+                    const userDataArray = Array.isArray(data) ? data : [data];
+                    const firstUser = userDataArray[0];
+
+                    setNewEstablishment({
+                        id: firstUser.id,
+                        address: {
+                            address: firstUser.address,
+                            zipCode: firstUser.zipCode,
+                            city: firstUser.city,
+                            state: firstUser.state
+                        },
+                        fantasyName: firstUser.fantasyName,
+                        establishmentName: firstUser.establishmentName,
+                        phoneNumber: firstUser.phoneNumber,
+                        cnpj: firstUser.cnpj,
+                        capacity: firstUser.capacity,
+                        amount110Outlets: firstUser.amount110Outlets,
+                        amount220Outlets: firstUser.amount220Outlets
+                    });
+                } else {
+                    console.log('Resposta vazia ou sem dados:', data.data);
+                }
             } catch (error) {
                 console.error('Erro ao buscar os dados dos cards:', error);
             }
@@ -123,6 +183,11 @@ export default function ManageEstablishment() {
 
     const handleReset = () => {
         setActiveStep(0);
+    };
+
+    const handleClick = () => {
+        setOpenToast(true);
+        handleClose()
     };
 
     const handleCreateEstablishment = async () => {
@@ -221,108 +286,184 @@ export default function ManageEstablishment() {
                 }
             </Grid>
             <div>
-      <Modal
-        open={openGerenciarModal}
-        onClose={() => setOpenGerenciarModal(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style} spacing={2}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Gerenciar Estabelecimento
-          </Typography>
-          <Box
-            component="form"
-            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-            noValidate
-            autoComplete="off"
-          >
-            <div style={{ display: 'flex', gap: 20 }}>
-              <TextField
-                label="Razão Social"
-                id="filled-size-normal"
-                variant="filled"
-                name="establishmentName"
-              />
-              <TextField
-                label="Nome Fantasia"
-                id="filled-size-normal"
-                variant="filled"
-                name="fantasyName"
-              />
-            </div>
-            <div style={{ display: 'flex', gap: 20 }}>
-              <TextField
-                label="Número de Telefone"
-                id="filled-size-normal"
-                variant="filled"
-                name="phoneNumber"
-              />
+                <Modal
+                    open={openGerenciarModal}
+                    onClose={() => setOpenGerenciarModal(false)}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                >
+                    <Box sx={style} spacing={2}>
+                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                            Gerenciar Estabelecimento
+                        </Typography>
+                        <Box
+                            component="form"
+                            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+                            noValidate
+                            autoComplete="off"
+                        >
+                            <div style={{ display: 'flex', gap: 20 }}>
+                                <TextField
+                                    label="Razão Social"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="establishmentName"
+                                    value={newEstablishment.establishmentName}
+                                    onChange={(e) => setNewEstablishment({ ...newEstablishment, establishmentName: e.target.value })}
+                                />
+                                <TextField
+                                    label="Nome Fantasia"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="fantasyName"
+                                    value={newEstablishment.fantasyName}
+                                    onChange={(e) => setNewEstablishment({ ...newEstablishment, fantasyName: e.target.value })}
+                                />
+                            </div>
+                            <div style={{ display: 'flex', gap: 20 }}>
+                                <TextField
+                                    label="Número de Telefone"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="phoneNumber"
+                                    value={newEstablishment.phoneNumber}
+                                    onChange={(e) => setNewEstablishment({ ...newEstablishment, phoneNumber: e.target.value })}
+                                />
 
-              <TextField
-                label="CNPJ"
-                id="filled-size-normal"
-                variant="filled"
-                name="cnpj"
-              />
+                                <TextField
+                                    label="CNPJ"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="cnpj"
+                                    value={newEstablishment.cnpj}
+                                    onChange={(e) => setNewEstablishment({ ...newEstablishment, cnpj: e.target.value })}
+                                />
+                            </div>
+                            <div style={{ display: 'flex', gap: 20 }}>
+                                <TextField
+                                    label="Quantidade de tomadas 110"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="amount110Outlets"
+                                    value={newEstablishment.amount110Outlets}
+                                    onChange={(e) => setNewEstablishment({ ...newEstablishment, amount110Outlets: e.target.value })}
+                                />
+                                <TextField
+                                    label="Quantidade de tomadas 220"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="amount220Outlets"
+                                    value={newEstablishment.amount220Outlets}
+                                    onChange={(e) => setNewEstablishment({ ...newEstablishment, amount220Outlets: e.target.value })}
+                                />
+                            </div>
+                            <div style={{ display: 'flex', gap: 20 }}>
+                                <TextField
+                                    label="Endereço"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="address"
+                                    value={newEstablishment.address.address}
+                                    onChange={(e) => setNewEstablishment({ ...newEstablishment, address: e.target.value })}
+                                />
+                                <TextField
+                                    label="Cidade"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="city"
+                                    value={newEstablishment.address.city}
+                                    onChange={(e) => setNewEstablishment({ ...newEstablishment, city: e.target.value })}
+                                />
+                            </div>
+                            <div style={{ display: 'flex', gap: 20 }}>
+                                <TextField
+                                    label="Estado"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="state"
+                                    value={newEstablishment.address.state}
+                                    onChange={(e) => setNewEstablishment({ ...newEstablishment, state: e.target.value })}
+                                />
+                                <TextField
+                                    label="CEP"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="zipCode"
+                                    value={newEstablishment.address.zipCode}
+                                    onChange={(e) => setNewEstablishment({ ...newEstablishment, zipCode: e.target.value })}
+                                />
+                            </div>
+                            <div style={{ display: 'flex', gap: 20, justifyContent: "center" }}>
+                                <TextField
+                                    label="Capacidade"
+                                    id="filled-size-normal"
+                                    variant="filled"
+                                    name="capacity"
+                                    value={newEstablishment.capacity}
+                                    onChange={(e) => setNewEstablishment({ ...newEstablishment, capacity: e.target.value })}
+                                />
+
+                            </div>
+                            <div style={{ display: 'flex', gap: 20 }}>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    id="upload-button"
+                                    style={{ display: 'none' }}
+                                    onChange={handleFileChange}
+                                />
+                                <label htmlFor="upload-button">
+                                    <Button
+                                        variant="outlined"
+                                        color="primary"
+                                        component="span"
+                                        startIcon={<CloudUploadIcon />}
+                                        style={{ flex: 2, padding: '13px', fontSize: '0.8rem', width: 220 }}
+                                        onClick={handleClick}
+                                    >
+                                        Upload de Imagem
+                                    </Button>
+                                </label>
+                                <div style={{ display: "flex" }}>
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        size="medium"
+                                        disabled={!selectedFile}
+                                        onClick={handleUpload}
+                                        sx={{
+                                            marginTop: 'auto',
+                                            borderColor: 'black',
+                                            backgroundColor: 'red',
+                                            color: 'white',
+                                            height: "100%",
+                                            width: 220
+                                        }}
+                                    >
+                                        Enviar Imagem
+                                    </Button>
+                                </div>
+
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+                            <Button variant="contained" color="success" style={{ width: 'auto', height: 'auto' }}
+                            onClick={() => {
+                                setOpenGerenciarModal(false);
+                            }}>
+                                Salvar
+                            </Button>
+                            <Button variant="contained" color="error" style={{ width: 'auto', height: 'auto' }}
+                            onClick={() => {
+                                setOpenGerenciarModal(false);
+                            }}>
+                                Excluir
+                            </Button>
+                        </div>
+                        </Box>
+                        
+                    </Box>
+                </Modal>
             </div>
-            <div style={{ display: 'flex', gap: 20 }}>
-              <TextField
-                label="Quantidade de tomadas 110"
-                id="filled-size-normal"
-                variant="filled"
-                name="amount110Outlets"
-              />
-              <TextField
-                label="Quantidade de tomadas 220"
-                id="filled-size-normal"
-                variant="filled"
-                name="amount220Outlets"
-              />
-            </div>
-            <div style={{ display: 'flex', gap: 20 }}>
-              <TextField
-                label="Endereço"
-                id="filled-size-normal"
-                variant="filled"
-                name="address"
-              />
-              <TextField
-                label="Cidade"
-                id="filled-size-normal"
-                variant="filled"
-                name="city"
-              />
-            </div>
-            <div style={{ display: 'flex', gap: 20 }}>
-              <TextField
-                label="Estado"
-                id="filled-size-normal"
-                variant="filled"
-                name="state"
-              />
-              <TextField
-                label="CEP"
-                id="filled-size-normal"
-                variant="filled"
-                name="zipCode"
-              />
-            </div>
-            <div style={{ display: 'flex', gap: 20 }}>
-              <TextField
-                label="Capacidade"
-                id="filled-size-normal"
-                variant="filled"
-                name="capacity"
-              />
-            </div>
-          </Box>
-          <Button variant="contained" color="success" style={{ width: 250, height: 40 }}>
-            Criar Estabelecimento
-          </Button>
-        </Box>
-      </Modal>
-    </div>
             <Modal
                 open={openCreateModal}
                 onClose={() => setOpenCreateModal(false)}

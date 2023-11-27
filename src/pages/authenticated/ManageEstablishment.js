@@ -48,7 +48,7 @@ const style = {
 export default function ManageEstablishment() {
     const { userId } = useAuth();
     const [establishments, setEstablishments] = useState([])
-
+    const [openGerenciarModal, setOpenGerenciarModal] = useState(false);
     const [openCreateModal, setOpenCreateModal] = useState(false);
     const [newEstablishment, setNewEstablishment] = useState({
         cnpj: '',
@@ -210,6 +210,7 @@ export default function ManageEstablishment() {
                                             height: 40,
                                             marginRight: 15
                                         }}
+                                        onClick={() => setOpenGerenciarModal(true)}
                                     >
                                         Gerenciar
                                     </Button>
@@ -219,6 +220,109 @@ export default function ManageEstablishment() {
                     ))
                 }
             </Grid>
+            <div>
+      <Modal
+        open={openGerenciarModal}
+        onClose={() => setOpenGerenciarModal(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style} spacing={2}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Gerenciar Estabelecimento
+          </Typography>
+          <Box
+            component="form"
+            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+            noValidate
+            autoComplete="off"
+          >
+            <div style={{ display: 'flex', gap: 20 }}>
+              <TextField
+                label="Razão Social"
+                id="filled-size-normal"
+                variant="filled"
+                name="establishmentName"
+              />
+              <TextField
+                label="Nome Fantasia"
+                id="filled-size-normal"
+                variant="filled"
+                name="fantasyName"
+              />
+            </div>
+            <div style={{ display: 'flex', gap: 20 }}>
+              <TextField
+                label="Número de Telefone"
+                id="filled-size-normal"
+                variant="filled"
+                name="phoneNumber"
+              />
+
+              <TextField
+                label="CNPJ"
+                id="filled-size-normal"
+                variant="filled"
+                name="cnpj"
+              />
+            </div>
+            <div style={{ display: 'flex', gap: 20 }}>
+              <TextField
+                label="Quantidade de tomadas 110"
+                id="filled-size-normal"
+                variant="filled"
+                name="amount110Outlets"
+              />
+              <TextField
+                label="Quantidade de tomadas 220"
+                id="filled-size-normal"
+                variant="filled"
+                name="amount220Outlets"
+              />
+            </div>
+            <div style={{ display: 'flex', gap: 20 }}>
+              <TextField
+                label="Endereço"
+                id="filled-size-normal"
+                variant="filled"
+                name="address"
+              />
+              <TextField
+                label="Cidade"
+                id="filled-size-normal"
+                variant="filled"
+                name="city"
+              />
+            </div>
+            <div style={{ display: 'flex', gap: 20 }}>
+              <TextField
+                label="Estado"
+                id="filled-size-normal"
+                variant="filled"
+                name="state"
+              />
+              <TextField
+                label="CEP"
+                id="filled-size-normal"
+                variant="filled"
+                name="zipCode"
+              />
+            </div>
+            <div style={{ display: 'flex', gap: 20 }}>
+              <TextField
+                label="Capacidade"
+                id="filled-size-normal"
+                variant="filled"
+                name="capacity"
+              />
+            </div>
+          </Box>
+          <Button variant="contained" color="success" style={{ width: 250, height: 40 }}>
+            Criar Estabelecimento
+          </Button>
+        </Box>
+      </Modal>
+    </div>
             <Modal
                 open={openCreateModal}
                 onClose={() => setOpenCreateModal(false)}
@@ -418,13 +522,13 @@ export default function ManageEstablishment() {
                                         const { value } = event.target;
                                         const alphabeticValue = value.replace(/[^A-Za-z]/g, '');
                                         if (alphabeticValue !== '') {
-                                          setNewEstablishment({
-                                            ...newEstablishment,
-                                            city: alphabeticValue,
-                                          });
-                                          handleCreateEstablishmentChange(event);
+                                            setNewEstablishment({
+                                                ...newEstablishment,
+                                                city: alphabeticValue,
+                                            });
+                                            handleCreateEstablishmentChange(event);
                                         }
-                                      }}
+                                    }}
                                     inputProps={{
                                         maxLength: 45,
                                         minLength: 2,
@@ -439,16 +543,16 @@ export default function ManageEstablishment() {
                                     value={newEstablishment.state}
                                     onChange={(event) => {
                                         const { value } = event.target;
-                                    
+
                                         const alphabeticValue = value.replace(/[^A-Za-z]/g, '');
                                         if (alphabeticValue !== '') {
-                                          setNewEstablishment({
-                                            ...newEstablishment,
-                                            state: alphabeticValue,
-                                          });
-                                          handleCreateEstablishmentChange(event);
+                                            setNewEstablishment({
+                                                ...newEstablishment,
+                                                state: alphabeticValue,
+                                            });
+                                            handleCreateEstablishmentChange(event);
                                         }
-                                      }}
+                                    }}
                                     inputProps={{
                                         maxLength: 2,
                                         minLength: 2,

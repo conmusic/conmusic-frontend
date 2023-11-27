@@ -4,6 +4,7 @@ import {
     Typography,
     Grid,
     Button,
+    Paper
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Autocomplete from '@mui/material/Autocomplete';
@@ -33,6 +34,14 @@ export default function UserFormArtist(onUpload) {
         email: '',
         phoneNumber: '',
         cpf: '',
+        birthDate: '',
+        instagram: '',
+        address: '',
+        state: '',
+        city: '',
+        zipCode: '',
+        about: '',
+        musicalGenres: '',
         // ... outros campos que você busca no banco
     });
 
@@ -61,7 +70,26 @@ export default function UserFormArtist(onUpload) {
         setSelectedFile(file);
     };
 
+    const handleUpdate = async () => {
+        try {
+            var token = localStorage.getItem('@conmusic:token');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
 
+            const response = await api.put(`/artists/${userId}`, userData, config);
+
+            if (response.status === 200) {
+                console.log('Dados atualizados com sucesso!');
+                // Se necessário, adicione um feedback para o usuário de que os dados foram atualizados
+
+            } else {
+                console.log('Falha ao atualizar os dados:', response.data);
+            }
+        } catch (error) {
+            console.error('Erro ao atualizar os dados do usuário:', error);
+        }
+    };
 
     const handleUpload = () => {
         if (selectedFile) {
@@ -91,10 +119,10 @@ export default function UserFormArtist(onUpload) {
 
                 if (response.data) {
                     console.log('Dados recebidos:', response.data);
-            
+
                     const userDataArray = Array.isArray(response.data) ? response.data : [response.data];
                     const firstUser = userDataArray[0];
-            
+
                     setUserData({
                         name: firstUser.name || '',
                         email: firstUser.email || '',
@@ -103,6 +131,11 @@ export default function UserFormArtist(onUpload) {
                         birthDate: firstUser.birthDate || '',
                         instagram: firstUser.instagram || '',
                         about: firstUser.about || '',
+                        address: firstUser.address || '',
+                        city: firstUser.city || '',
+                        state: firstUser.state || '',
+                        zipCode: firstUser.zipCode || '',
+                        musicalGenres: firstUser.musicalGenres || '',
                         // ... outros campos do usuário
                     });
                 } else {
@@ -126,240 +159,229 @@ export default function UserFormArtist(onUpload) {
                 <Typography variant="h4" gutterBottom>
                     Meu Perfil
                 </Typography>
-                <SmallImage src={image[selectedImage]} alt="Profile" />
-                <Typography variant="h6" gutterBottom>
-                    Dados do Usuário
-                </Typography>
-                <Grid container spacing={3}>
+                <Paper sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: 4, gap: 1, my: 2 }}>
 
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            required
-                            id="firstName"
-                            name="firstName"
-                            label="Nome"
-                            fullWidth
-                            autoComplete="given-name"
-                            variant="outlined"
-                            value={userData.name}
-                            onChange={(e) => setUserData({ ...userData, name: e.target.value })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            required
-                            id="email"
-                            name="email"
-                            label="Email"
-                            fullWidth
-                            autoComplete="family-name"
-                            variant="outlined"
-                            value={userData.email}
-                            onChange={(e) => setUserData({ ...userData, email: e.target.value })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            required
-                            id="state"
-                            name="state"
-                            label="Telefone"
-                            fullWidth
-                            variant="outlined"
-                            inputProps={{
-                                maxLength: 15,
-                                pattern: "{2} {5}-{4}",
-                            }}
-                            value={userData.phoneNumber}
-                            onChange={(e) => setUserData({ ...userData, phoneNumber: e.target.value })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            required
-                            id="state"
-                            name="state"
-                            label="CPF"
-                            fullWidth
-                            variant="outlined"
-                            inputProps={{
-                                maxLength: 14,
-                                pattern: "{3}{3}{3}-{2}",
-                            }}
-                            value={userData.cpf}
-                            onChange={(e) => setUserData({ ...userData, cpf: e.target.value })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            required
-                            id="date"
-                            fullWidth
-                            name="dataNasci"
-                            variant="outlined"
-                            label="Data de nascimento"
-                            value={userData.birthDate}
-                            onChange={(e) => setUserData({ ...userData, birthDate: e.target.value })}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            id="state"
-                            name="state"
-                            label="Instagram"
-                            fullWidth
-                            variant="outlined"
-                            value={userData.instagram}
-                            onChange={(e) => setUserData({ ...userData, instagram: e.target.value })}
-                        />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <TextField
-                            required
-                            id="address1"
-                            name="address1"
-                            label="Endereço"
-                            fullWidth
-                            autoComplete="shipping address-line1"
-                            variant="outlined"
+                    <SmallImage src={image[selectedImage]} alt="Profile" />
+                    <Typography variant="h6" gutterBottom>
+                        Dados do Usuário
+                    </Typography>
+                    <Grid container spacing={3}>
 
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            required
-                            id="city"
-                            name="city"
-                            label="Cidade"
-                            fullWidth
-                            autoComplete="shipping address-level2"
-                            variant="outlined"
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            required
-                            id="state"
-                            name="state"
-                            label="Estado"
-                            fullWidth
-                            variant="outlined"
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            required
-                            id="zip"
-                            name="zip"
-                            label="CEP"
-                            fullWidth
-                            autoComplete="shipping postal-code"
-                            variant="outlined"
-
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            required
-                            id="country"
-                            name="country"
-                            label="UF"
-                            fullWidth
-                            autoComplete="shipping country"
-                            variant="outlined"
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <TextField
-                            id="outlined-multiline-static"
-                            label="Escreva um pouco sobre você"
-                            multiline
-                            rows={4}
-                            fullWidth
-                            autoComplete="shipping country"
-                            variant="outlined"
-                            value={userData.about}
-                            onChange={(e) => setUserData({ ...userData, instagram: e.target.value })}
-                        />
-                        <Button
-                            variant="contained"
-                            size="medium"
-                            sx={{
-                                borderColor: 'black',
-                                backgroundColor: 'green',
-                                color: 'white',
-                                marginTop: 2
-                            }}
-                            onClick={handleUpload}
-                        >
-                            Salvar
-                        </Button>
-
-                        <Button
-                            variant="contained"
-                            size="medium"
-                            sx={{
-                                marginTop: 'auto',
-                                borderColor: 'black',
-                                backgroundColor: 'red',
-                                color: 'white',
-                                marginLeft: 3,
-                                marginTop: 2
-                            }}
-                        >
-                            Cancelar
-                        </Button>
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <Autocomplete
-                            fullWidth
-                            id="combo-box-demo"
-                            options={topEstilosMusicais}
-                            renderInput={(params) => <TextField {...params} label="Gênero Musical" />}
-                        />
-                        <input
-                            type="file"
-                            accept="image/*"
-                            id="upload-button"
-                            style={{ display: 'none' }}
-                            onChange={handleFileChange}
-                        />
-                        <label htmlFor="upload-button">
-                            <Button
-                                variant="outlined"
-                                color="primary"
-                                component="span"
-                                startIcon={<CloudUploadIcon />}
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                required
+                                id="firstName"
+                                name="firstName"
+                                label="Nome"
                                 fullWidth
-                                style={{ padding: '13px', fontSize: '1.0rem', marginTop: 13 }}
-                                onClick={handleClick}
-                            >
+                                autoComplete="given-name"
+                                variant="outlined"
+                                value={userData.name}
+                                onChange={(e) => setUserData({ ...userData, name: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                required
+                                id="email"
+                                name="email"
+                                label="Email"
+                                fullWidth
+                                autoComplete="family-name"
+                                variant="outlined"
+                                value={userData.email}
+                                onChange={(e) => setUserData({ ...userData, email: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                required
+                                id="state"
+                                name="state"
+                                label="Telefone"
+                                fullWidth
+                                variant="outlined"
+                                inputProps={{
+                                    maxLength: 15,
+                                    pattern: "{2} {5}-{4}",
+                                }}
+                                value={userData.phoneNumber}
+                                onChange={(e) => setUserData({ ...userData, phoneNumber: e.target.value })}
 
-                                Upload de Imagem
-                            </Button>
-                            {selectedFile && (
-                                <Snackbar open={openToast} autoHideDuration={6000} onClose={handleCloseToast}>
-                                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                                        Avaliação enviada!
-                                    </Alert>
-                                </Snackbar>
-                            )}
-                        </label>
-                        <Grid sx={{ display: "flex" }}>
-                            <div style={{ display: "flex", justifyContent: "flex-end", width: "100%" }}>
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                required
+                                id="state"
+                                name="state"
+                                label="CPF"
+                                fullWidth
+                                variant="outlined"
+                                inputProps={{
+                                    maxLength: 14,
+                                    pattern: "{3}{3}{3}-{2}",
+                                }}
+                                value={userData.cpf}
+                                onChange={(e) => setUserData({ ...userData, cpf: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                required
+                                id="date"
+                                fullWidth
+                                name="dataNasci"
+                                variant="outlined"
+                                label="Data de nascimento"
+                                value={userData.birthDate}
+                                onChange={(e) => setUserData({ ...userData, birthDate: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id="state"
+                                name="state"
+                                label="Instagram"
+                                fullWidth
+                                variant="outlined"
+                                value={userData.instagram}
+                                onChange={(e) => setUserData({ ...userData, instagram: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12}>
+                            <TextField
+                                required
+                                id="address1"
+                                name="address1"
+                                label="Endereço"
+                                fullWidth
+                                autoComplete="shipping address-line1"
+                                variant="outlined"
+                                value={userData.address}
+                                onChange={(e) => setUserData({ ...userData, address: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                required
+                                id="city"
+                                name="city"
+                                label="Cidade"
+                                fullWidth
+                                autoComplete="shipping address-level2"
+                                variant="outlined"
+                                value={userData.city}
+                                onChange={(e) => setUserData({ ...userData, city: e.target.value })}
+                            />
+                        </Grid>
+
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                required
+                                id="zip"
+                                name="zip"
+                                label="CEP"
+                                fullWidth
+                                autoComplete="shipping postal-code"
+                                variant="outlined"
+                                value={userData.zipCode}
+                                onChange={(e) => setUserData({ ...userData, zipCode: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                required
+                                id="country"
+                                name="country"
+                                label="UF"
+                                fullWidth
+                                autoComplete="shipping country"
+                                variant="outlined"
+                                value={userData.state}
+                                onChange={(e) => setUserData({ ...userData, state: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+    <Autocomplete
+        fullWidth
+        id="combo-box-demo"
+        options={topEstilosMusicais}
+        getOptionLabel={(option) => option.label}
+        renderInput={(params) => <TextField {...params} label="Gênero Musical" />}
+        value={
+            userData.musicalGenres
+                ? topEstilosMusicais.find((option) => option.label === userData.musicalGenres)
+                : null
+        }
+        onChange={(e, newValue) => {
+            if (newValue) {
+                setUserData({ ...userData, musicalGenres: newValue.label });
+            } else {
+                setUserData({ ...userData, musicalGenres: '' });
+            }
+        }}
+    />
+</Grid>
+
+
+                        <Grid item xs={12} sm={6} sx={{ display: "flex", flexDirection: "column" }}>
+                            <TextField
+                                id="outlined-multiline-static"
+                                label="Escreva um pouco sobre você"
+                                multiline
+                                rows={4}
+                                fullWidth
+                                autoComplete="shipping country"
+                                variant="outlined"
+                                value={userData.about}
+                                onChange={(e) => setUserData({ ...userData, about: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6}>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                id="upload-button"
+                                style={{ display: 'none' }}
+                                onChange={handleFileChange}
+                            />
+                            <label htmlFor="upload-button">
+                                <Button
+                                    variant="outlined"
+                                    color="primary"
+                                    component="span"
+                                    startIcon={<CloudUploadIcon />}
+                                    fullWidth
+                                    style={{ padding: '13px', fontSize: '1.0rem' }}
+                                    onClick={handleClick}
+                                >
+
+                                    Upload de Imagem
+                                </Button>
+                                {selectedFile && (
+                                    <Snackbar open={openToast} autoHideDuration={6000} onClose={handleCloseToast}>
+                                        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                                            Imagem selecionada, agora basta enviar!
+                                        </Alert>
+                                    </Snackbar>
+                                )}
+                            </label>
+                            <div style={{ display: "flex", justifyContent: "flex-end" }}>
                                 <Button
                                     variant="contained"
                                     color="primary"
                                     size="medium"
                                     disabled={!selectedFile}
                                     onClick={handleUpload}
+                                    fullWidth
                                     sx={{
                                         marginTop: 'auto',
                                         borderColor: 'black',
                                         backgroundColor: 'red',
                                         color: 'white',
-                                        marginTop: 2
-
+                                        marginTop: 2,
+                                        height: 53
                                     }}
 
                                 >
@@ -367,8 +389,46 @@ export default function UserFormArtist(onUpload) {
                                 </Button>
                             </div>
                         </Grid>
+
+
+
+
                     </Grid>
-                </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <div style={{ width: "100%", display: "flex", justifyContent: "end" }}>
+                            <Button
+                                variant="contained"
+                                size="medium"
+                                onClick={handleUpdate}
+                                sx={{
+                                    borderColor: 'black',
+                                    backgroundColor: 'green',
+                                    color: 'white',
+                                    marginTop: 2,
+
+                                }}
+                            >
+                                Salvar
+                            </Button>
+
+                            <Button
+                                variant="contained"
+                                size="medium"
+                                sx={{
+                                    marginTop: 'auto',
+                                    borderColor: 'black',
+                                    backgroundColor: 'red',
+                                    color: 'white',
+                                    marginLeft: 3,
+                                    marginTop: 2,
+
+                                }}
+                            >
+                                Cancelar
+                            </Button>
+                        </div>
+                    </Grid>
+                </Paper>
             </Grid>
 
         </React.Fragment>

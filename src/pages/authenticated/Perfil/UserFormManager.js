@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
 import {
     Typography,
     Grid,
     Button,
+    Paper
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import Autocomplete from '@mui/material/Autocomplete';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
+import { useAuth } from '../../../hooks/auth';
+import api from "../../../services/api";
 
 const SmallImage = styled('img')({
     width: '150px',
@@ -21,6 +25,27 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 export default function UserFormManager(onUpload) {
+
+    const { userId } = useAuth();
+
+    const [cardData, setCardData] = useState([]);
+
+    const [userData, setUserData] = useState({
+        name: '',
+        email: '',
+        phoneNumber: '',
+        cpf: '',
+        birthDate: '',
+        instagram: '',
+        address: '',
+        state: '',
+        city: '',
+        zipCode: '',
+        about: '',
+        musicalGenres: '',
+        // ... outros campos que você busca no banco
+    });
+
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = () => setOpen(true);
@@ -57,6 +82,56 @@ export default function UserFormManager(onUpload) {
         'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
     ]
 
+
+
+    useEffect(() => {
+
+        const getManagerData = async () => {
+            try {
+                var token = localStorage.getItem('@conmusic:token');
+                const config = {
+                    headers: { Authorization: `Bearer ${token}` }
+                };
+
+                console.log("userId:", userId);
+
+                console.log('Chamando a API para buscar dados do usuário...');
+                const response = await api.get(`/manegers/${userId}`, config);
+                console.log(response)
+
+                if (response.data) {
+                    console.log('Dados recebidos:', response.data);
+
+                    const userDataArray = Array.isArray(response.data) ? response.data : [response.data];
+                    const firstUser = userDataArray[0];
+
+                    setUserData({
+                        name: firstUser.name || '',
+                        email: firstUser.email || '',
+                        phoneNumber: firstUser.phoneNumber || '',
+                        cpf: firstUser.cpf || '',
+                        birthDate: firstUser.birthDate || '',
+                        instagram: firstUser.instagram || '',
+                        about: firstUser.about || '',
+                        address: firstUser.address || '',
+                        city: firstUser.city || '',
+                        state: firstUser.state || '',
+                        zipCode: firstUser.zipCode || '',
+                    });
+                } else {
+                    console.log('Resposta vazia ou sem dados:', response.data);
+                }
+            } catch (error) {
+                console.error('Erro ao buscar os dados do usuário:', error);
+            }
+        };
+
+        if (userId !== 0) {
+            getManagerData();
+        }
+    }, [userId]);
+
+
     return (
         <React.Fragment >
             <Grid maxWidth="lg" sx={{ mt: 4, mb: 4, marginLeft: 9, width: "85%" }}>
@@ -77,6 +152,8 @@ export default function UserFormManager(onUpload) {
                             fullWidth
                             autoComplete="given-name"
                             variant="outlined"
+                            value={userData.name}
+                            onChange={(e) => setUserData({ ...userData, name: e.target.value })}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -88,6 +165,8 @@ export default function UserFormManager(onUpload) {
                             fullWidth
                             autoComplete="family-name"
                             variant="outlined"
+                            value={userData.email}
+                            onChange={(e) => setUserData({ ...userData, email: e.target.value })}
                         />
                     </Grid>
                     <Grid item xs={12} sm={6}>
@@ -238,26 +317,26 @@ export default function UserFormManager(onUpload) {
                             )}
                         </label>
                         <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    size="medium"
-                                    disabled={!selectedFile}
-                                    onClick={handleUpload}
-                                    fullWidth
-                                    sx={{
-                                        marginTop: 'auto',
-                                        borderColor: 'black',
-                                        backgroundColor: 'red',
-                                        color: 'white',
-                                        marginTop: 2,
-                                        height: 53
-                                    }}
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                size="medium"
+                                disabled={!selectedFile}
+                                onClick={handleUpload}
+                                fullWidth
+                                sx={{
+                                    marginTop: 'auto',
+                                    borderColor: 'black',
+                                    backgroundColor: 'red',
+                                    color: 'white',
+                                    marginTop: 2,
+                                    height: 53
+                                }}
 
-                                >
-                                    Enviar Imagem
-                                </Button>
-                            </div>
+                            >
+                                Enviar Imagem
+                            </Button>
+                        </div>
                     </Grid>
                 </Grid>
                 <Grid sx={{ display: "flex" }}>

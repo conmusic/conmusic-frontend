@@ -60,7 +60,6 @@ export default function NegotiationsArtist() {
                         showStart={item.showStart}
                         showEnd={item.showEnd}
                         status={item.status}
-                        establishmentId={item.establishmentId}
                     />
                 ))
             }

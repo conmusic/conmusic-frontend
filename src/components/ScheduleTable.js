@@ -32,12 +32,11 @@ export default function ScheduleTable({eventId, ...rest }) {
           .map(row => {
             let showIniDate = format(new Date(row.startDateTime), "dd/MM/yyyy - HH:mm");
             let showEndDate = format(new Date(row.endDateTime), "dd/MM/yyyy - HH:mm");
-            let conf = scheduleConfirmationHelper.getConfirmationName(row.confirmed);
             return {
               id: row.id,
               startDateTime: showIniDate,
               endDateTime: showEndDate,
-              status: conf
+              status: scheduleConfirmationHelper.getConfirmationName(row.confirmed)
             }
           })
         setTableData(TableData);
@@ -52,7 +51,7 @@ export default function ScheduleTable({eventId, ...rest }) {
 
   return (
     <React.Fragment>
-      <Title>Propostas em andamento</Title>
+      <Title>Agendas</Title>
       <div style={{ height: '300px', overflow: 'auto' }}>
         <TableContainer>
           <Table size="small">
@@ -68,7 +67,7 @@ export default function ScheduleTable({eventId, ...rest }) {
                 <TableRow key={row.id}>
                   <TableCell style={{ textAlign: 'left' }}>{row.startDateTime}</TableCell>
                   <TableCell style={{ textAlign: 'left' }}>{row.endDateTime}</TableCell>
-                  <TableCell style={{ textAlign: 'left' }}>{}</TableCell>
+                  <TableCell style={{ textAlign: 'left' }}>{row.status}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

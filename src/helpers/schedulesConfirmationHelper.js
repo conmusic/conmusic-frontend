@@ -2,10 +2,10 @@ function getConfirmationName(status) {
     let displayName = status
     
     switch (displayName) {
-        case "true":
-            displayName = "confirmado"
+        case true:
+            displayName = "Alocado"
             break;
-        case "false":
+        case false:
             displayName = "Horario livre"
             break;
     }

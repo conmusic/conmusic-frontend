@@ -30,6 +30,7 @@ import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ScheduleTable from '../../../components/ScheduleTable';
+import ButtonHour from '../../../components/ButtonHour';
 
 const CarouselContainer = styled('div')({
   display: 'flex',
@@ -498,10 +499,13 @@ export default function EventDetail(onUpload) {
               {event.description}
             </Typography>
           </Paper>
+          <Grid display={'flex'} justifyContent={'flex-end'} padding={'20px'} flexDirection={'row'} alignContent={"flex-end"}>
+            <ButtonHour />
+          </Grid>
+          <Paper style={{ width: '100%', padding: '20px' }}>
+            <ScheduleTable eventId={eventId} />
+          </Paper>
         </SubtitleContainer>
-        <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-          <ScheduleTable eventId={eventId} />
-        </Paper>
       </Grid>
 
 

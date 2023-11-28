@@ -47,7 +47,7 @@ function ButtonHour() {
 
     return (
         <Container>
-            <Stack spacing={2} direction="row" justifyContent={'space-between'}>
+            <Stack spacing={2} direction="row" justifyContent={'flex-end'}>
                 <Button variant="contained" color="success" onClick={handleOpenModal}>
                     Criar Agendamento
                 </Button>

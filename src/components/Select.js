@@ -16,12 +16,16 @@ const currencies = [
     value: 'Anual',
     label: 'Anual',
   },
+  {
+    value: 'Semanal',
+    label: 'Semanal',
+  },
+  {
+    value: 'Diário',
+    label: 'Diário',
+  },
  
 ];
-
-const divStyle = {
-    height: '45px',
-  };
 
 export default function Select() {
   return (

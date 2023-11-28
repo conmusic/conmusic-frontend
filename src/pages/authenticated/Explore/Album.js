@@ -106,46 +106,46 @@ export default function Album() {
     <>
       <div style={{ display: 'flex', justifyContent: 'center', margin: 0 }}>
         <Container maxWidth="md" style={{ margin: 0, padding: 0, display: 'none', justifyContent: 'center' }}>
-          <Paper sx={{ marginTop: 10, paddingY: 4, paddingX: 4, width: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-            <FormControl sx={{ width: '100%' }}>
-              <InputLabel id='genre-filter-option-label'>Gêneros</InputLabel>
-              <Select
-                id='genre-filter-option'
-                labelId='genre-filter-option-label'
-                multiple
-                value={selectedGenres}
-                onChange={(event) => setSelectedGenres(event.target.value)}
-                input={<OutlinedInput id="select-multiple-genre" label="Gênero" />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {
-                      selected.map((option, i) => (
-                        <Chip
-                          key={option.id}
-                          sx={{ backgroundColor: i % 2 === 0 ? "#FF3E3A" : "#CC3245", color: '#F2F2F2' }}
-                          label={option.genre}
-                        />
-                      ))
-                    }
-                  </Box>
-                )}
-              >
-                {
-                  genres.map(g => (
-                    <MenuItem
-                      key={g.id}
-                      value={g}
-                    >
-                      {g.genre}
-                    </MenuItem>
-                  ))
-                }
-              </Select>
-            </FormControl>
-            <Button sx={{ marginLeft: 6 }}>
-              Filtrar
-            </Button>
-          </Paper>
+            <Paper sx={{ marginTop: 10, paddingY: 4, paddingX: 4, width: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'  }}>
+              <FormControl sx={{ width: '100%' }}>
+                <InputLabel id='genre-filter-option-label'>Gêneros</InputLabel>
+                <Select
+                  id='genre-filter-option'
+                  labelId='genre-filter-option-label'
+                  multiple
+                  value={selectedGenres}
+                  onChange={(event) => setSelectedGenres(event.target.value)}
+                  input={<OutlinedInput id="select-multiple-genre" label="Gênero" />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                      {
+                        selected.map((option, i) => (
+                          <Chip 
+                            key={option.id}
+                            sx={{ backgroundColor: i % 2 === 0 ? "#FF3E3A" : "#CC3245", color: '#F2F2F2'}}
+                            label={option.genre} 
+                          />
+                        ))
+                      }
+                    </Box>
+                  )}
+                >
+                  {
+                    genres.map(g => (
+                      <MenuItem
+                        key={g.id}
+                        value={g}
+                      >
+                        {g.genre}
+                      </MenuItem>
+                    ))
+                  }
+                </Select>
+              </FormControl>
+              <Button sx={{ marginLeft: 6 }}>
+                Filtrar
+              </Button>
+            </Paper>
         </Container>
       </div>
       <Container sx={{ py: 8 }} maxWidth="md">

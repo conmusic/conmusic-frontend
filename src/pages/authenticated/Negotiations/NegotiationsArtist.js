@@ -27,7 +27,6 @@ export default function NegotiationsArtist() {
                         return {
                             establishmentId: obj.event.establishment.id,
                             establishment: obj.event.establishment.establishmentName,
-                            establishmentId: obj.event.establishment.id,
                             event: obj.event.name,
                             local: obj.event.establishment.address,
                             showStart: `${showDate} - ${showStartDateTime}`,

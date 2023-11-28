@@ -28,6 +28,7 @@ import CardAdmin from '../../../components/CardAdmin';
 import styled from 'styled-components';
 import api from '../../../services/api';
 import eventPropsHelper from '../../../helpers/eventPropsHelper';
+import dateHelper from '../../../helpers/dateHelper';
 
 const CenteredTypography = styled(Typography)`
   display: flex;
@@ -56,9 +57,9 @@ export default function BiArtist() {
     negotiations: 0,
     negotiationsByYou: 0,
     confirmed: 0,
-    percentageConfirmed: 0,
+    percentageConfirmed: 0.0,
     canceled: 0,
-    percentageCanceled: 0,
+    percentageCanceled: 0.0,
   })
   const [eventsChartData, setEventChartData] = useState([])
   const [valuesChartData, setValuesChartData] = useState([])
@@ -73,9 +74,9 @@ export default function BiArtist() {
           negotiations: data.negotiations,
           negotiationsByYou: data.negotiationsStartedByYou,
           confirmed: data.confirmed,
-          percentageConfirmed: (data.confirmed / data.negotiations) * 100,
+          percentageConfirmed: Number(data.percentageConfirmed.toFixed(2)),
           canceled: data.canceled,
-          percentageCanceled: (data.canceled / data.negotiations) * 100,
+          percentageCanceled: Number(data.percentageCanceled.toFixed(2)),
         })
       }
       catch (e) {
@@ -83,11 +84,17 @@ export default function BiArtist() {
       }
     }
 
-    const getGenreChartData = async () => {
+    const getEventChartData = async () => {
       try {
-        const { data } = await api.get(`/managers/events-chart?lastDays=${period}`)
+        const { data, status } = await api.get(`/managers/events-chart?lastDays=${period}`)
 
-        setEventChartData(data)
+        if (status === 200) {
+          setEventChartData(data)
+        }
+
+        if (status === 204) {
+          setEventChartData([])
+        }
       }
       catch (e) {
         console.error(e)
@@ -96,26 +103,18 @@ export default function BiArtist() {
 
     const getValuesChartData = async () => {
       try {
-        const { data } = await api.get(`/managers/value-chart?lastDays=${period}`)
+        const { data, status } = await api.get(`/managers/value-chart?lastDays=${period}`)
 
-        console.log(data)
+        if (status === 200) {
+          setValuesChartData(data.map(d => ({
+            date: dateHelper.getDate(d.date),
+            count: d.count
+          })))
+        }
 
-        const ficData = [
-          { date: 'Jan', count: 5000 },
-          { date: 'Fev', count: 6000 },
-          { date: 'Mar', count: 5500 },
-          { date: 'Abr', count: 7000 },
-          { date: 'Mai', count: 8000 },
-          { date: 'Jun', count: 7000 },
-          { date: 'Jul', count: 6000 },
-          { date: 'Ago', count: 5000 },
-          { date: 'Set', count: 5500 },
-          { date: 'Out', count: 7800 },
-          { date: 'Nov', count: 6000 },
-          { date: 'Dez', count: 7500 },
-        ];
-
-        setValuesChartData(ficData)
+        if (status === 204) {
+          setValuesChartData([])
+        }
       }
       catch (e) {
         console.error(e)
@@ -123,7 +122,7 @@ export default function BiArtist() {
     }
 
     getKpi()
-    getGenreChartData()
+    getEventChartData()
     getValuesChartData()
   }, [period])
 
@@ -233,20 +232,20 @@ export default function BiArtist() {
         </Grid>
       </Box>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={6} lg={6}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              height: 350,
-            }}
-          >
-            <Title>Eventos com mais Propostas Recebidas</Title>
-            {
-              eventsChartData.length > 0
-              &&
-              (
+        {
+          eventsChartData.length > 0
+          &&
+          (
+            <Grid item xs={12} md={6} lg={6}>
+              <Paper
+                sx={{
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  height: 350,
+                }}
+              >
+                <Title>Eventos com mais Propostas Recebidas</Title>
                 <BarChart
                   dataset={eventsChartData}
                   yAxis={[{ scaleType: 'band', dataKey: 'eventName' }]}
@@ -254,25 +253,27 @@ export default function BiArtist() {
                   layout="horizontal"
                   {...chartSetting}
                 />
-              )
-            }
-          </Paper>
-        </Grid>
-        <Grid item xs={6} md={6} lg={6}>
-          <Paper
-            sx={{
-              p: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              height: 350,
-            }}
-          >
-            <Title>Valor total recebido para todos shows em período</Title>
-            {
-              valuesChartData.length > 0
-              &&
-              (
+
+              </Paper>
+            </Grid>
+          )
+        }
+        {
+          valuesChartData.length > 0
+          &&
+          (
+            <Grid item xs={6} md={6} lg={6}>
+              <Paper
+                sx={{
+                  p: 2,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  height: 350,
+                }}
+              >
+                <Title>Valor total recebido para todos shows em período</Title>
+
                 <ResponsiveContainer width="100%" height={200} >
                   <LineChart
                     data={valuesChartData}
@@ -318,10 +319,11 @@ export default function BiArtist() {
                     />
                   </LineChart>
                 </ResponsiveContainer>
-              )
-            }
-          </Paper>
-        </Grid>
+
+              </Paper>
+            </Grid>
+          )
+        }
       </Grid>
     </Container>
   );

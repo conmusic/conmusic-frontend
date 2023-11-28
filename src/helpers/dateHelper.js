@@ -18,16 +18,25 @@ function getFormattedAge(date) {
         return ''
     }
 
-        const birthDate = new Date(date)
-        const age = differenceInYears(new Date(), birthDate)
+    const birthDate = new Date(date)
+    const age = differenceInYears(new Date(), birthDate)
 
-        return `${birthDate.toLocaleDateString('pt-BR')} - ${age} anos`
+    return `${birthDate.toLocaleDateString('pt-BR')} - ${age} anos`
+}
+
+function getDate(date) {
+    if (date === null || date === "") {
+        return ''
+    }
+
+    return format(new Date(date), "dd/MM/yy", { locale: ptBR })
 }
 
 const dateHelper = {
     toLocalDateTimeISOString,
     getFormattedScheduleDate,
-    getFormattedAge
+    getFormattedAge,
+    getDate
 }
 
 export default dateHelper;

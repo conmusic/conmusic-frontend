@@ -138,7 +138,7 @@ export default function SideBar() {
                     destination={"/establishments"} 
                 />
                 <SideBarOption 
-                    isVisible={true} 
+                    isVisible={type !== 'Admin'} 
                     text={"Desempenho"} 
                     currentMenu={currentMenu} 
                     setCurrentMenu={setCurrentMenu} 

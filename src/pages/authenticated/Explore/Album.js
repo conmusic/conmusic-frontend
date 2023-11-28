@@ -22,6 +22,7 @@ import {
 import api from '../../../services/api';
 import dateHelper from '../../../helpers/dateHelper';
 import eventPropsHelper from '../../../helpers/eventPropsHelper';
+import StarIcon from '@mui/icons-material/Star';
 
 export default function Album() {
   const navigate = useNavigate()
@@ -74,7 +75,6 @@ export default function Album() {
             date: dateHelper.toLocalDateTimeISOString(new Date())
           }
         })
-
         setEvents(data.map(event => ({
           id: event.id,
           paymentValue: event.value,
@@ -87,14 +87,14 @@ export default function Album() {
             state: event.establishment.state,
           },
           establishmentName: event.establishment.fantasyName,
-          establishmentId: event.establishment.id,
-          genre: event.genre.name
+          genre: event.genre.name,
+          rating: event.establishment.avaregeRating,
+          establishmentId: event.establishment.id
         })))
       } catch (error) {
         console.error(error)
       }
     }
-
     getAvailableEvents()
   }, [])
 
@@ -168,11 +168,41 @@ export default function Album() {
                   />
                 )}
                 <CardContent sx={{ flexGrow: 1, justifyContent: 'space-between', display: 'flex', flexDirection: 'column' }}>
-                  <Typography gutterBottom variant="h6" component="h2" style={{ display: "flex", alignItems: "center", fontWeight: 'bold' }}>
-                    {event.name}
-                    {/* <img width="24" height="24" src="https://img.icons8.com/material/24/star--v1.png" alt="star--v1" style={{ marginLeft: "120px" }} />
-                    4.0 */}
-                  </Typography>
+                  <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    alignItems: 'baseline', // Align items vertically along the baseline
+                  }}>
+                    <Box>
+                      <Typography
+                        gutterBottom
+                        variant="h6"
+                        component="h2"
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        {event.name}
+                        {/* <img width="24" height="24" src="https://img.icons8.com/material/24/star--v1.png" alt="star--v1" style={{ marginLeft: "120px" }} />
+    4.0 */}
+                      </Typography>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        alignItems: 'center', // Align items vertically in the center
+                        justifyContent: 'space-between', // Align icon and text to start
+                      }}
+                    >
+                      <Typography sx={{ mt: 0.5}}>{event.rating}</Typography>
+                      <StarIcon sx={{ color: '#FFD700', textAlign: 'left' }} />
+                    </Box>
+                  </Box>
+
                   <Divider orientation="horizontal" flexItem sx={{ my: 1 }} />
                   <Typography>
                     {event.establishmentName}
@@ -204,7 +234,7 @@ export default function Album() {
             </Grid>
           ))}
         </Grid>
-      </Container>
+      </Container >
     </>
   );
 }   

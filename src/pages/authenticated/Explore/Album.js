@@ -31,6 +31,42 @@ export default function Album() {
   const [genres, setGenres] = useState([])
   const [selectedGenres, setSelectedGenres] = useState([])
 
+  const [establishmentImages, setEstablishmentImages] = useState({});
+
+  useEffect(() => {
+    const fetchEstablishmentImages = async () => {
+      const imageUrls = {};
+      for (const event of events) {
+        try {
+          const imageUrl = await getPerfilImage(event.establishmentId);
+          imageUrls[event.establishmentId] = imageUrl;
+        } catch (error) {
+          console.error(`Erro ao buscar imagem para o estabelecimento ${event.establishmentId}:`, error);
+        }
+      }
+      setEstablishmentImages(imageUrls);
+    };
+
+    if (events.length > 0) {
+      fetchEstablishmentImages();
+    }
+  }, [events]);
+
+  async function getPerfilImage(establishmentId) {
+    try {
+      var token = localStorage.getItem('@conmusic:token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      const response = await api.get(`/establishments/image/perfil/${establishmentId}`, config);
+
+      return response.data.url;
+    } catch (error) {
+      console.error('Erro ao buscar imagem:', error);
+    }
+  }
+
   useEffect(() => {
     const getAvailableEvents = async () => {
       try {
@@ -52,7 +88,8 @@ export default function Album() {
           },
           establishmentName: event.establishment.fantasyName,
           genre: event.genre.name,
-          rating: event.establishment.avaregeRating
+          rating: event.establishment.avaregeRating,
+          establishmentId: event.establishment.id
         })))
       } catch (error) {
         console.error(error)
@@ -69,46 +106,46 @@ export default function Album() {
     <>
       <div style={{ display: 'flex', justifyContent: 'center', margin: 0 }}>
         <Container maxWidth="md" style={{ margin: 0, padding: 0, display: 'none', justifyContent: 'center' }}>
-          <Paper sx={{ marginTop: 10, paddingY: 4, paddingX: 4, width: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-            <FormControl sx={{ width: '100%' }}>
-              <InputLabel id='genre-filter-option-label'>Gêneros</InputLabel>
-              <Select
-                id='genre-filter-option'
-                labelId='genre-filter-option-label'
-                multiple
-                value={selectedGenres}
-                onChange={(event) => setSelectedGenres(event.target.value)}
-                input={<OutlinedInput id="select-multiple-genre" label="Gênero" />}
-                renderValue={(selected) => (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {
-                      selected.map((option, i) => (
-                        <Chip
-                          key={option.id}
-                          sx={{ backgroundColor: i % 2 === 0 ? "#FF3E3A" : "#CC3245", color: '#F2F2F2' }}
-                          label={option.genre}
-                        />
-                      ))
-                    }
-                  </Box>
-                )}
-              >
-                {
-                  genres.map(g => (
-                    <MenuItem
-                      key={g.id}
-                      value={g}
-                    >
-                      {g.genre}
-                    </MenuItem>
-                  ))
-                }
-              </Select>
-            </FormControl>
-            <Button sx={{ marginLeft: 6 }}>
-              Filtrar
-            </Button>
-          </Paper>
+            <Paper sx={{ marginTop: 10, paddingY: 4, paddingX: 4, width: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'  }}>
+              <FormControl sx={{ width: '100%' }}>
+                <InputLabel id='genre-filter-option-label'>Gêneros</InputLabel>
+                <Select
+                  id='genre-filter-option'
+                  labelId='genre-filter-option-label'
+                  multiple
+                  value={selectedGenres}
+                  onChange={(event) => setSelectedGenres(event.target.value)}
+                  input={<OutlinedInput id="select-multiple-genre" label="Gênero" />}
+                  renderValue={(selected) => (
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                      {
+                        selected.map((option, i) => (
+                          <Chip 
+                            key={option.id}
+                            sx={{ backgroundColor: i % 2 === 0 ? "#FF3E3A" : "#CC3245", color: '#F2F2F2'}}
+                            label={option.genre} 
+                          />
+                        ))
+                      }
+                    </Box>
+                  )}
+                >
+                  {
+                    genres.map(g => (
+                      <MenuItem
+                        key={g.id}
+                        value={g}
+                      >
+                        {g.genre}
+                      </MenuItem>
+                    ))
+                  }
+                </Select>
+              </FormControl>
+              <Button sx={{ marginLeft: 6 }}>
+                Filtrar
+              </Button>
+            </Paper>
         </Container>
       </div>
       <Container sx={{ py: 8 }} maxWidth="md">
@@ -120,14 +157,16 @@ export default function Album() {
                 sx={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', }}
                 onClick={() => handleNavigate(event.id)}
               >
-                <CardMedia
-                  component="div"
-                  sx={{
-                    // 16:9
-                    pt: '95.25%',
-                  }}
-                  image="https://source.unsplash.com/random?wallpapers"
-                />
+                {establishmentImages[event.establishmentId] && (
+                  <CardMedia
+                    component="div"
+                    sx={{
+                      // 16:9
+                      pt: '95.25%',
+                    }}
+                    image={establishmentImages[event.establishmentId]}
+                  />
+                )}
                 <CardContent sx={{ flexGrow: 1, justifyContent: 'space-between', display: 'flex', flexDirection: 'column' }}>
                   <Box sx={{
                     display: 'flex',

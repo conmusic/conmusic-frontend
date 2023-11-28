@@ -57,6 +57,7 @@ export default function ChartAdmin() {
                 series={[
                     {
                         data: [2, 5, 3, 4, 5, 3, 7, 8, 10],
+                        color: '#2D75FB'
                     },
                 ]}
             />

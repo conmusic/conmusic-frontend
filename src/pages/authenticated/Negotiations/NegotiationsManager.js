@@ -4,6 +4,7 @@ import { format } from 'date-fns';
 
 import CardArtistNegotiation from "../../../components/CardArtistNegotiation"
 import Title from "../../../components/Title"
+import Pagina from "../../../components/PaginationForCards"
 
 import api from "../../../services/api";
 
@@ -32,7 +33,8 @@ export default function NegotiationsManager() {
                             showStart: `${showDate} - ${showStartDateTime}`,
                             showEnd: `${showDate} - ${showEndDateTime}`,
                             id: obj.id,
-                            status: obj.status
+                            status: obj.status,
+                            artistId: obj.artist.id
                         }
                     })
                 setCardData(card);
@@ -58,9 +60,11 @@ export default function NegotiationsManager() {
                         showStart={item.showStart}
                         showEnd={item.showEnd}
                         status={item.status}
+                        artistId={item.artistId}
                     />
                 ))
             }
+            <Pagina />
         </Container>
     )
 }

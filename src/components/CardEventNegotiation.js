@@ -8,7 +8,6 @@ import {
   CardContent,
   Button,
 } from '@mui/material';
-import myImage from '../assets/images/image.png';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -17,7 +16,6 @@ import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import StatusChip from './StatusChip';
 import api from '../services/api';
-import { getValue } from '@testing-library/user-event/dist/utils';
 
 const style = {
   position: 'absolute',
@@ -76,6 +74,28 @@ function CardEventNegotiation({ establishment, event, local, showStart, showEnd,
   const [showConfirmationButton, setShowConfirmationButton] = useState(false);
   const [openToast, setOpenToast] = React.useState(false);
 
+  const [perfilImage, setPerfilImage] = useState('');
+
+  useEffect(() => {
+    async function getPerfilImage(establishmentId) {
+      try {
+        var token = localStorage.getItem('@conmusic:token');
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
+
+        const response = await api.get(`/establishments/image/perfil/${establishmentId}`, config);
+
+        setPerfilImage(response.data.url);
+
+      } catch (error) {
+        console.error('Erro ao buscar imagem:', error);
+      }
+    }
+
+    getPerfilImage(establishmentId);
+  }, []);
+
   const handleNavigation = useCallback(() => {
     navigate(`/negotiations/${id}`)
   }, [navigate, id])
@@ -107,7 +127,7 @@ function CardEventNegotiation({ establishment, event, local, showStart, showEnd,
             borderRadius: 10,
             ml: 3,
           }}
-          src={myImage}
+          src={perfilImage}
         />
         <CardContent sx={{ flex: 1, mt: 1 }}>
           <Typography component="h2" variant="h5" fontWeight="bold">

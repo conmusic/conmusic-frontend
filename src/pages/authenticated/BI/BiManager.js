@@ -57,17 +57,17 @@ export default function BiArtist() {
     negotiations: 0,
     negotiationsByYou: 0,
     confirmed: 0,
-    percentageConfirmed: 0,
+    percentageConfirmed: 0.0,
     canceled: 0,
-    percentageCanceled: 0,
+    percentageCanceled: 0.0,
   })
-  const [genreChartData, setGenreChartData] = useState([])
+  const [eventsChartData, setEventChartData] = useState([])
   const [valuesChartData, setValuesChartData] = useState([])
 
   useEffect(() => {
     const getKpi = async () => {
       try {
-        const { data } = await api.get(`/artists/kpis?lastDays=${period}`)
+        const { data } = await api.get(`/managers/kpis?lastDays=${period}`)
 
         setKpi({
           receivedProposals: data.receivedProposals,
@@ -84,16 +84,16 @@ export default function BiArtist() {
       }
     }
 
-    const getGenreChartData = async () => {
+    const getEventChartData = async () => {
       try {
-        const { data, status } = await api.get(`/artists/genres-chart?lastDays=${period}`)
+        const { data, status } = await api.get(`/managers/events-chart?lastDays=${period}`)
 
         if (status === 200) {
-          setGenreChartData(data)
+          setEventChartData(data)
         }
 
         if (status === 204) {
-          setGenreChartData([])
+          setEventChartData([])
         }
       }
       catch (e) {
@@ -103,7 +103,7 @@ export default function BiArtist() {
 
     const getValuesChartData = async () => {
       try {
-        const { data, status } = await api.get(`/artists/value-chart?lastDays=${period}`)
+        const { data, status } = await api.get(`/managers/value-chart?lastDays=${period}`)
 
         if (status === 200) {
           setValuesChartData(data.map(d => ({
@@ -122,12 +122,13 @@ export default function BiArtist() {
     }
 
     getKpi()
-    getGenreChartData()
+    getEventChartData()
     getValuesChartData()
   }, [period])
 
   return (
     <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+
       <Title>Desempenho</Title>
       <Paper
         sx={{
@@ -232,7 +233,7 @@ export default function BiArtist() {
       </Box>
       <Grid container spacing={3}>
         {
-          genreChartData.length > 0
+          eventsChartData.length > 0
           &&
           (
             <Grid item xs={12} md={6} lg={6}>
@@ -244,11 +245,11 @@ export default function BiArtist() {
                   height: 350,
                 }}
               >
-                <Title>Gêneros Musicais que mais Tiveram Shows</Title>
+                <Title>Eventos com mais Propostas Recebidas</Title>
                 <BarChart
-                  dataset={genreChartData}
-                  yAxis={[{ scaleType: 'band', dataKey: 'genre' }]}
-                  series={[{ dataKey: 'count', valueFormatter, color: "#FF3E3A" }]}
+                  dataset={eventsChartData}
+                  yAxis={[{ scaleType: 'band', dataKey: 'eventName' }]}
+                  series={[{ dataKey: 'count', label: 'Propostas Recebidas', valueFormatter, color: '#2D75FB' }]}
                   layout="horizontal"
                   {...chartSetting}
                 />
@@ -272,6 +273,7 @@ export default function BiArtist() {
                 }}
               >
                 <Title>Valor total recebido para todos shows em período</Title>
+
                 <ResponsiveContainer width="100%" height={200} >
                   <LineChart
                     data={valuesChartData}
@@ -317,6 +319,7 @@ export default function BiArtist() {
                     />
                   </LineChart>
                 </ResponsiveContainer>
+
               </Paper>
             </Grid>
           )

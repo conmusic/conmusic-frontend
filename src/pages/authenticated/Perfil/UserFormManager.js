@@ -96,7 +96,7 @@ export default function UserFormManager(onUpload) {
                 console.log("userId:", userId);
 
                 console.log('Chamando a API para buscar dados do usuário...');
-                const response = await api.get(`/manegers/${userId}`, config);
+                const response = await api.get(`/managers/${userId}`, config);
                 console.log(response)
 
                 if (response.data) {

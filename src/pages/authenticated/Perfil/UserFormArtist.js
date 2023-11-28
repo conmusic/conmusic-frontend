@@ -49,6 +49,16 @@ export default function UserFormArtist(onUpload) {
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+
+    const handleOpenSnackbar = () => setOpenSnackbar(true);
+    const handleCloseSnackbar = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setOpenSnackbar(false);
+    };
+
     const [openToast, setOpenToast] = React.useState(false);
 
     const handleClick = () => {
@@ -136,7 +146,6 @@ export default function UserFormArtist(onUpload) {
                         state: firstUser.state || '',
                         zipCode: firstUser.zipCode || '',
                         musicalGenres: firstUser.musicalGenres || '',
-                        // ... outros campos do usuário
                     });
                 } else {
                     console.log('Resposta vazia ou sem dados:', response.data);
@@ -303,26 +312,26 @@ export default function UserFormArtist(onUpload) {
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-    <Autocomplete
-        fullWidth
-        id="combo-box-demo"
-        options={topEstilosMusicais}
-        getOptionLabel={(option) => option.label}
-        renderInput={(params) => <TextField {...params} label="Gênero Musical" />}
-        value={
-            userData.musicalGenres
-                ? topEstilosMusicais.find((option) => option.label === userData.musicalGenres)
-                : null
-        }
-        onChange={(e, newValue) => {
-            if (newValue) {
-                setUserData({ ...userData, musicalGenres: newValue.label });
-            } else {
-                setUserData({ ...userData, musicalGenres: '' });
-            }
-        }}
-    />
-</Grid>
+                            <Autocomplete
+                                fullWidth
+                                id="combo-box-demo"
+                                options={topEstilosMusicais}
+                                getOptionLabel={(option) => option.label}
+                                renderInput={(params) => <TextField {...params} label="Gênero Musical" />}
+                                value={
+                                    userData.musicalGenres
+                                        ? topEstilosMusicais.find((option) => option.label === userData.musicalGenres)
+                                        : null
+                                }
+                                onChange={(e, newValue) => {
+                                    if (newValue) {
+                                        setUserData({ ...userData, musicalGenres: newValue.label });
+                                    } else {
+                                        setUserData({ ...userData, musicalGenres: '' });
+                                    }
+                                }}
+                            />
+                        </Grid>
 
 
                         <Grid item xs={12} sm={6} sx={{ display: "flex", flexDirection: "column" }}>
@@ -398,18 +407,26 @@ export default function UserFormArtist(onUpload) {
                         <div style={{ width: "100%", display: "flex", justifyContent: "end" }}>
                             <Button
                                 variant="contained"
+                                color="primary"
                                 size="medium"
-                                onClick={handleUpdate}
+                                onClick={() => {
+                                    handleUpdate();
+                                    handleOpenSnackbar();
+                                }}
                                 sx={{
                                     borderColor: 'black',
                                     backgroundColor: 'green',
                                     color: 'white',
                                     marginTop: 2,
-
                                 }}
                             >
                                 Salvar
                             </Button>
+                            <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleCloseSnackbar}>
+                                <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+                                    Dados salvos com sucesso!
+                                </Alert>
+                            </Snackbar>
 
                             <Button
                                 variant="contained"

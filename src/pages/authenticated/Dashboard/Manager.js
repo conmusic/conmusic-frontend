@@ -32,6 +32,7 @@ export default function DashboardManager() {
 
                         return {
                             artist: obj.artist.name,
+                            id: obj.artist.id,
                             event: obj.event.name,
                             date: showDate,
                             time: `${showStartDateTime} - ${showEndDateTime}`,
@@ -63,6 +64,7 @@ export default function DashboardManager() {
                         >
                             <CardShows
                                mode="Manager"
+                               id={cardData[0].id}
                                name={cardData[0].artist}
                                eventName={cardData[0].event}
                                showDate={cardData[0].date}
@@ -84,6 +86,7 @@ export default function DashboardManager() {
                         >
                             <CardShows
                                 mode="Manager"
+                                id={cardData[1].id}
                                 name={cardData[1].artist}
                                 eventName={cardData[1].event}
                                 showDate={cardData[1].date}
@@ -105,6 +108,7 @@ export default function DashboardManager() {
                         >
                             <CardShows
                                 mode="Manager"
+                                id={cardData[2].id}
                                 name={cardData[2].artist}
                                 eventName={cardData[2].event}
                                 showDate={cardData[2].date}

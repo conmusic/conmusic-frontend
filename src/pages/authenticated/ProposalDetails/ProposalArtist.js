@@ -37,6 +37,7 @@ const SmallImage = styled('img')({
     width: '150px',
     height: '150px',
     borderRadius: '50%',
+    objectFit: 'cover'
 });
 
 const SubtitleContainer = styled('div')({
@@ -48,54 +49,25 @@ const SubtitleContainer = styled('div')({
 })
 
 function srcset(image, size, rows = 1, cols = 1) {
+    const originalWidth = size * cols;
+    const originalHeight = size * rows;
+    const aspectRatio = originalWidth / originalHeight;
+
+    // Definindo nova largura e altura com base na proporção original
+    let newWidth = originalWidth;
+    let newHeight = originalHeight;
+
+    if (cols > rows) {
+        newHeight = Math.round(originalWidth / aspectRatio);
+    } else if (cols < rows) {
+        newWidth = Math.round(originalHeight * aspectRatio);
+    }
+
     return {
-        src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-        srcSet: `${image}?w=${size * cols}&h=${size * rows
-            }&fit=crop&auto=format&dpr=2 2x`,
+        src: `${image}?w=${newWidth}&h=${newHeight}&fit=crop&auto=format`,
+        srcSet: `${image}?w=${newWidth}&h=${newHeight}&fit=crop&auto=format&dpr=2 2x`,
     };
 }
-
-const itemData = [
-    {
-        img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-        title: 'Breakfast',
-        rows: 2,
-        cols: 2,
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-        title: 'Burger',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-        title: 'Camera',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-        title: 'Coffee',
-        cols: 2,
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-        title: 'Hats',
-        cols: 2,
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-        title: 'Honey',
-        author: '@arwinneil',
-        rows: 2,
-        cols: 2,
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-        title: 'Basketball',
-    },
-    {
-        img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-        title: 'Fern',
-    },
-];
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -104,6 +76,59 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export default function ProposalArtist() {
     const { proposalId } = useParams()
     const navigate = useNavigate();
+    const [perfilImage, setPerfilImage] = useState('');
+    const [images, setImages] = useState([]);
+
+    async function getPerfilImage(artistId) {
+        try {
+            var token = localStorage.getItem('@conmusic:token');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` },
+            };
+
+            const response = await api.get(`/artists/image/perfil/${artistId}`, config);
+
+            if (response.data.url) {
+                setPerfilImage(response.data.url);
+            } else {
+                // Caso o artista não tenha imagem de perfil cadastrada, limpar a imagem anterior
+                setPerfilImage('');
+            }
+        } catch (error) {
+            console.error('Erro ao buscar imagem:', error);
+        }
+    }
+
+    async function getImages(artistId) {
+        try {
+            var token = localStorage.getItem('@conmusic:token');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` },
+            };
+
+            const response = await api.get(`/artists/images/${artistId}`, config);
+
+            const patternMapping = {
+                0: { cols: 2, rows: 2 },
+                1: { cols: 1, rows: 1 },
+                2: { cols: 1, rows: 1 },
+                3: { cols: 2, rows: 1 },
+                4: { cols: 2, rows: 1 },
+                5: { cols: 2, rows: 2 },
+                6: { cols: 1, rows: 1 },
+                7: { cols: 1, rows: 1 },
+            };
+
+            const updatedImages = response.data.map((image, index) => ({
+                ...image,
+                ...patternMapping[index],
+            }));
+
+            setImages(updatedImages);
+        } catch (error) {
+            console.error('Erro ao buscar imagens:', error);
+        }
+    }
 
     const [proposal, setProposal] = useState({
         artist: {
@@ -198,7 +223,7 @@ export default function ProposalArtist() {
                         phoneNumber: data.event.establishment.phoneNumber,
                     },
                     address: {
-                        address: data.event.establishment.address,                        
+                        address: data.event.establishment.address,
                         city: data.event.establishment.city,
                         state: data.event.establishment.state,
                         zipCode: data.event.establishment.zipCode,
@@ -213,6 +238,9 @@ export default function ProposalArtist() {
                         genre: data.event.genre.name
                     }
                 })
+
+                await getPerfilImage(data.artist.id)
+                await getImages(data.artist.id)
             } catch (error) {
                 console.error(error)
             }
@@ -225,22 +253,18 @@ export default function ProposalArtist() {
         if (proposal.artist.birthDate != null) {
             const birthDate = new Date(proposal.artist.birthDate)
             const age = differenceInYears(new Date(), birthDate)
-    
+
             return `${birthDate.toLocaleDateString('pt-BR')} - ${age} anos`
-        } 
+        }
 
         return ''
     }, [proposal.artist.birthDate])
 
-    const image = [
-        'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
-    ]
-
     const handleCloseToast = (event, reason) => {
         if (reason === 'clickaway') {
-          return;
+            return;
         }
-    
+
         setToast({
             open: false,
             message: "",
@@ -252,7 +276,7 @@ export default function ProposalArtist() {
         <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
             <Grid item xs={12} md={4}>
                 <Paper sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: 4, gap: 1, my: 2 }}>
-                    <SmallImage src={image[0]} alt="Profile" />
+                    <SmallImage src={perfilImage} alt="Profile" />
                     <Typography variant="h5" fontWeight='bold' style={{ color: '#FB2D57', marginTop: 2 }}>
                         {proposal.artist.name}
                     </Typography>
@@ -268,7 +292,7 @@ export default function ProposalArtist() {
                     </Typography>
                     <Divider orientation="horizontal" flexItem />
                     {
-                        proposal.artist.genres && 
+                        proposal.artist.genres &&
                         proposal.artist.genres.length > 0 &&
                         (<>
                             <Typography variant='h6' sx={{ fontWeight: 'bold' }}>
@@ -278,21 +302,21 @@ export default function ProposalArtist() {
                                 {
                                     proposal.artist.genres
                                         .map((genre, i) => (<Chip sx={{ backgroundColor: i % 2 === 0 ? "#FF3E3A" : "#CC3245", color: '#F2F2F2' }} label={genre} />))
-                                }                        
+                                }
                             </Box>
                             <Divider orientation="horizontal" flexItem />
                         </>)
-                    }                    
-                    <Button 
-                        variant="contained" 
-                        color="success" 
+                    }
+                    <Button
+                        variant="contained"
+                        color="success"
                         sx={{ marginTop: 1.5 }}
                     >
                         Iniciar Negociação
                     </Button>
-                    <Button 
-                        variant="contained" 
-                        color="error" 
+                    <Button
+                        variant="contained"
+                        color="error"
                         sx={{ marginBottom: 1.5 }}
                         onClick={() => setRejectDialogOpen(true)}
                     >
@@ -301,7 +325,7 @@ export default function ProposalArtist() {
                     <Divider orientation="horizontal" flexItem />
                     <Typography variant="h5" fontWeight='bold' style={{ color: '#FB2D57', marginTop: 2 }}>
                         {proposal.event.name}
-                    </Typography>                    
+                    </Typography>
                     <Box>
                         <Typography variant="h6" mb={1} fontWeight="bold">Data e Horário:</Typography>
                         <Box variant="body1" display='flex' flexDirection="row">
@@ -349,10 +373,10 @@ export default function ProposalArtist() {
                             cols={4}
                             rowHeight={121}
                         >
-                            {itemData.map((item) => (
-                                <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
+                            {images.map((item) => (
+                                <ImageListItem key={item.url} cols={item.cols || 1} rows={item.rows || 1}>
                                     <img
-                                        {...srcset(item.img, 121, item.rows, item.cols)}
+                                        {...srcset(item.url, 121, item.rows, item.cols)}
                                         alt={item.title}
                                         loading="lazy"
                                     />

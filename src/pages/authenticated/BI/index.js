@@ -3,6 +3,7 @@ import React from "react";
 import { useAuth } from "../../../hooks/auth";
 import BiArtist from "./BiArtist";
 import BiManager from "./BiManager";
+import { Navigate } from "react-router-dom";
 
 
 export default function BI() {
@@ -14,6 +15,6 @@ export default function BI() {
         case 'Manager':
             return (<BiManager />);
         default:
-            return (<h1>Unathorized</h1>)
+            return (<Navigate to="/forbiden" replace={true} />)
     }
 }

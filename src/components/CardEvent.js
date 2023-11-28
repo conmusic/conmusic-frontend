@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import myImage from '../assets/images/image.png';
+import React, { useState, useEffect } from 'react';
 import {
   Grid,
   Button,
@@ -16,15 +15,15 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
-import StatusChip from './StatusChip';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
 import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import MuiAlert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
+
+import api from '../services/api';
+
 
 const style = {
   position: 'absolute',
@@ -48,10 +47,33 @@ const style = {
 const fiveAM = dayjs().set('hour', 5).startOf('hour');
 const nineAM = dayjs().set('hour', 9).startOf('hour');
 
-function CardEvent({ establishment, event, local, showStart, showEnd, id, genero, onUpload }) {
-  const [openToast, setOpenToast] = React.useState(false);
+function CardEvent({ establishment, event, local, showStart, showEnd, id, establishmentId, genero, onUpload }) {
+  // const [openToast, setOpenToast] = React.useState(false);
 
   const [selectedFile, setSelectedFile] = useState(null);
+
+  const [imageURL, setImageURL] = useState('');
+
+  useEffect(() => {
+    const getImage = async () => {
+      try {
+        var token = localStorage.getItem('@conmusic:token');
+        const config = {
+          headers: { Authorization: `Bearer ${token}` }
+        };
+
+        const response = await api.get(`/establishments/image/perfil/${establishmentId}`, config);
+
+        console.log(response.data.url);
+
+        setImageURL(response.data.url);
+      } catch (error) {
+        console.error('Erro ao buscar imagem:', error);
+      }
+    }
+
+    getImage();
+  }, []);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -71,7 +93,7 @@ function CardEvent({ establishment, event, local, showStart, showEnd, id, genero
   return (
     <Grid item xs={12} md={7} sx={{ display: "flex", justifyContent: "center", mb: 4 }}>
       <Card sx={{ display: 'flex', width: 1300, alignItems: 'center', justifyContent: 'space-between' }}>
-        <CardMedia
+        {/* <CardMedia
           component="img"
           sx={{
             width: 120,
@@ -81,9 +103,9 @@ function CardEvent({ establishment, event, local, showStart, showEnd, id, genero
             borderRadius: 10,
             ml: 3,
           }}
-          src={myImage}
-        />
-        <CardContent sx={{ flex: 1, mt: 1 }}>
+          src={imageURL}
+        /> */}
+        <CardContent sx={{ flex: 1, mt: 1, paddingLeft: 7 }}>
           <Typography component="h2" variant="h5" fontWeight="bold">
             {event}
           </Typography>

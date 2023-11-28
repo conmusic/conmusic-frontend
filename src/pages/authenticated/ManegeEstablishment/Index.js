@@ -1,7 +1,6 @@
 import React from "react";
 
-import Album from "./Album";
-import Tinder from "./Tinder";
+import ManegeEstablishment from "./ManageEstablishment";
 
 import { useAuth } from "../../../hooks/auth";
 import { Navigate } from "react-router-dom";
@@ -11,9 +10,9 @@ export default function Explore() {
 
     switch (type) {
         case 'Artist':
-            return (<Album></Album>);
+            return (<Navigate to="/forbiden" replace={true} />);
         case 'Manager':
-            return (<Tinder></Tinder>);        
+            return (<ManegeEstablishment></ManegeEstablishment>);        
         default:
             return (<Navigate to="/forbiden" replace={true} />)
     }

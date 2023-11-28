@@ -5,6 +5,8 @@ import { useAuth } from "../../../hooks/auth";
 import DashboardArtist from "./Artist";
 import DashboardEstablishment from "./Manager";
 import DashboardAdmin from "./Admin";
+import { Navigate } from "react-router-dom";
+
 
 export default function Dashboard() {
     const { type } = useAuth();
@@ -17,6 +19,6 @@ export default function Dashboard() {
         case 'Admin':
             return (<DashboardAdmin />)
         default:
-            return (<h1>Unathorized</h1>)
+            return (<Navigate to="/forbiden" replace={true} />)
     }
 }

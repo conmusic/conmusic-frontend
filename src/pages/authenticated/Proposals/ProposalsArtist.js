@@ -6,6 +6,7 @@ import CardEventProposal from "../../../components/CardEventProposal"
 import Title from "../../../components/Title"
 
 import api from "../../../services/api"
+import Pagina from "../../../components/PaginationForCards"
 
 export default function ProposalsArtist(){
     const [proposals, setProposals] = useState([])
@@ -23,6 +24,7 @@ export default function ProposalsArtist(){
 
                     return {
                         establishment: proposal.event.establishment.establishmentName,
+                        establishmentId: proposal.event.establishment.id,
                         event: proposal.event.name,
                         local: proposal.event.establishment.address,
                         showStart: `${showDate} - ${showStartDateTime}`,
@@ -47,6 +49,7 @@ export default function ProposalsArtist(){
                         key={`Proposal#${item.id}`}
                         id={item.id}
                         establishment={item.establishment}
+                        establishmentId={item.establishmentId}
                         event={item.event}
                         local={item.local}
                         showStart={item.showStart}
@@ -54,6 +57,7 @@ export default function ProposalsArtist(){
                     />
                 ))
             }
+            <Pagina />
         </Container>
     )
 }

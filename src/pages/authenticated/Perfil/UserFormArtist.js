@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import TextField from '@mui/material/TextField';
 import {
     Typography,
     Grid,
     Button,
-    Paper
+    Paper,
+    styled,
+    TextField,
+    Alert as MuiAlert,
+    Snackbar,
+    FormControl,
+    InputLabel,
+    Select,
+    OutlinedInput,
+    Box,
+    Chip,
+    MenuItem
 } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import Autocomplete from '@mui/material/Autocomplete';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import MuiAlert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
 import { useAuth } from '../../../hooks/auth';
 import api from "../../../services/api";
 
@@ -27,8 +33,6 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 export default function UserFormArtist(onUpload) {
     const { userId } = useAuth();
 
-    const [cardData, setCardData] = useState([]);
-
     const [userData, setUserData] = useState({
         name: '',
         email: '',
@@ -41,15 +45,16 @@ export default function UserFormArtist(onUpload) {
         city: '',
         zipCode: '',
         about: '',
-        musicalGenres: '',
-        // ... outros campos que você busca no banco
+        musicalGenres: [],
     });
 
-    const [open, setOpen] = React.useState(false);
+    const [genres, setGenres] = useState([])
+
+    const [open, setOpen] = useState(false);
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+    const [openSnackbar, setOpenSnackbar] = useState(false);
 
     const handleOpenSnackbar = () => setOpenSnackbar(true);
     const handleCloseSnackbar = (event, reason) => {
@@ -59,7 +64,7 @@ export default function UserFormArtist(onUpload) {
         setOpenSnackbar(false);
     };
 
-    const [openToast, setOpenToast] = React.useState(false);
+    const [openToast, setOpenToast] = useState(false);
 
     const handleClick = () => {
         setOpenToast(true);
@@ -75,10 +80,73 @@ export default function UserFormArtist(onUpload) {
 
         setOpenToast(false);
     };
+
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         setSelectedFile(file);
     };
+
+    const handleUpload = () => {
+        if (selectedFile) {
+            onUpload(selectedFile);
+            setSelectedFile(null);
+        }
+    };
+
+    const [selectedImage] = useState(0);
+    const image = [
+        'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
+    ]
+
+    useEffect(() => {
+        const getArtistsData = async () => {
+            try {
+                var token = localStorage.getItem('@conmusic:token');
+                const config = {
+                    headers: { Authorization: `Bearer ${token}` }
+                };
+
+                const response = await api.get(`/artists/${userId}`, config);
+
+                if (response.data) {
+                    console.log('Dados recebidos:', response.data);
+
+                    setUserData({
+                        name: response.data.name || '',
+                        email: response.data.email || '',
+                        phoneNumber: response.data.phoneNumber || '',
+                        cpf: response.data.cpf || '',
+                        birthDate: response.data.birthDate || '',
+                        instagram: response.data.instagram || '',
+                        about: response.data.about || '',
+                        address: response.data.address || '',
+                        city: response.data.city || '',
+                        state: response.data.state || '',
+                        zipCode: response.data.zipCode || '',
+                        musicalGenres: response.data.musicalGenres || [],
+                    });
+                } else {
+                    console.log('Resposta vazia ou sem dados:', response.data);
+                }
+            } catch (error) {
+                console.error('Erro ao buscar os dados do usuário:', error);
+            }
+        };
+
+        const getGenres = async () => {
+            try {
+                const { data } = await api.get('/genres')
+
+                setGenres(data)
+            }
+            catch (e) {
+                console.error(e)
+            }
+        }
+
+        getArtistsData();
+        getGenres();
+    }, [userId]);
 
     const handleUpdate = async () => {
         try {
@@ -100,67 +168,6 @@ export default function UserFormArtist(onUpload) {
             console.error('Erro ao atualizar os dados do usuário:', error);
         }
     };
-
-    const handleUpload = () => {
-        if (selectedFile) {
-            onUpload(selectedFile);
-            setSelectedFile(null);
-        }
-    };
-    const [selectedImage] = useState(0);
-    const image = [
-        'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
-    ]
-
-    useEffect(() => {
-
-        const getArtistsData = async () => {
-            try {
-                var token = localStorage.getItem('@conmusic:token');
-                const config = {
-                    headers: { Authorization: `Bearer ${token}` }
-                };
-
-                console.log("userId:", userId);
-
-                console.log('Chamando a API para buscar dados do usuário...');
-                const response = await api.get(`/artists/${userId}`, config);
-                console.log(response)
-
-                if (response.data) {
-                    console.log('Dados recebidos:', response.data);
-
-                    const userDataArray = Array.isArray(response.data) ? response.data : [response.data];
-                    const firstUser = userDataArray[0];
-
-                    setUserData({
-                        name: firstUser.name || '',
-                        email: firstUser.email || '',
-                        phoneNumber: firstUser.phoneNumber || '',
-                        cpf: firstUser.cpf || '',
-                        birthDate: firstUser.birthDate || '',
-                        instagram: firstUser.instagram || '',
-                        about: firstUser.about || '',
-                        address: firstUser.address || '',
-                        city: firstUser.city || '',
-                        state: firstUser.state || '',
-                        zipCode: firstUser.zipCode || '',
-                        musicalGenres: firstUser.musicalGenres || '',
-                    });
-                } else {
-                    console.log('Resposta vazia ou sem dados:', response.data);
-                }
-            } catch (error) {
-                console.error('Erro ao buscar os dados do usuário:', error);
-            }
-        };
-
-        if (userId !== 0) {
-            getArtistsData();
-        }
-    }, [userId]);
-
-
 
     return (
         <React.Fragment >
@@ -312,25 +319,41 @@ export default function UserFormArtist(onUpload) {
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
-                            <Autocomplete
-                                fullWidth
-                                id="combo-box-demo"
-                                options={topEstilosMusicais}
-                                getOptionLabel={(option) => option.label}
-                                renderInput={(params) => <TextField {...params} label="Gênero Musical" />}
-                                value={
-                                    userData.musicalGenres
-                                        ? topEstilosMusicais.find((option) => option.label === userData.musicalGenres)
-                                        : null
-                                }
-                                onChange={(e, newValue) => {
-                                    if (newValue) {
-                                        setUserData({ ...userData, musicalGenres: newValue.label });
-                                    } else {
-                                        setUserData({ ...userData, musicalGenres: '' });
+                            <FormControl sx={{ width: '100%' }}>
+                                <InputLabel id='genre-filter-option-label'>Gêneros</InputLabel>
+                                <Select
+                                    id='genre-filter-option'
+                                    labelId='genre-filter-option-label'
+                                    multiple
+                                    value={userData.musicalGenres}
+                                    onChange={(e) => setUserData({ ...userData, musicalGenres: e.target.value})}
+                                    input={<OutlinedInput id="select-multiple-genre" label="Gênero" />}
+                                    renderValue={(selected) => (
+                                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                            {
+                                                selected.map((option, i) => (
+                                                    <Chip
+                                                        key={`SelectedGenre#${i}`}
+                                                        sx={{ backgroundColor: i % 2 === 0 ? "#FF3E3A" : "#CC3245", color: '#F2F2F2' }}
+                                                        label={option}
+                                                    />
+                                                ))
+                                            }
+                                        </Box>
+                                    )}
+                                >
+                                    {
+                                        genres.map((g, i) => (
+                                            <MenuItem
+                                                key={`GenreMenuItem#${i}`}
+                                                value={g.name}
+                                            >
+                                                {g.name}
+                                            </MenuItem>
+                                        ))
                                     }
-                                }}
-                            />
+                                </Select>
+                            </FormControl>
                         </Grid>
 
 
@@ -451,106 +474,3 @@ export default function UserFormArtist(onUpload) {
         </React.Fragment>
     );
 }
-const topEstilosMusicais = [
-    { label: 'Rock' },
-    { label: 'Pop' },
-    { label: 'Hip Hop' },
-    { label: 'Jazz' },
-    { label: 'Blues' },
-    { label: 'Country' },
-    { label: 'Eletrônica' },
-    { label: 'Clássica' },
-    { label: 'R&B' },
-    { label: 'Reggae' },
-    { label: 'Funk' },
-    { label: 'Soul' },
-    { label: 'Metal' },
-    { label: 'Punk' },
-    { label: 'Folk' },
-    { label: 'Indie' },
-    { label: 'Alternativo' },
-    { label: 'Rap' },
-    { label: 'EDM (Electronic Dance Music)' },
-    { label: 'Latina' },
-    { label: 'Sertanejo' },
-    { label: 'Samba' },
-    { label: 'Forró' },
-    { label: 'Gospel' },
-    { label: 'MPB (Música Popular Brasileira)' },
-    { label: 'Axé' },
-    { label: 'Bossa Nova' },
-    { label: 'Pagode' },
-    { label: 'Gótico' },
-    { label: 'Raggamuffin' },
-    { label: 'K-Pop' },
-    { label: 'Disco' },
-    { label: 'Ranchera' },
-    { label: 'Fado' },
-    { label: 'Flamenco' },
-    { label: 'J-Pop' },
-    { label: 'Hard Rock' },
-    { label: 'Death Metal' },
-    { label: 'Ska' },
-    { label: 'Celtic' },
-    { label: 'Piano Bar' },
-    { label: 'Musical' },
-    { label: 'New Wave' },
-    { label: 'Grunge' },
-    { label: 'Rapcore' },
-    { label: 'Trap' },
-    { label: 'Rap Metal' },
-    { label: 'Indie Pop' },
-    { label: 'Hardcore Punk' },
-    { label: 'Soul Jazz' },
-    { label: 'Country Rock' },
-    { label: 'Smooth Jazz' },
-    { label: 'Rockabilly' },
-    { label: 'R&B Contemporâneo' },
-    { label: 'Soul Clássico' },
-    { label: 'Hip Hop Alternativo' },
-    { label: 'Reggaeton' },
-    { label: 'Trance' },
-    { label: 'Dubstep' },
-    { label: 'Salsa' },
-    { label: 'Merengue' },
-    { label: 'Punk Rock' },
-    { label: 'Pop Punk' },
-    { label: 'Hardstyle' },
-    { label: 'Bluegrass' },
-    { label: 'Jazz Fusion' },
-    { label: 'Cumbia' },
-    { label: 'Chiptune' },
-    { label: 'House' },
-    { label: 'Techno' },
-    { label: 'Gospel Contemporâneo' },
-    { label: 'R&B Alternativo' },
-    { label: 'Metalcore' },
-    { label: 'Rap Latino' },
-    { label: 'Pop Rock Brasileiro' },
-    { label: 'Reggae Brasileiro' },
-    { label: 'Funk Carioca' },
-    { label: 'Frevo' },
-    { label: 'Brega' },
-    { label: 'Pop Latino' },
-    { label: 'Rock Progressivo' },
-    { label: 'Heavy Metal' },
-    { label: 'Indie Rock' },
-    { label: 'Rap Nacional' },
-    { label: 'Música Clássica Indiana' },
-    { label: 'Sertanejo Universitário' },
-    { label: 'Samba-Reggae' },
-    { label: 'Música Eletrônica Brasileira' },
-    { label: 'Maracatu' },
-    { label: 'Samba Enredo' },
-    { label: 'Baião' },
-    { label: 'Manguebeat' },
-    { label: 'Metal Alternativo' },
-    { label: 'Pós-Punk' },
-    { label: 'Gospel Brasileiro' },
-    { label: 'Música Tradicional Chinesa' },
-    { label: 'Música Tradicional Japonesa' },
-    { label: 'Música Tradicional Africana' },
-    { label: 'Música Tradicional Irlandesa' },
-    { label: 'Música Tradicional Escocesa' },
-    { label: 'Música Tradicional Árabe' },
-];

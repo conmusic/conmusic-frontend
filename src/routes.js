@@ -6,8 +6,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterStepOne from './pages/RegisterStepOne';
 import RegisterStepTwo from './pages/RegisterStepTwo';
 
-import UserFormArtist from './pages/authenticated/Perfil/UserFormArtist'
-import UserFormManager from './pages/authenticated/Perfil/UserFormManager'
+import Profile from './pages/authenticated/Perfil';
 import Layout from './layouts/Layout';
 import Dashboard from './pages/authenticated/Dashboard';
 import Explore from './pages/authenticated/Explore';
@@ -30,8 +29,7 @@ export default function MainRoutes() {
       <Route path="/register-two-step" element={<RegisterStepTwo />} />
       <Route element={<Layout />} >
         <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<UserFormArtist />} />
-        <Route path="/test" element={<UserFormManager />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/BI" element={<BI />} />
         <Route path="/events" element={<Events />} />
         <Route path="/explore" element={<Explore />} /> 

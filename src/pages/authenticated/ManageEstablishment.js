@@ -71,7 +71,7 @@ export default function ManageEstablishment(onUpload) {
             if (selectedFile) {
                 const formData = new FormData();
                 formData.append('file', selectedFile);
-    
+
                 const response = await api.post(`/establishments/upload/${newEstablishment.id}`, formData);
                 console.log("response:", response)
                 if (response.status === 200) {
@@ -79,7 +79,7 @@ export default function ManageEstablishment(onUpload) {
                 } else {
                     console.error('Erro no upload da imagem:', response);
                 }
-    
+
                 setSelectedFile(null);
             }
         } catch (error) {
@@ -87,7 +87,7 @@ export default function ManageEstablishment(onUpload) {
             console.error('Mensagem de erro do servidor:', error.response.data);
         }
     };
-    
+
 
     const handleFileChange = (event) => {
         const file = event.target.files[0];
@@ -208,6 +208,26 @@ export default function ManageEstablishment(onUpload) {
 
         } catch (error) {
             console.error('Erro ao criar o estabelecimento:', error);
+            console.error('Mensagem de erro do servidor:', error.response.data);
+        }
+    };
+
+    const handleInactivateEstablishment = async (id) => {
+        try {
+            const token = localStorage.getItem('@conmusic:token');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` },
+            };
+            console.log("id:", newEstablishment.id)
+            const response = await api.delete(`/establishments/inctivate/${id}`, config);
+            console.log("response:", response)
+            if (response.status === 200) {
+                console.log(`Estabelecimento ${id} inativado com sucesso.`);
+            } else {
+                console.error('Erro ao inativar o estabelecimento:', response);
+            }
+        } catch (error) {
+            console.error('Erro ao inativar o estabelecimento:', error);
             console.error('Mensagem de erro do servidor:', error.response.data);
         }
     };
@@ -446,21 +466,22 @@ export default function ManageEstablishment(onUpload) {
 
                             </div>
                             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-                            <Button variant="contained" color="success" style={{ width: 'auto', height: 'auto' }}
-                            onClick={() => {
-                                setOpenGerenciarModal(false);
-                            }}>
-                                Salvar
-                            </Button>
-                            <Button variant="contained" color="error" style={{ width: 'auto', height: 'auto' }}
-                            onClick={() => {
-                                setOpenGerenciarModal(false);
-                            }}>
-                                Excluir
-                            </Button>
-                        </div>
+                                <Button variant="contained" color="success" style={{ width: 'auto', height: 'auto' }}
+                                    onClick={() => {
+                                        setOpenGerenciarModal(false);
+                                    }}>
+                                    Salvar
+                                </Button>
+                                <Button variant="contained" color="error" style={{ width: 'auto', height: 'auto' }}
+                                    onClick={() => {
+                                        handleInactivateEstablishment(newEstablishment.id);
+                                        setOpenGerenciarModal(false);
+                                    }}>
+                                    Excluir
+                                </Button>
+                            </div>
                         </Box>
-                        
+
                     </Box>
                 </Modal>
             </div>

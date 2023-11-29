@@ -33,7 +33,7 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ScheduleTable from '../../../components/ScheduleTable';
 import ButtonHour from '../../../components/ButtonHour';
-import { de } from 'date-fns/locale';
+import { de, tr } from 'date-fns/locale';
 import { set } from 'date-fns';
 
 const CarouselContainer = styled('div')({
@@ -102,7 +102,7 @@ export default function EventDetail(onUpload) {
   const [perfilImage, setPerfilImage] = useState('');
   const [images, setImages] = useState([]);
 
-async function getPerfilImage(establishmentId) {
+  async function getPerfilImage(establishmentId) {
     try {
       var token = localStorage.getItem('@conmusic:token');
       const config = {
@@ -153,13 +153,14 @@ async function getPerfilImage(establishmentId) {
   const [open, setOpen] = React.useState(false);
 
   const handleClose = () => setOpen(false);
+  const handleOpen = () => setOpen(true);
 
   const { eventId } = useParams();
 
   const [selectedImage, setSelectedImage] = useState(0);
   const [genres, setGenres] = useState({
     name: '',
-  }); 
+  });
   const [event, setEvent] = useState({
     name: '',
     genre: '',
@@ -266,26 +267,15 @@ async function getPerfilImage(establishmentId) {
     setOpenToast(true);
   };
 
-
-
-    const handleOpen = async () => {
-      try {
-        const { data } = await api.get(`/genres`)
-
-        setGenres({
-          name: data.name,
-        });
-      } catch (error) {
-        console.error(error)
-        console.log(genres)
-      }
-      setOpen(true);
+  const handleClickDeletion = async () => {
+    try {
+      await api.delete(`/events/inactivate/${eventId}`);
+    } catch (error) {
+      console.error(error);
     }
+    setOpenToast(true);
+  };
 
-
-  const image = [
-    'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
-  ]
   const data = [
     {
       horarioInicio: "10:00",
@@ -381,6 +371,13 @@ async function getPerfilImage(establishmentId) {
           >
             Atualizar
           </Button>
+          <Button
+            variant="outlined"
+            color="inherit"
+            onClick={handleClickDeletion}
+          >
+            Desativar
+          </Button>
           <Modal
             open={open}
             onClose={handleClose}
@@ -410,7 +407,7 @@ async function getPerfilImage(establishmentId) {
                   <Autocomplete
                     fullWidth
                     id="genre"
-                    options={topEstilosMusicais} 
+                    options={topEstilosMusicais}
                     renderInput={(params) => <TextField {...params} label="Gênero Musical" />}
                   />
                 </Grid>
@@ -486,7 +483,7 @@ async function getPerfilImage(establishmentId) {
           </Alert>
         </Snackbar>
         <SubtitleContainer>
-           <CarouselContainer>
+          <CarouselContainer>
             <ImageList
               sx={{ width: '100%', height: 370 }}
               variant="quilted"

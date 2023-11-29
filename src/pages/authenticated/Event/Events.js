@@ -11,23 +11,14 @@ import {
     Box,
     TextField,
 } from '@mui/material';
-// import { format } from 'date-fns';
 import { useAuth } from '../../../hooks/auth';
 import Autocomplete from '@mui/material/Autocomplete';
-// import OutlinedInput from '@mui/material/OutlinedInput';
-// import InputLabel from '@mui/material/InputLabel';
-// import InputAdornment from '@mui/material/InputAdornment';
-// import FormControl from '@mui/material/FormControl';
-// import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-// import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
-// import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-// import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-// import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Pagina from "../../../components/PaginationForCards";
+import { es } from "date-fns/locale";
 
 dayjs.extend(customParseFormat);
 
@@ -92,17 +83,6 @@ export default function Events(onUpload) {
 
         setOpenToast(false);
     };
-    // const handleFileChange = (event) => {
-    //     const file = event.target.files[0];
-    //     setSelectedFile(file);
-    // };
-
-    // const handleUpload = () => {
-    //     if (selectedFile) {
-    //         onUpload(selectedFile);
-    //         setSelectedFile(null);
-    //     }
-    // };
 
     useEffect(() => {
         const getEstablishments = async () => {
@@ -115,10 +95,6 @@ export default function Events(onUpload) {
 
                 var card = response.data
                     .map(establishment => {
-                        // let showDate = format(new Date(establishment.schedules.startDateTime), "dd/MM/yyyy");
-                        // let showStartDateTime = format(new Date(establishment.schedules.startDateTime), "HH:mm");
-                        // let showEndDateTime = format(new Date(establishment.schedules.endDateTime), "HH:mm");
-
                         return {
                             id: establishment.id,
                             local: establishment.establishment.address,
@@ -126,8 +102,6 @@ export default function Events(onUpload) {
                             event: establishment.name,
                             genero: establishment.genre.name,
                             establishmentId: establishment.establishment.id,
-                            // showStart: `${showDate} - ${showStartDateTime}`,
-                            // showEnd: `${showDate} - ${showEndDateTime}`,
                         }
                     })
                 setCardData(card);
@@ -163,6 +137,24 @@ export default function Events(onUpload) {
         }
     };
 
+    const getYourEstablishments = async () => {
+        try {
+            const token = localStorage.getItem('@conmusic:token');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` },
+            };
+            const response = await api.get(`/establishments/manager/${userId}`, config);
+            var establishmentData = response.data.map(establishment => {
+                return {
+                    id: establishment.id,
+                    name: establishment.establishmentName,
+                }
+            });
+        } catch (error) {
+            console.error('Erro ao buscar os estabelecimentos:', error);
+            console.error('Mensagem de erro do servidor:', error.response.data);
+        }
+    }
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 2 }}>
@@ -197,8 +189,6 @@ export default function Events(onUpload) {
                         local={item.local}
                         genero={item.genero}
                         establishmentId={item.establishmentId}
-                    // showStart={item.showStart}
-                    // showEnd={item.showEnd}
                     />
                 ))
             }
@@ -231,14 +221,14 @@ export default function Events(onUpload) {
                             />
 
                         </Grid>
-                        {/* <Grid item xs={12} >
+                        <Grid item xs={12} >
                             <Autocomplete
                                 fullWidth
                                 id="combo-box-demo"
                                 options={estabelecimentosExemplo}
                                 renderInput={(params) => <TextField {...params} label="Nome do Estabelecimento" />}
                             />
-                        </Grid> */}
+                        </Grid>
                         <Grid item xs={12}>
                             <Autocomplete
                                 fullWidth
@@ -254,38 +244,6 @@ export default function Events(onUpload) {
                                 )}
                             />
                         </Grid>
-                        {/* <Grid item xs={6}>
-                                <FormControl fullWidth>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DemoContainer components={['TimePicker', 'DateTimePicker']}>
-                                            <DemoItem label="Data de início">
-                                                <DateTimePicker
-                                                    onChange={(newValue) => {
-                                                        const formattedDate = formatCustomDate(newValue);
-                                                        console.log(formattedDate); // Use o valor formatado como necessário
-                                                    }}
-                                                />
-                                            </DemoItem>
-                                        </DemoContainer>
-                                    </LocalizationProvider>
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={6}>
-                                <FormControl fullWidth>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DemoContainer components={['TimePicker', 'DateTimePicker']}>
-                                            <DemoItem label="Data de fim">
-                                                <DateTimePicker
-                                                    onChange={(newValue) => {
-                                                        const formattedDate = formatCustomDate(newValue);
-                                                        console.log(formattedDate); // Use o valor formatado como necessário
-                                                    }}
-                                                />
-                                            </DemoItem>
-                                        </DemoContainer>
-                                    </LocalizationProvider>
-                                </FormControl>
-                            </Grid> */}
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
                                 <TextField
@@ -307,56 +265,15 @@ export default function Events(onUpload) {
                             </Grid>
                         </Grid>
                         <Grid item xs={12} sx={{ display: "flex", flexDirection: "row" }}>
-                                <TextField
-                                    label="Descrição do Evento"
-                                    multiline
-                                    name="description"
-                                    rows={4}
-                                    fullWidth
-                                    value={eventData.description}
-                                    onChange={handleInputChange}
-                                />
-                            {/* <div style={{ width: '50%', marginLeft: 25 }}>
-                                <input
-                                    type="file"
-                                    accept="image/*"
-                                    id="upload-button"
-                                    style={{ display: 'none' }}
-                                    onChange={handleFileChange}
-                                />
-                                <label htmlFor="upload-button">
-                                    <Button
-                                        variant="outlined"
-                                        color="primary"
-                                        component="span"
-                                        startIcon={<CloudUploadIcon />}
-                                        fullWidth
-                                        style={{ padding: '13px', fontSize: '1.0rem' }}
-                                    >
-                                        Upload de Imagem
-                                    </Button>
-                                </label>
-                                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                                    <Button
-                                        variant="contained"
-                                        color="primary"
-                                        size="medium"
-                                        disabled={!selectedFile}
-                                        onClick={handleUpload}
-                                        fullWidth
-                                        sx={{
-                                            marginTop: 'auto',
-                                            borderColor: 'black',
-                                            backgroundColor: 'red',
-                                            color: 'white',
-                                            marginTop: 2,
-                                            height: 53,
-                                        }}
-                                    >
-                                        Enviar Imagem
-                                    </Button>
-                                </div>
-                            </div> */}
+                            <TextField
+                                label="Descrição do Evento"
+                                multiline
+                                name="description"
+                                rows={4}
+                                fullWidth
+                                value={eventData.description}
+                                onChange={handleInputChange}
+                            />
                         </Grid>
                         <Grid sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                             <Button variant="contained"

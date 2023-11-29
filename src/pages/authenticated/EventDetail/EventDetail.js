@@ -12,7 +12,9 @@ import {
   Chip,
   Modal,
   Divider,
-  TextField
+  TextField,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import PowerIcon from '@mui/icons-material/Power';
 
@@ -31,6 +33,8 @@ import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ScheduleTable from '../../../components/ScheduleTable';
 import ButtonHour from '../../../components/ButtonHour';
+import { de } from 'date-fns/locale';
+import { set } from 'date-fns';
 
 const CarouselContainer = styled('div')({
   display: 'flex',
@@ -74,65 +78,88 @@ const SubtitleContainer = styled('div')({
 })
 
 function srcset(image, size, rows = 1, cols = 1) {
+  const originalWidth = size * cols;
+  const originalHeight = size * rows;
+  const aspectRatio = originalWidth / originalHeight;
+
+  // Definindo nova largura e altura com base na proporção original
+  let newWidth = originalWidth;
+  let newHeight = originalHeight;
+
+  if (cols > rows) {
+    newHeight = Math.round(originalWidth / aspectRatio);
+  } else if (cols < rows) {
+    newWidth = Math.round(originalHeight * aspectRatio);
+  }
+
   return {
-    src: `${image}?w=${size * cols}&h=${size * rows}&fit=crop&auto=format`,
-    srcSet: `${image}?w=${size * cols}&h=${size * rows
-      }&fit=crop&auto=format&dpr=2 2x`,
+    src: `${image}?w=${newWidth}&h=${newHeight}&fit=crop&auto=format`,
+    srcSet: `${image}?w=${newWidth}&h=${newHeight}&fit=crop&auto=format&dpr=2 2x`,
   };
 }
 
-const itemData = [
-  {
-    img: 'https://images.unsplash.com/photo-1551963831-b3b1ca40c98e',
-    title: 'Breakfast',
-    rows: 2,
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1551782450-a2132b4ba21d',
-    title: 'Burger',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1522770179533-24471fcdba45',
-    title: 'Camera',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1444418776041-9c7e33cc5a9c',
-    title: 'Coffee',
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1533827432537-70133748f5c8',
-    title: 'Hats',
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1558642452-9d2a7deb7f62',
-    title: 'Honey',
-    author: '@arwinneil',
-    rows: 2,
-    cols: 2,
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1516802273409-68526ee1bdd6',
-    title: 'Basketball',
-  },
-  {
-    img: 'https://images.unsplash.com/photo-1518756131217-31eb79b20e8f',
-    title: 'Fern',
-  },
-];
-
-
 export default function EventDetail(onUpload) {
+  const [perfilImage, setPerfilImage] = useState('');
+  const [images, setImages] = useState([]);
+
+async function getPerfilImage(establishmentId) {
+    try {
+      var token = localStorage.getItem('@conmusic:token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      const response = await api.get(`/establishments/image/perfil/${establishmentId}`, config);
+
+      setPerfilImage(response.data.url);
+
+    } catch (error) {
+      console.error('Erro ao buscar imagem:', error);
+    }
+  }
+
+  async function getImages(establishmentId) {
+    try {
+      var token = localStorage.getItem('@conmusic:token');
+      const config = {
+        headers: { Authorization: `Bearer ${token}` },
+      };
+
+      const response = await api.get(`/establishments/images/${establishmentId}`, config);
+
+      const patternMapping = {
+        0: { cols: 2, rows: 2 },
+        1: { cols: 1, rows: 1 },
+        2: { cols: 1, rows: 1 },
+        3: { cols: 2, rows: 1 },
+        4: { cols: 2, rows: 1 },
+        5: { cols: 2, rows: 2 },
+        6: { cols: 1, rows: 1 },
+        7: { cols: 1, rows: 1 },
+      };
+
+      const updatedImages = response.data.map((image, index) => ({
+        ...image,
+        ...patternMapping[index],
+      }));
+
+      setImages(updatedImages);
+    } catch (error) {
+      console.error('Erro ao buscar imagens:', error);
+    }
+  }
+
+
   const [open, setOpen] = React.useState(false);
 
-  const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const { eventId } = useParams();
 
   const [selectedImage, setSelectedImage] = useState(0);
+  const [genres, setGenres] = useState({
+    name: '',
+  }); 
   const [event, setEvent] = useState({
     name: '',
     genre: '',
@@ -153,6 +180,7 @@ export default function EventDetail(onUpload) {
     },
     description: '',
   })
+
 
   const fiveAM = dayjs().set('hour', 5).startOf('hour');
   const nineAM = dayjs().set('hour', 9).startOf('hour');
@@ -204,6 +232,56 @@ export default function EventDetail(onUpload) {
     getEventData()
   }, [eventId])
 
+  const [openToast, setOpenToast] = React.useState(false);
+  const handleCloseToast = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenToast(false);
+  };
+
+
+
+  const handleClick = async () => {
+    const nomeDoEventoInput = document.getElementById('outlined-multiline-static');
+    const generoMusicalInput = document.getElementById('genre');
+    const valorPropostoInput = document.getElementById('outlined-adornment-amount');
+    const taxaCouvertArtisticoInput = document.getElementById('couver');
+    const descricaoDoEventoInput = document.getElementById('descricao');
+    const data = {
+      name: nomeDoEventoInput.value,
+      description: descricaoDoEventoInput.value,
+      value: parseFloat(valorPropostoInput.value.replace(/\D/g, '.')),
+      coverCharge: parseFloat(taxaCouvertArtisticoInput.value.replace(/\D/g, '.')),
+      genre: generoMusicalInput.value,
+    };
+
+    try {
+      await api.put(`/events/${eventId}`, data);
+    } catch (error) {
+      console.error(error);
+      console.log(data);
+    }
+    setOpenToast(true);
+  };
+
+
+
+    const handleOpen = async () => {
+      try {
+        const { data } = await api.get(`/genres`)
+
+        setGenres({
+          name: data.name,
+        });
+      } catch (error) {
+        console.error(error)
+        console.log(genres)
+      }
+      setOpen(true);
+    }
+
 
   const image = [
     'https://s2-g1.glbimg.com/u_Sep5KE8nfnGb8wWtWB-vbBeD0=/1200x/smart/filters:cover():strip_icc()/i.s3.glbimg.com/v1/AUTH_59edd422c0c84a879bd37670ae4f538a/internal_photos/bs/2022/N/Q/S27GlHSKA6DAAjshAgSA/bar-paradiso.png',
@@ -230,7 +308,7 @@ export default function EventDetail(onUpload) {
     <Grid container spacing={2} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start' }}>
       <Grid item xs={12} md={4}>
         <Paper sx={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', padding: 4, gap: 1, my: 2 }}>
-          <SmallImage src={image[selectedImage]} alt="Profile" />
+          <SmallImage src={perfilImage} alt="Profile" />
           <Typography variant="h5" fontWeight='bold' style={{ color: '#FB2D57', marginTop: 2 }}>
             {event.name}
           </Typography>
@@ -319,55 +397,24 @@ export default function EventDetail(onUpload) {
                 noValidate
                 autoComplete="off"
               >
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Nome do Evento"
-                    id="filled-size-normal"
-                    name="establishmentName"
-                    fullWidth
-                  />
-
+                <Grid>
+                  <div style={{ width: '100%' }}>
+                    <TextField
+                      id="outlined-multiline-static"
+                      label="Nome do Evento"
+                      fullWidth
+                    />
+                  </div>
                 </Grid>
                 <Grid item xs={12} >
                   <Autocomplete
                     fullWidth
-                    id="combo-box-demo"
-                    options={estabelecimentosExemplo}
-                    renderInput={(params) => <TextField {...params} label="Nome do Estabelecimento" />}
-                  />
-                </Grid>
-
-                <Grid item xs={12} >
-                  <Autocomplete
-                    fullWidth
-                    id="combo-box-demo"
-                    options={topEstilosMusicais}
+                    id="genre"
+                    options={topEstilosMusicais} 
                     renderInput={(params) => <TextField {...params} label="Gênero Musical" />}
                   />
                 </Grid>
                 <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <FormControl fullWidth>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['TimePicker', 'DateTimePicker']}>
-                          <DemoItem label="Data de fim">
-                            <DateTimePicker defaultValue={fiveAM} minTime={nineAM} />
-                          </DemoItem>
-                        </DemoContainer>
-                      </LocalizationProvider>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <FormControl fullWidth>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['TimePicker', 'DateTimePicker']}>
-                          <DemoItem label="Data de fim">
-                            <DateTimePicker defaultValue={fiveAM} minTime={nineAM} />
-                          </DemoItem>
-                        </DemoContainer>
-                      </LocalizationProvider>
-                    </FormControl>
-                  </Grid>
                   <Grid item xs={6}>
                     <FormControl fullWidth>
                       <InputLabel htmlFor="outlined-adornment-amount">Valor Proposto</InputLabel>
@@ -390,9 +437,9 @@ export default function EventDetail(onUpload) {
                   </Grid>
                   <Grid item xs={6}>
                     <FormControl fullWidth>
-                      <InputLabel htmlFor="outlined-adornment-amount">Taxa de Couvert Artístico</InputLabel>
+                      <InputLabel htmlFor="couver">Taxa de Couvert Artístico</InputLabel>
                       <OutlinedInput
-                        id="outlined-adornment-amount"
+                        id="couver"
                         startAdornment={<InputAdornment position="start">R$</InputAdornment>}
                         label="Taxa de Couvert Artístico"
                         onChange={(event) => {
@@ -410,59 +457,18 @@ export default function EventDetail(onUpload) {
                   </Grid>
                 </Grid>
                 <Grid item xs={12} sx={{ display: "flex", flexDirection: "row" }}>
-                  <div style={{ width: '50%' }}>
+                  <div style={{ width: '100%' }}>
                     <TextField
-                      id="outlined-multiline-static"
+                      id="descricao"
                       label="Descrição do Evento"
                       multiline
                       rows={4}
                       fullWidth
                     />
                   </div>
-                  <div style={{ width: '50%', marginLeft: 25 }}>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      id="upload-button"
-                      style={{ display: 'none' }}
-                      onChange={handleFileChange}
-                    />
-                    <label htmlFor="upload-button">
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        component="span"
-                        startIcon={<CloudUploadIcon />}
-                        fullWidth
-                        style={{ padding: '13px', fontSize: '1.0rem' }}
-                      >
-                        Upload de Imagem
-                      </Button>
-                    </label>
-                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="medium"
-                        disabled={!selectedFile}
-                        onClick={handleUpload}
-                        fullWidth
-                        sx={{
-                          marginTop: 'auto',
-                          borderColor: 'black',
-                          backgroundColor: 'red',
-                          color: 'white',
-                          marginTop: 2,
-                          height: 53,
-                        }}
-                      >
-                        Enviar Imagem
-                      </Button>
-                    </div>
-                  </div>
                 </Grid>
                 <Grid sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                  <Button variant="contained" color="success" style={{ width: "auto", height: "auto" }}>
+                  <Button variant="contained" color="success" style={{ width: "auto", height: "auto" }} onClick={handleClick}>
                     Atualizar Evento
                   </Button>
                   <Button variant="contained" color="error" style={{ width: "auto", height: "auto" }}
@@ -474,18 +480,23 @@ export default function EventDetail(onUpload) {
             </Box>
           </Modal>
         </Grid>
+        <Snackbar open={openToast} autoHideDuration={6000} onClose={handleCloseToast}>
+          <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+            Avaliação enviada!
+          </Alert>
+        </Snackbar>
         <SubtitleContainer>
-          <CarouselContainer>
+           <CarouselContainer>
             <ImageList
               sx={{ width: '100%', height: 370 }}
               variant="quilted"
               cols={4}
               rowHeight={121}
             >
-              {itemData.map((item) => (
-                <ImageListItem key={item.img} cols={item.cols || 1} rows={item.rows || 1}>
+              {images.map((item) => (
+                <ImageListItem key={item.url} cols={item.cols || 1} rows={item.rows || 1}>
                   <img
-                    {...srcset(item.img, 121, item.rows, item.cols)}
+                    {...srcset(item.url, 121, item.rows, item.cols)}
                     alt={item.title}
                     loading="lazy"
                   />
@@ -500,7 +511,7 @@ export default function EventDetail(onUpload) {
             </Typography>
           </Paper>
           <Grid display={'flex'} justifyContent={'flex-end'} padding={'20px'} flexDirection={'row'} alignContent={"flex-end"}>
-            <ButtonHour />
+            <ButtonHour eventId={eventId} />
           </Grid>
           <Paper style={{ width: '100%', padding: '20px' }}>
             <ScheduleTable eventId={eventId} />

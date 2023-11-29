@@ -8,14 +8,17 @@ import {
     Typography,
     Stack,
     Box,
+    Snackbar,
+    Alert,
 } from '@mui/material';
 import dayjs from 'dayjs';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import Title from '../components/Title';
+import api from '../services/api';
+import { auto } from '@popperjs/core';
+import moment from 'moment';
+
 
 
 const style = {
@@ -24,7 +27,6 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 'auto',
     bgcolor: 'background.paper',
     border: '2px solid #000',
     boxShadow: 24,
@@ -34,15 +36,41 @@ const style = {
     justifyContent: 'space-between',
     height: 'auto',
     alignItems: 'center',
-    gap: 2
+    gap: 2,
+    display: 'flex',
 };
 
 
-function ButtonHour() {
-    const [value, setValue] = React.useState(dayjs('2022-04-07'));
+function ButtonHour(eventId) {
     const [openCreateModal, setOpenCreateModal] = useState(false);
+    const [startDateTime, setStartDateTime] = React.useState(dayjs());
+    const [endDateTime, setEndDateTime] = React.useState(dayjs());
+    const [openToast, setOpenToast] = React.useState(false);
+    const handleCloseToast = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setOpenToast(false);
+    };
     const handleOpenModal = () => {
         setOpenCreateModal(true);
+    };
+    const handleClose = () => setOpenCreateModal(false);
+
+    const handleClick = async () => {
+        const data = {
+            starDateTime: startDateTime,
+            endDateTime: endDateTime,
+        };
+
+        try {
+            await api.post(`/schedules/${eventId}`, data);
+        } catch (error) {
+            console.error(error);
+            console.log(data);
+        }
+        setOpenToast(true);
     };
 
     return (
@@ -59,53 +87,58 @@ function ButtonHour() {
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style} spacing={2}>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                    <Grid container spacing={2}>
+                        <Grid item xs={12}>
+                            <Typography variant="h6">Formulário de Agendamento</Typography>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DateTimePicker
+                                    label="Data e horário de Início"
+                                    value={startDateTime}
+                                    onChange={(schedule) => {
+                                        // Atualiza o valor do input
+                                        setStartDateTime(schedule.value);
 
-                    </Typography>
-                    <Box
-                        component="form"
-                        sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-                        noValidate
-                        autoComplete="off"
-                    >
-                        <div style={{ display: 'flex', gap: 20 }}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={12}>
-                                    <Typography variant="h6">Formulário de Agendamento</Typography>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DateTimePicker
-                                            label="Data e horário de Início"
-                                            value={value}
-                                            onChange={(newValue) => {
-                                                setValue(newValue);
-                                            }}
-                                            renderInput={(params) => <TextField {...params} />}
-                                        />
-                                    </LocalizationProvider>
-                                </Grid>
-                                <Grid item xs={12} md={6}>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                        <DateTimePicker
-                                            label="Data e horário de Fim"
-                                            value={value}
-                                            onChange={(newValue) => {
-                                                setValue(newValue);
-                                            }}
-                                            renderInput={(params) => <TextField {...params} />}
-                                        />
-                                    </LocalizationProvider>
-                                </Grid>
-                            </Grid>
-                        </div>
-                    </Box>
-                    <Button variant="contained" color="success" style={{ width: 200, height: 40 }}>
-                        Criar Agendamento
-                    </Button>
+                                        // Pega o valor do input como string
+                                        const date = moment(startDateTime).format('YYYY-MM-DD');
+
+                                        // Mostra o valor do input como string
+                                        console.log(date);
+                                    }}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </LocalizationProvider>
+                        </Grid>
+                        <Grid item xs={12} md={6} display={'flex'} justifyContent={'flex-end'}>
+                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DateTimePicker
+                                    label="Data e horário de Fim"
+                                    value={endDateTime}
+                                    onChange={(schedule) => {
+                                        setEndDateTime(schedule.value);
+                                    }}
+                                    renderInput={(params) => <TextField {...params} />}
+                                />
+                            </LocalizationProvider>
+                        </Grid>
+                    </Grid>
+                    <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'space-around' }}>
+                        <Button variant="contained" color="success" style={{ width: auto, height: auto }} onClick={handleClick}>
+                            Criar
+                        </Button>
+                        <Button variant="contained" color="error" style={{ width: "auto", height: "auto" }}
+                            onClick={handleClose}>
+                            Cancelar
+                        </Button>
+                    </Grid>
                 </Box>
             </Modal>
-
+            <Snackbar open={openToast} autoHideDuration={6000} onClose={handleCloseToast}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                    Agendamento feito!
+                </Alert>
+            </Snackbar>
         </Container>
     );
 }

@@ -207,7 +207,7 @@ export default function ManageEstablishment(onUpload) {
             const config = {
                 headers: { Authorization: `Bearer ${token}` },
             };
-            console.log("id:", newEstablishment.id)
+            console.log("id:", id)
             const response = await api.delete(`/establishments/inctivate/${id}`, config);
             console.log("response:", response)
             if (response.status === 200) {
@@ -517,7 +517,7 @@ export default function ManageEstablishment(onUpload) {
                                     onClick={async () => {
                                         try {
                                             // Primeiro, inativa/exclui o estabelecimento
-                                            await handleInactivateEstablishment(newEstablishment.id);
+                                            await handleInactivateEstablishment(selectedEstablishment.id);
                                             console.log('Estabelecimento inativado/excluído com sucesso!');
                                     
                                             // Em seguida, fecha o modal

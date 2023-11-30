@@ -60,9 +60,11 @@ function ButtonHour(eventId) {
 
     const handleClick = async () => {
         const data = {
-            starDateTime: startDateTime,
-            endDateTime: endDateTime,
+            starDateTime: startDateTime.toDate(),
+            endDateTime: endDateTime.toDate(),
         };
+
+        console.log(data);  
 
         try {
             await api.post(`/schedules/${eventId}`, data);
@@ -74,8 +76,8 @@ function ButtonHour(eventId) {
     };
 
     return (
-        <Container>
-            <Stack spacing={2} direction="row" justifyContent={'flex-end'}>
+        <>
+            <Stack width={'100%'} ml direction="row" justifyContent={'flex-end'}>
                 <Button variant="contained" color="success" onClick={handleOpenModal}>
                     Criar Agendamento
                 </Button>
@@ -139,7 +141,7 @@ function ButtonHour(eventId) {
                     Agendamento feito!
                 </Alert>
             </Snackbar>
-        </Container>
+        </>
     );
 }
 

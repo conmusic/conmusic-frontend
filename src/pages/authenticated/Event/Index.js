@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Events from "./Events";
 
@@ -6,14 +6,20 @@ import { useAuth } from "../../../hooks/auth";
 import { Navigate } from "react-router-dom";
 
 export default function Explore() {
-    const { type } = useAuth();
+    const [access, setAccess] = React.useState('default');
 
-    switch (type) {
+    useEffect(() => {
+        setAccess(localStorage.getItem('@conmusic:type'));
+    }, []);
+
+    switch (access) {
         case 'Artist':
             return (<Navigate to="/forbiden" replace={true} />);
         case 'Manager':
-            return (<Events></Events>);        
+            return (<Events></Events>);
+        case 'default':
+            return (<></>)
         default:
-            return (<Navigate to="/forbiden" replace={true} />)
+            return (<Navigate to="/forbiden"  />)
     }
 }

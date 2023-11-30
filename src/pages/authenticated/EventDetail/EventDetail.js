@@ -25,16 +25,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import ScheduleTable from '../../../components/ScheduleTable';
 import ButtonHour from '../../../components/ButtonHour';
-import { de, tr } from 'date-fns/locale';
-import { set } from 'date-fns';
 
 const CarouselContainer = styled('div')({
   display: 'flex',
@@ -234,6 +227,7 @@ export default function EventDetail(onUpload) {
   }, [eventId])
 
   const [openToast, setOpenToast] = React.useState(false);
+  const [openToastError, setOpenToastError] = React.useState(false);
   const handleCloseToast = (event, reason) => {
     if (reason === 'clickaway') {
       return;
@@ -253,23 +247,26 @@ export default function EventDetail(onUpload) {
     const data = {
       name: nomeDoEventoInput.value,
       description: descricaoDoEventoInput.value,
-      value: parseFloat(valorPropostoInput.value.replace(/\D/g, '.')),
+      value: parseFloat(valorPropostoInput.value.replace(/\D/g, '')),
       coverCharge: parseFloat(taxaCouvertArtisticoInput.value.replace(/\D/g, '.')),
       genre: generoMusicalInput.value,
     };
-
     try {
-      await api.put(`/events/${eventId}`, data);
+      const response = await api.put(`/events/${eventId}`, data);
     } catch (error) {
       console.error(error);
       console.log(data);
     }
-    setOpenToast(true);
-  };
+      setTimeout(() => {
+        window.location.reload();
+        setOpenToast(true);
+      }, 3000);
+    //setOpenToastError(true);
+  }
 
   const handleClickDeletion = async () => {
     try {
-      await api.delete(`/events/inactivate/${eventId}`);
+      await api.delete(`/events/inctivate/${eventId}`);
     } catch (error) {
       console.error(error);
     }
@@ -354,30 +351,6 @@ export default function EventDetail(onUpload) {
       </Grid>
       <Grid item xs={12} md={6} mt={2}>
         <Grid display={'flex'} justifyContent={'flex-end'}>
-          <Button
-            variant="outlined"
-            color="inherit"
-            onClick={handleOpen}
-            sx={{
-              alignSelf: "center",
-              borderColor: 'black',
-              backgroundColor: '#006ab5',
-              color: 'white',
-              '&:hover': {
-                backgroundColor: 'white',
-                color: 'black',
-              },
-            }}
-          >
-            Atualizar
-          </Button>
-          <Button
-            variant="outlined"
-            color="inherit"
-            onClick={handleClickDeletion}
-          >
-            Desativar
-          </Button>
           <Modal
             open={open}
             onClose={handleClose}
@@ -479,10 +452,34 @@ export default function EventDetail(onUpload) {
         </Grid>
         <Snackbar open={openToast} autoHideDuration={6000} onClose={handleCloseToast}>
           <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-            Avaliação enviada!
+            Evento Atualizado!
+          </Alert>
+        </Snackbar>
+        <Snackbar open={openToastError} autoHideDuration={6000} onClose={handleCloseToast}>
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+            Erro a o criar evento.
           </Alert>
         </Snackbar>
         <SubtitleContainer>
+          <Grid display={'flex'} justifyContent={'flex-end'} flexDirection={'row'} alignItems={'center'}>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={handleOpen}
+              sx={{
+                alignSelf: "center",
+                borderColor: 'black',
+                backgroundColor: '#006ab5',
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: 'white',
+                  color: 'black',
+                },
+              }}
+            >
+              Atualizar
+            </Button>
+          </Grid>
           <CarouselContainer>
             <ImageList
               sx={{ width: '100%', height: 370 }}
@@ -507,7 +504,7 @@ export default function EventDetail(onUpload) {
               {event.description}
             </Typography>
           </Paper>
-          <Grid display={'flex'} justifyContent={'flex-end'} padding={'20px'} flexDirection={'row'} alignContent={"flex-end"}>
+          <Grid display={'flex'} justifyContent={'flex-end'} mt={2} mb={2} flexDirection={'row'} alignContent={"flex-end"}>
             <ButtonHour eventId={eventId} />
           </Grid>
           <Paper style={{ width: '100%', padding: '20px' }}>

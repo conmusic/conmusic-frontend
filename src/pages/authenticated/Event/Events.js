@@ -18,7 +18,6 @@ import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import Pagina from "../../../components/PaginationForCards";
-import { es } from "date-fns/locale";
 
 dayjs.extend(customParseFormat);
 
@@ -301,11 +300,6 @@ export default function Events(onUpload) {
         </Container>
     )
 }
-
-const estabelecimentosExemplo = [
-    { label: 'Bar do Chico' },
-    { label: 'Bar do Chico 2' },
-]
 
 const topEstilosMusicais = [
     { label: 'Rock' },

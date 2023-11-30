@@ -1,28 +1,22 @@
 import React from "react";
 
-import { useAuth } from "../../../hooks/auth";
+import ManageEstablishment from "./ManageEstablishment";
 
-import DashboardArtist from "./Artist";
-import DashboardEstablishment from "./Manager";
-import DashboardAdmin from "./Admin";
 import { Navigate } from "react-router-dom";
 import { useEffect } from "react";
 
-
-export default function Dashboard() {
+export default function Explore() {
     const [access, setAccess] = React.useState('default');
 
     useEffect(() => {
         setAccess(localStorage.getItem('@conmusic:type'));
-    }, []);
+    }, []);;
 
     switch (access) {
         case 'Artist':
-            return (<DashboardArtist />);
+            return (<Navigate to="/forbiden" replace={true} />);
         case 'Manager':
-            return (<DashboardEstablishment />);
-        case 'Admin':
-            return (<DashboardAdmin />)
+            return (<ManageEstablishment></ManageEstablishment>);
         case 'default':
             return (<></>)
         default:

@@ -10,16 +10,17 @@ import {
     TextField,
     Card,
     CardMedia,
-    CardContent
+    CardContent,
+    Stepper,
+    Step,
+    StepLabel
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import api from '../../../services/api';
-import Title from '../../components/Title';
-import { useAuth } from '../../hooks/auth';
-import eventPropsHelper from '../../helpers/eventPropsHelper';
-import Stepper from '@mui/material/Stepper';
-import Step from '@mui/material/Step';
-import StepLabel from '@mui/material/StepLabel';
+import Title from '../../../components/Title';
+import { useAuth } from '../../../hooks/auth';
+import eventPropsHelper from '../../../helpers/eventPropsHelper';
+
 const steps = ['Informações gerais', 'Infraestrutura', 'Localização'];
 const style = {
     position: 'absolute',
@@ -41,6 +42,7 @@ const style = {
     overflowY: "scroll",
     maxHeight: "100%"
 };
+
 export default function ManageEstablishment(onUpload) {
     const { userId } = useAuth();
     const [establishments, setEstablishments] = useState([])

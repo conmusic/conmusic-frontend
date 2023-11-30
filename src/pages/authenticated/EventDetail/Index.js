@@ -1,11 +1,10 @@
 import React from "react";
 
-import Album from "./Album";
-import Tinder from "./Tinder";
-
 import { useAuth } from "../../../hooks/auth";
-import { Navigate } from "react-router-dom";
-import { useEffect } from "react";
+
+import EventDetail from './EventDetail';
+import { Navigate } from "react-router";
+import	{	useEffect	}	from	'react';
 
 export default function Explore() {
     const [access, setAccess] = React.useState('default');
@@ -16,12 +15,12 @@ export default function Explore() {
 
     switch (access) {
         case 'Artist':
-            return (<Album></Album>);
+            return (<Navigate to="/forbiden"/>);
         case 'Manager':
-            return (<Tinder></Tinder>);
+            return (<EventDetail></EventDetail>);
         case 'default':
             return (<></>)
         default:
-            return (<Navigate to="/forbiden" replace={true} />)
+            return (<Navigate to="/forbiden" />)
     }
 }

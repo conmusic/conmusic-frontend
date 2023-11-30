@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import {
     Grid,
@@ -9,14 +9,37 @@ import {
     Button,
 } from '@mui/material';
 
-import myImage from '../assets/images/image.png';
+import api from '../services/api';
 
-function CardEventProposal({ establishment, event, local, showStart, showEnd, id }){
+function CardEventProposal({ establishment, event, local, showStart, showEnd, id, establishmentId }){
   const navigate = useNavigate();
 
   const handleNavigation = useCallback(() => {
     navigate(`/proposals/${id}`)
   }, [navigate, id])
+
+  const [imageURL, setImageURL] = useState('');
+
+  useEffect(() => {
+    const getImage = async () => {
+      try {
+        var token = localStorage.getItem('@conmusic:token');
+        const config = {
+          headers: { Authorization: `Bearer ${token}` }
+        };
+
+        const response = await api.get(`/establishments/image/perfil/${establishmentId}`, config);
+
+        console.log(response.data.url);
+
+        setImageURL(response.data.url);
+      } catch (error) {
+        console.error('Erro ao buscar imagem:', error);
+      }
+    }
+
+    getImage();
+  }, []);
 
     return(
         <Grid item xs={12} md={7} sx={{display: "flex", justifyContent: "center", mb: 2}}>
@@ -32,7 +55,7 @@ function CardEventProposal({ establishment, event, local, showStart, showEnd, id
                 alignSelf: "center" ,
                 borderRadius: 10,
                 ml: 3, }}
-            src={myImage}
+            src={imageURL}
             />
             <CardContent sx={{ flex: 1, mt: 1 }}>
               <Typography component="h2" variant="h5" fontWeight="bold">

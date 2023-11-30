@@ -17,6 +17,7 @@ import dayjs from 'dayjs';
 import MuiAlert from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
+import Pagina from "../../../components/PaginationForCards";
 
 dayjs.extend(customParseFormat);
 
@@ -168,11 +169,13 @@ export default function Events(onUpload) {
                         event={item.event}
                         local={item.local}
                         genero={item.genero}
+                        establishmentId={item.establishmentId}
                     // showStart={item.showStart}
                     // showEnd={item.showEnd}
                     />
                 ))
             }
+            <Pagina ></Pagina>
 
             <Modal
                 open={open}

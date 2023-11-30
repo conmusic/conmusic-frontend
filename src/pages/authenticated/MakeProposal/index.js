@@ -3,6 +3,8 @@ import React from "react";
 import { useAuth } from "../../../hooks/auth";
 import MakeProposalArtist from "./MakeProposalArtist";
 import MakeProposalManager from "./MakeProposalManager";
+import { Navigate } from "react-router-dom";
+
 
 export default function MakeProposalIndex() {
     const { type } = useAuth();
@@ -13,6 +15,6 @@ export default function MakeProposalIndex() {
         case "Manager":
             return (<MakeProposalManager />)
         default:
-            return (<h1>Unauthorized</h1>)
+            return (<Navigate to="/forbiden" replace={true} />)
     }
 }

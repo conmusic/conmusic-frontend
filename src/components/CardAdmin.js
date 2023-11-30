@@ -13,10 +13,10 @@ export default function CardAdmin({valor}) {
                 justifyContent: 'center',
                 height: 300,
                 boxShadow: 0,
-                
+                background: 'transparent'
             }}
         >
-            <Typography variant="h3" color="black">
+            <Typography variant="h3" color="#15005A">
                 {valor}
             </Typography>
         </Paper>

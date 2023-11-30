@@ -1,8 +1,9 @@
 import React from "react";
 
 import { useAuth } from "../../../hooks/auth";
-import BIartist from "./BIartist";
-import BImaneger from "./BImaneger";
+import BiArtist from "./BIartist";
+import BiManager from "./BiManager";
+import { Navigate } from "react-router-dom";
 
 
 export default function BI() {
@@ -10,11 +11,10 @@ export default function BI() {
 
     switch (type) {
         case 'Artist':
-            return (<BIartist />);
+            return (<BiArtist />);
         case 'Manager':
-            return (<BImaneger />);
-     
+            return (<BiManager />);
         default:
-            return (<h1>Unathorized</h1>)
+            return (<Navigate to="/forbiden" replace={true} />)
     }
 }

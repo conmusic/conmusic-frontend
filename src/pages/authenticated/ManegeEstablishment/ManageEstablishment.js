@@ -279,7 +279,7 @@ export default function ManageEstablishment(onUpload) {
                     Criar Estabelecimento
                 </Button>
             </Stack>
-            <Grid container spacing={0.5} sx={{ mt: 3 }}>
+            <Grid container spacing={2} sx={{ mt: 3,  mb: 4}}>
                 {
                     establishments.map(establishment => (
                         <Grid

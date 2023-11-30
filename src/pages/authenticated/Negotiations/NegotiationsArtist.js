@@ -4,6 +4,7 @@ import { Container } from "@mui/material"
 import { format } from 'date-fns';
 import React, { useState, useEffect } from 'react';
 import api from "../../../services/api";
+import Pagina from "../../../components/PaginationForCards";
 
 export default function NegotiationsArtist() {
     const [cardData, setCardData] = useState([]);
@@ -24,6 +25,7 @@ export default function NegotiationsArtist() {
                         let showEndDateTime = format(new Date(obj.schedule.endDateTime), "HH:mm");
 
                         return {
+                            establishmentId: obj.event.establishment.id,
                             establishment: obj.event.establishment.establishmentName,
                             event: obj.event.name,
                             local: obj.event.establishment.address,
@@ -51,6 +53,7 @@ export default function NegotiationsArtist() {
                         key={`Negotiation#${item.id}`}
                         id={item.id}
                         establishment={item.establishment}
+                        establishmentId={item.establishmentId}
                         event={item.event}
                         local={item.local}
                         showStart={item.showStart}
@@ -59,6 +62,7 @@ export default function NegotiationsArtist() {
                     />
                 ))
             }
+            <Pagina />
         </Container>
     )
 }

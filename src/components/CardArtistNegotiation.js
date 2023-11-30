@@ -8,7 +8,6 @@ import {
   CardContent,
   Button,
 } from '@mui/material';
-import myImage from '../assets/images/image.png';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -16,6 +15,8 @@ import Rating from '@mui/material/Rating';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import StatusChip from './StatusChip';
+
+import api from '../services/api';
 
 const style = {
   position: 'absolute',
@@ -43,7 +44,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function CardArtistNegotiation({ establishment, event, artist, showStart, showEnd, id, status }) {
+function CardArtistNegotiation({ establishment, event, artist, showStart, showEnd, id, status, artistId }) {
   const navigate = useNavigate();
 
   const [value, setValue] = React.useState(2);
@@ -53,6 +54,29 @@ function CardArtistNegotiation({ establishment, event, artist, showStart, showEn
   const handleClose = () => setOpen(false);
   const [showConfirmationButton, setShowConfirmationButton] = useState(false);
   const [openToast, setOpenToast] = React.useState(false);
+
+  const [imageURL, setImageURL] = useState('');
+
+  useEffect(() => {
+    const getImage = async () => {
+      try {
+        var token = localStorage.getItem('@conmusic:token');
+        const config = {
+          headers: { Authorization: `Bearer ${token}` }
+        };
+
+        const response = await api.get(`/artists/image/perfil/${artistId}`, config);
+
+        console.log(response.data.url);
+
+        setImageURL(response.data.url);
+      } catch (error) {
+        console.error('Erro ao buscar imagem:', error);
+      }
+    }
+
+    getImage();
+  }, []);
 
   const handleClick = () => {
     setOpenToast(true);
@@ -91,7 +115,7 @@ function CardArtistNegotiation({ establishment, event, artist, showStart, showEn
             borderRadius: 10,
             ml: 3,
           }}
-          src={myImage}
+          src={imageURL}
         />
         <CardContent sx={{ flex: 1, mt: 1 }}>
           <Typography component="h2" variant="h5" fontWeight="bold">

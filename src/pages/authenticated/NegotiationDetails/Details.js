@@ -73,7 +73,6 @@ export default function Details({
     })
 
     const handlePaymentValueChange = useCallback((event) => {
-        console.log(event)
         const value = Number(event.target.value.replace(/\D/gm, ""))
 
         const formatted = eventPropsHelper.getFormattedPaymentValue(value / 100);

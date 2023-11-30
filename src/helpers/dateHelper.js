@@ -1,4 +1,4 @@
-import { format } from "date-fns";
+import { differenceInYears, format } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
 
 function toLocalDateTimeISOString(date) {
@@ -13,9 +13,30 @@ function getFormattedScheduleDate(date) {
     return format(new Date(date), "eee, Pp", { locale: ptBR })
 }
 
+function getFormattedAge(date) {
+    if (date === null || date === "") {
+        return ''
+    }
+
+    const birthDate = new Date(date)
+    const age = differenceInYears(new Date(), birthDate)
+
+    return `${birthDate.toLocaleDateString('pt-BR')} - ${age} anos`
+}
+
+function getDate(date) {
+    if (date === null || date === "") {
+        return ''
+    }
+
+    return format(new Date(date), "dd/MM/yy", { locale: ptBR })
+}
+
 const dateHelper = {
     toLocalDateTimeISOString,
-    getFormattedScheduleDate
+    getFormattedScheduleDate,
+    getFormattedAge,
+    getDate
 }
 
 export default dateHelper;

@@ -8,7 +8,6 @@ import {
   CardContent,
   Button,
 } from '@mui/material';
-import myImage from '../assets/images/image.png';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
@@ -16,6 +15,7 @@ import Rating from '@mui/material/Rating';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import StatusChip from './StatusChip';
+import api from '../services/api';
 
 const style = {
   position: 'absolute',
@@ -43,9 +43,29 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-function CardEventNegotiation({ establishment, event, local, showStart, showEnd, id, status }) {
+function CardEventNegotiation({ establishment, event, local, showStart, showEnd, id, status, establishmentId}) {
   const navigate = useNavigate();
 
+  const handleClick = async () => {
+    const getValue = value;
+    const getEstablishmentId = establishmentId;
+    const data = {
+      rating: getValue,
+      comentary: comentario,
+      artistId: localStorage.getItem('@conmusic:id'),
+      establishmentId: getEstablishmentId,
+    };
+
+    try {
+      await api.post('/avaliation', data);
+    } catch (error) {
+      console.error(error);
+    }
+    setOpenToast(true);  
+    handleClose();
+  };
+
+  const [comentario, setComentario] = useState(null);
   const [value, setValue] = React.useState(2);
   const [open, setOpen] = React.useState(false);
 
@@ -54,10 +74,27 @@ function CardEventNegotiation({ establishment, event, local, showStart, showEnd,
   const [showConfirmationButton, setShowConfirmationButton] = useState(false);
   const [openToast, setOpenToast] = React.useState(false);
 
-  const handleClick = () => {
-    setOpenToast(true);
-    handleClose()
-  };
+  const [perfilImage, setPerfilImage] = useState('');
+
+  useEffect(() => {
+    async function getPerfilImage(establishmentId) {
+      try {
+        var token = localStorage.getItem('@conmusic:token');
+        const config = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
+
+        const response = await api.get(`/establishments/image/perfil/${establishmentId}`, config);
+
+        setPerfilImage(response.data.url);
+
+      } catch (error) {
+        console.error('Erro ao buscar imagem:', error);
+      }
+    }
+
+    getPerfilImage(establishmentId);
+  }, []);
 
   const handleNavigation = useCallback(() => {
     navigate(`/negotiations/${id}`)
@@ -90,7 +127,7 @@ function CardEventNegotiation({ establishment, event, local, showStart, showEnd,
             borderRadius: 10,
             ml: 3,
           }}
-          src={myImage}
+          src={perfilImage}
         />
         <CardContent sx={{ flex: 1, mt: 1 }}>
           <Typography component="h2" variant="h5" fontWeight="bold">
@@ -174,17 +211,22 @@ function CardEventNegotiation({ establishment, event, local, showStart, showEnd,
                   name="simple-controlled"
                   value={value}
                   classes={{ icon: 'custom-rating-icon' }}
+                  precision={0.5}
                   style={{ display: "flex", marginLeft: "-7px" }}
-                  onChange={(event, newValue) => {
+                  onChange={(getValue, newValue) => {
                     setValue(newValue);
                   }}
                 />
                 <TextField
-                  id="outlined-multiline-static"
+                  id="commentSection"
                   label="Comentário"
                   multiline
                   rows={4}
                   style={{ display: "flex", width: "auto", marginTop: 15 }}
+                  value={comentario}
+                  onChange={(event) => {
+                    setComentario(event.target.value);
+                  }}
                 />
 
               </Box>

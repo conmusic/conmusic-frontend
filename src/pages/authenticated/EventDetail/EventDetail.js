@@ -144,7 +144,10 @@ export default function EventDetail(onUpload) {
 
 
   const [open, setOpen] = React.useState(false);
+  const [isOpen, setIsOpen] = React.useState(false);
 
+  const onClose = () => setIsOpen(false);
+  const onOpen = () => setIsOpen(true);
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
 
@@ -257,10 +260,10 @@ export default function EventDetail(onUpload) {
       console.error(error);
       console.log(data);
     }
-      setTimeout(() => {
-        window.location.reload();
-        setOpenToast(true);
-      }, 3000);
+    setTimeout(() => {
+      window.location.reload();
+      setOpenToast(true);
+    }, 3000);
     //setOpenToastError(true);
   }
 
@@ -479,6 +482,57 @@ export default function EventDetail(onUpload) {
             >
               Atualizar
             </Button>
+            <Button
+              variant="outlined"
+              color="inherit"
+              onClick={onOpen}
+              sx={{
+                alignSelf: "center",
+                ml: 4,
+                borderColor: 'black',
+                backgroundColor: '#FB2D57',
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: 'white',
+                  color: 'black',
+                },
+              }}
+            >
+              Deletar
+            </Button>
+            <Grid display={'flex'} justifyContent={'flex-end'}>
+              <Modal
+                open={isOpen}
+                onClose={onClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+              >
+                <Box sx={style} spacing={2}>
+                  <Typography id="modal-modal-title" variant="h6" component="h2">
+                    Atualizar seu Evento
+                  </Typography>
+                  <Box
+                    component="form"
+                    sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+                    noValidate
+                    autoComplete="off"
+                  >
+                    <Typography variant="h6" gutterBottom>
+                      Confirmar Desativação
+                    </Typography>
+                    <Typography variant="body2" paragraph>
+                      Tem certeza de que deseja desativar este estabelecimento?
+                    </Typography>
+                    <Button onClick={handleClickDeletion} variant="contained" color="error">
+                      Confirmar
+                    </Button>
+                    <Button onClick={onClose} variant="contained" color="primary">
+                      Cancelar
+                    </Button>
+                  </Box>
+                </Box>
+              </Modal>
+            </Grid>
           </Grid>
           <CarouselContainer>
             <ImageList

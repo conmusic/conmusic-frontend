@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import {
     Button,
     Container,
@@ -60,18 +60,15 @@ function ButtonHour(eventId) {
 
     const handleClick = async () => {
         const data = {
-            starDateTime: startDateTime.toDate(),
+            startDateTime: startDateTime.toDate(),
             endDateTime: endDateTime.toDate(),
         };
-
-        console.log(data);  
-
         try {
-            await api.post(`/schedules/${eventId}`, data);
+            await api.post(`/schedules/${eventId.eventId}`, data);
         } catch (error) {
             console.error(error);
-            console.log(data);
         }
+        console.log(data);
         setOpenToast(true);
     };
 
@@ -98,16 +95,7 @@ function ButtonHour(eventId) {
                                 <DateTimePicker
                                     label="Data e horário de Início"
                                     value={startDateTime}
-                                    onChange={(schedule) => {
-                                        // Atualiza o valor do input
-                                        setStartDateTime(schedule.value);
-
-                                        // Pega o valor do input como string
-                                        const date = moment(startDateTime).format('YYYY-MM-DD');
-
-                                        // Mostra o valor do input como string
-                                        console.log(date);
-                                    }}
+                                    onChange={(newValue) => setStartDateTime(newValue)}
                                     renderInput={(params) => <TextField {...params} />}
                                 />
                             </LocalizationProvider>
@@ -117,9 +105,7 @@ function ButtonHour(eventId) {
                                 <DateTimePicker
                                     label="Data e horário de Fim"
                                     value={endDateTime}
-                                    onChange={(schedule) => {
-                                        setEndDateTime(schedule.value);
-                                    }}
+                                    onChange={(newValue) => setEndDateTime(newValue)}
                                     renderInput={(params) => <TextField {...params} />}
                                 />
                             </LocalizationProvider>

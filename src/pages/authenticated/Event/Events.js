@@ -1,6 +1,4 @@
-import CardEvent from "../../../components/CardEvent"
-import Title from "../../../components/Title"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import api from "../../../services/api";
 import {
     Container,
@@ -10,14 +8,20 @@ import {
     Modal,
     Box,
     TextField,
+    FormControl,
+    Select,
+    MenuItem,
+    InputLabel,
+    Snackbar,
+    Alert,
 } from '@mui/material';
 import { useAuth } from '../../../hooks/auth';
 import Autocomplete from '@mui/material/Autocomplete';
 import dayjs from 'dayjs';
-import MuiAlert from '@mui/material/Alert';
-import Snackbar from '@mui/material/Snackbar';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import Pagina from "../../../components/PaginationForCards";
+import CardEvent from "../../../components/CardEvent"
+import Title from "../../../components/Title"
+import eventPropsHelper from '../../../helpers/eventPropsHelper';
 
 dayjs.extend(customParseFormat);
 
@@ -42,20 +46,18 @@ const style = {
     maxHeight: "100%"
 };
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
-
-export default function Events(onUpload) {
+export default function Events() {
     const { userId } = useAuth();
     const [cardData, setCardData] = useState([]);
+    const [genres, setGenres] = useState([]);
+    const [establishments, setEstablishments] = useState([])
 
     const [eventData, setEventData] = useState({
         name: '',
         description: '',
-        value: 0,
-        coverCharge: 0,
-        establishmentId: userId,
+        value: null,
+        coverCharge: null,
+        establishmentId: undefined,
         genre: '',
     });
 
@@ -67,24 +69,18 @@ export default function Events(onUpload) {
         });
     };
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const [openToast, setOpenToast] = React.useState(false);
-
-    const [selectedFile, setSelectedFile] = useState(null);
-
-    const handleCloseToast = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
-        }
-
-        setOpenToast(false);
-    };
+    const [toast, setToast] = useState({
+        open: false,
+        message: "",
+        severity: "info"
+    })
 
     useEffect(() => {
-        const getEstablishments = async () => {
+        const getEvents = async () => {
             try {
                 var token = localStorage.getItem('@conmusic:token');
                 const config = {
@@ -109,22 +105,158 @@ export default function Events(onUpload) {
                 console.error('Mensagem de erro do servidor:', error.response.data);
             }
         };
-        if (userId !== 0) {
-            getEstablishments();
+
+        const getEstablishments = async () => {
+            try {
+                const { data } = await api.get(`/establishments/manager/${userId}`)
+
+                setEstablishments(data.map(e => ({ text: e.establishmentName, value: e.id })))
+            }
+            catch (e) {
+                console.error(e)
+            }
         }
+
+        const getGenres = async () => {
+            try {
+                const { data } = await api.get('/genres')
+
+                setGenres(data)
+            }
+            catch (e) {
+                console.error(e)
+            }
+        }
+
+        getEvents();
+        getGenres();
+        getEstablishments();
     }, [userId]);
 
-    const handleCreateEvent = async () => {
+    const handlePaymentValueChange = useCallback((event) => {
+        const value = Number(event.target.value.replace(/\D/gm, ""))
+
+        const formatted = eventPropsHelper.getFormattedPaymentValue(value / 100);
+
+        setEventData(prev => ({
+            ...prev,
+            paymentValue: formatted
+        }))
+    }, [])
+
+    const handleCouvertChargeChange = useCallback((event) => {
+        const value = Number(event.target.value.replace(/\D/gm, ""))
+
+        const formatted = String((value / 100).toFixed(2)).replace(".", ",")
+
+        setEventData(prev => ({
+            ...prev,
+            couvertCharge: formatted
+        }))
+    }, [])
+
+    const handleCloseToast = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+    
+        setToast({
+            open: false,
+            message: "",
+            severity: "info"
+        });
+      };
+    
+
+    const handleCreateEvent = useCallback(async () => {
         try {
             const token = localStorage.getItem('@conmusic:token');
             const config = {
                 headers: { Authorization: `Bearer ${token}` },
             };
-            console.log("eventData:", eventData)
+
+            const body = {
+                name: eventData.name,
+                description: eventData.description,
+                value: Number(eventData.paymentValue.replace(/\D/gm, "")) / 100,
+                coverCharge: Number(eventData.coverCharge.replace(/\D/gm, "")) / 100,
+                establishmentId: Number.isNaN(Number(eventData.establishmentId)) ? 0 : Number(eventData.establishmentId),
+                genre: eventData.genre
+            }
+
+            if (body.name === '') {
+                setToast({
+                    open: true,
+                    severity: "error",
+                    message: "Nome do evento é inválido"
+                })
+                return;
+            }
+
+            if (body.description === '') {
+                setToast({
+                    open: true,
+                    severity: "error",
+                    message: "Descrição do evento é inválido"
+                })
+                return;
+            }
+
+            if (body.genre === '') {
+                setToast({
+                    open: true,
+                    severity: "error",
+                    message: "Gênero é inválido"
+                })
+                return;
+            }
+
+            if (body.establishmentId === 0) {
+                setToast({
+                    open: true,
+                    severity: "error",
+                    message: "Estabelecimento é inválido"
+                })
+                return;
+            }
+
+            if (body.paymentValue < 200) {
+                setToast({
+                    open: true,
+                    severity: "error",
+                    message: "Valor de pagamento deve ser no minímo R$ 200,00"
+                })
+                return;
+            }
+
+            if (body.coverCharge < 0 && body.coverCharge > 100) {
+                setToast({
+                    open: true,
+                    severity: "error",
+                    message: "Taxa de Couvert deve ser um percentual (entre 0 e 100)"
+                })
+                return;
+            }
+
             const response = await api.post('/events', eventData, config);
 
             if (response.status === 201) {
-                setOpenToast(true);
+                setToast({
+                    open: true,
+                    message: "Evento foi cadastradk com sucesso!",
+                    severity: "success"
+                })
+
+                const newCard = {
+                    id: response.data.id,
+                    local: response.data.establishment.address,
+                    establishment: response.data.establishment.establishmentName,
+                    event: response.data.name,
+                    genero: response.data.genre.name,
+                    establishmentId: response.data.establishment.id,
+                }
+
+                setCardData(prev => [...prev, newCard])
                 handleClose();
             } else {
                 console.error('Erro ao criar o evento:', response);
@@ -134,26 +266,8 @@ export default function Events(onUpload) {
             console.error('Erro ao criar o evento:', error);
             console.error('Mensagem de erro do servidor:', error.response.data);
         }
-    };
+    }, [eventData]);
 
-    const getYourEstablishments = async () => {
-        try {
-            const token = localStorage.getItem('@conmusic:token');
-            const config = {
-                headers: { Authorization: `Bearer ${token}` },
-            };
-            const response = await api.get(`/establishments/manager/${userId}`, config);
-            var establishmentData = response.data.map(establishment => {
-                return {
-                    id: establishment.id,
-                    name: establishment.establishmentName,
-                }
-            });
-        } catch (error) {
-            console.error('Erro ao buscar os estabelecimentos:', error);
-            console.error('Mensagem de erro do servidor:', error.response.data);
-        }
-    }
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 2 }}>
@@ -191,8 +305,6 @@ export default function Events(onUpload) {
                     />
                 ))
             }
-            <Pagina ></Pagina>
-
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -211,37 +323,56 @@ export default function Events(onUpload) {
                         autoComplete="off"
                     >
                         <Grid item xs={12} sm={6}>
-                            <TextField
-                                label="Nome do Evento"
-                                name="name"
-                                value={eventData.name}
-                                onChange={handleInputChange}
-                                fullWidth
-                            />
-
+                            <FormControl fullWidth>
+                                <TextField
+                                    id='nameId'
+                                    name="name"
+                                    label='Nome do evento'
+                                    value={eventData.name}
+                                    onChange={handleInputChange}
+                                    fullWidth
+                                />
+                            </FormControl>
                         </Grid>
                         <Grid item xs={12} >
-                            <Autocomplete
-                                fullWidth
-                                id="combo-box-demo"
-                                options={'estabelecimentosExemplo'}
-                                renderInput={(params) => <TextField {...params} label="Nome do Estabelecimento" />}
-                            />
+                            <FormControl fullWidth>
+                                <InputLabel id='establishment-id-select-label'>Estabelecimento</InputLabel>
+                                <Select
+                                    id="establishment-id-select-id"
+                                    labelId='establishment-id-select-label'
+                                    name="establishmentId"
+                                    label="Estabelecimento"
+                                    value={eventData.establishmentId}
+                                    onChange={handleInputChange}
+                                    error={eventData.establishmentId === 0}
+                                    required
+                                >
+                                    <MenuItem value={0}>Selecionar estabelecimento</MenuItem>
+                                    {
+                                        establishments.map(e => (<MenuItem key={e.value} value={e.value}>{e.text}</MenuItem>))
+                                    }
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Grid item xs={12}>
-                            <Autocomplete
-                                fullWidth
-                                id="combo-box-demo"
-                                options={topEstilosMusicais}
-                                getOptionLabel={(option) => option.label}
-                                value={topEstilosMusicais.find(option => option.label === eventData.genre) || null}
-                                onChange={(event, newValue) => {
-                                    setEventData({ ...eventData, genre: newValue ? newValue.label : '' });
-                                }}
-                                renderInput={(params) => (
-                                    <TextField {...params} label="Gênero Musical" />
-                                )}
-                            />
+                            <FormControl fullWidth>
+                                <InputLabel id='genreIdLabel'>Gênero Musical</InputLabel>
+                                <Select
+                                    id="genreId"
+                                    labelId='genreIdLabel'
+                                    name="genre"
+                                    label="Gênero musical"
+                                    value={eventData.genre}
+                                    onChange={handleInputChange}
+                                    error={eventData.genre === "none"}
+                                    required
+                                >
+                                    <MenuItem value="none">Selecionar Gênero musical</MenuItem>
+                                    {
+                                        genres.map((g, i) => (<MenuItem key={i} value={g.name}>{g.name}</MenuItem>))
+                                    }
+                                </Select>
+                            </FormControl>
                         </Grid>
                         <Grid container spacing={2}>
                             <Grid item xs={6}>
@@ -249,16 +380,16 @@ export default function Events(onUpload) {
                                     label="Valor Proposto"
                                     name="value"
                                     value={eventData.value}
-                                    onChange={handleInputChange}
+                                    onChange={handlePaymentValueChange}
                                     fullWidth
                                 />
                             </Grid>
                             <Grid item xs={6}>
                                 <TextField
-                                    label="Taxa de Couvert"
+                                    label="Taxa de Couvert (%)"
                                     name="coverCharge"
                                     value={eventData.coverCharge}
-                                    onChange={handleInputChange}
+                                    onChange={handleCouvertChargeChange}
                                     fullWidth
                                 />
                             </Grid>
@@ -290,117 +421,11 @@ export default function Events(onUpload) {
                     </Box>
                 </Box>
             </Modal>
-            {selectedFile && (
-                <Snackbar open={openToast} autoHideDuration={6000} onClose={handleCloseToast}>
-                    <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-                        Avaliação enviada!
-                    </Alert>
-                </Snackbar>
-            )}
+            <Snackbar open={toast.open} autoHideDuration={6000} onClose={handleCloseToast}>
+                <Alert severity={toast.severity} sx={{ width: '100%' }}>
+                    {toast.message}
+                </Alert>
+            </Snackbar>
         </Container>
     )
 }
-
-const topEstilosMusicais = [
-    { label: 'Rock' },
-    { label: 'Pop' },
-    { label: 'Hip Hop' },
-    { label: 'Jazz' },
-    { label: 'Blues' },
-    { label: 'Country' },
-    { label: 'Eletrônica' },
-    { label: 'Clássica' },
-    { label: 'R&B' },
-    { label: 'Reggae' },
-    { label: 'Funk' },
-    { label: 'Soul' },
-    { label: 'Metal' },
-    { label: 'Punk' },
-    { label: 'Folk' },
-    { label: 'Indie' },
-    { label: 'Alternativo' },
-    { label: 'Rap' },
-    { label: 'EDM (Electronic Dance Music)' },
-    { label: 'Latina' },
-    { label: 'Sertanejo' },
-    { label: 'Samba' },
-    { label: 'Forró' },
-    { label: 'Gospel' },
-    { label: 'MPB (Música Popular Brasileira)' },
-    { label: 'Axé' },
-    { label: 'Bossa Nova' },
-    { label: 'Pagode' },
-    { label: 'Gótico' },
-    { label: 'Raggamuffin' },
-    { label: 'K-Pop' },
-    { label: 'Disco' },
-    { label: 'Ranchera' },
-    { label: 'Fado' },
-    { label: 'Flamenco' },
-    { label: 'J-Pop' },
-    { label: 'Hard Rock' },
-    { label: 'Death Metal' },
-    { label: 'Ska' },
-    { label: 'Celtic' },
-    { label: 'Piano Bar' },
-    { label: 'Musical' },
-    { label: 'New Wave' },
-    { label: 'Grunge' },
-    { label: 'Rapcore' },
-    { label: 'Trap' },
-    { label: 'Rap Metal' },
-    { label: 'Indie Pop' },
-    { label: 'Hardcore Punk' },
-    { label: 'Soul Jazz' },
-    { label: 'Country Rock' },
-    { label: 'Smooth Jazz' },
-    { label: 'Rockabilly' },
-    { label: 'R&B Contemporâneo' },
-    { label: 'Soul Clássico' },
-    { label: 'Hip Hop Alternativo' },
-    { label: 'Reggaeton' },
-    { label: 'Trance' },
-    { label: 'Dubstep' },
-    { label: 'Salsa' },
-    { label: 'Merengue' },
-    { label: 'Punk Rock' },
-    { label: 'Pop Punk' },
-    { label: 'Hardstyle' },
-    { label: 'Bluegrass' },
-    { label: 'Jazz Fusion' },
-    { label: 'Cumbia' },
-    { label: 'Chiptune' },
-    { label: 'House' },
-    { label: 'Techno' },
-    { label: 'Gospel Contemporâneo' },
-    { label: 'R&B Alternativo' },
-    { label: 'Metalcore' },
-    { label: 'Rap Latino' },
-    { label: 'Pop Rock Brasileiro' },
-    { label: 'Reggae Brasileiro' },
-    { label: 'Funk Carioca' },
-    { label: 'Frevo' },
-    { label: 'Brega' },
-    { label: 'Pop Latino' },
-    { label: 'Rock Progressivo' },
-    { label: 'Heavy Metal' },
-    { label: 'Indie Rock' },
-    { label: 'Rap Nacional' },
-    { label: 'Música Clássica Indiana' },
-    { label: 'Sertanejo Universitário' },
-    { label: 'Samba-Reggae' },
-    { label: 'Música Eletrônica Brasileira' },
-    { label: 'Maracatu' },
-    { label: 'Samba Enredo' },
-    { label: 'Baião' },
-    { label: 'Manguebeat' },
-    { label: 'Metal Alternativo' },
-    { label: 'Pós-Punk' },
-    { label: 'Gospel Brasileiro' },
-    { label: 'Música Tradicional Chinesa' },
-    { label: 'Música Tradicional Japonesa' },
-    { label: 'Música Tradicional Africana' },
-    { label: 'Música Tradicional Irlandesa' },
-    { label: 'Música Tradicional Escocesa' },
-    { label: 'Música Tradicional Árabe' },
-];

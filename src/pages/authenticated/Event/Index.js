@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 
 import Events from "./Events";
 
-import { useAuth } from "../../../hooks/auth";
 import { Navigate } from "react-router-dom";
 
 export default function Explore() {

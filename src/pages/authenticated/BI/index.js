@@ -1,12 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import BiArtist from "./BiArtist";
 import BiManager from "./BiManager";
 import { Navigate } from "react-router-dom";
-import { useEffect } from "react";
 
 export default function BI() {
-    const [access, setAccess] = React.useState('default');
+    const [access, setAccess] = useState('default');
 
     useEffect(() => {
         setAccess(localStorage.getItem('@conmusic:type'));

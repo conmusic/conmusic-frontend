@@ -117,7 +117,7 @@ export default function MakeProposalManager() {
   const [perfilImage, setPerfilImage] = useState('');
 
   useEffect(() => {
-    const getEestablishments = async () => {
+    const getEstablishments = async () => {
       try {
         const { data } = await api.get(`/establishments/manager/${userId}`)
 
@@ -129,7 +129,7 @@ export default function MakeProposalManager() {
         console.log(error)
       }
     }
-    getEestablishments()
+    getEstablishments()
   }, [userId])
 
   async function getPerfilImage(artistId) {

@@ -224,7 +224,7 @@ export default function Events(onUpload) {
                             <Autocomplete
                                 fullWidth
                                 id="combo-box-demo"
-                                options={estabelecimentosExemplo}
+                                options={'estabelecimentosExemplo'}
                                 renderInput={(params) => <TextField {...params} label="Nome do Estabelecimento" />}
                             />
                         </Grid>

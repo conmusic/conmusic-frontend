@@ -1,7 +1,6 @@
 import React from "react";
 
-import { useAuth } from "../../../hooks/auth";
-import BiArtist from "./BIartist";
+import BiArtist from "./BiArtist";
 import BiManager from "./BiManager";
 import { Navigate } from "react-router-dom";
 import { useEffect } from "react";

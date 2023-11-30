@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import BiArtist from "./BiArtist";
+import BiArtist from "./BIartist";
 import BiManager from "./BiManager";
 import { Navigate } from "react-router-dom";
 

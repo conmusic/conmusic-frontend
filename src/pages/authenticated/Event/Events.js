@@ -16,7 +16,6 @@ import {
     Alert,
 } from '@mui/material';
 import { useAuth } from '../../../hooks/auth';
-import Autocomplete from '@mui/material/Autocomplete';
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import CardEvent from "../../../components/CardEvent"
@@ -174,12 +173,15 @@ export default function Events() {
             const config = {
                 headers: { Authorization: `Bearer ${token}` },
             };
-
+    
+            const paymentValue = eventData.paymentValue ? Number(eventData.paymentValue.replace(/\D/gm, "")) / 100 : 0;
+            const coverCharge = eventData.coverCharge ? Number(eventData.coverCharge.replace(/\D/gm, "")) / 100 : 0;
+    
             const body = {
                 name: eventData.name,
                 description: eventData.description,
-                value: Number(eventData.paymentValue.replace(/\D/gm, "")) / 100,
-                coverCharge: Number(eventData.coverCharge.replace(/\D/gm, "")) / 100,
+                value: paymentValue.toFixed(2),
+                coverCharge: coverCharge.toFixed(2),
                 establishmentId: Number.isNaN(Number(eventData.establishmentId)) ? 0 : Number(eventData.establishmentId),
                 genre: eventData.genre
             }
@@ -237,16 +239,16 @@ export default function Events() {
                 })
                 return;
             }
-
-            const response = await api.post('/events', eventData, config);
+            console.log("eventData:", body)
+            const response = await api.post('/events', body, config);
 
             if (response.status === 201) {
                 setToast({
                     open: true,
-                    message: "Evento foi cadastradk com sucesso!",
+                    message: "Evento foi cadastrado com sucesso!",
                     severity: "success"
                 })
-
+            
                 const newCard = {
                     id: response.data.id,
                     local: response.data.establishment.address,
@@ -255,8 +257,9 @@ export default function Events() {
                     genero: response.data.genre.name,
                     establishmentId: response.data.establishment.id,
                 }
-
+            
                 setCardData(prev => [...prev, newCard])
+            
                 handleClose();
             } else {
                 console.error('Erro ao criar o evento:', response);

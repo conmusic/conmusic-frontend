@@ -13,7 +13,7 @@ import {
     CardContent
 } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import api from '../../services/api';
+import api from '../../../services/api';
 import Title from '../../components/Title';
 import { useAuth } from '../../hooks/auth';
 import eventPropsHelper from '../../helpers/eventPropsHelper';

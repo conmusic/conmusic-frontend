@@ -1,3 +1,6 @@
+import myImage from '../assets/images/image.png';
+import { useNavigate } from "react-router";
+import { useCallback } from 'react';
 import React, { useState, useEffect } from 'react';
 import {
   Grid,
@@ -10,18 +13,7 @@ import {
   CardContent,
   Card,
 } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import InputLabel from '@mui/material/InputLabel';
-import InputAdornment from '@mui/material/InputAdornment';
-import FormControl from '@mui/material/FormControl';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { DemoContainer, DemoItem } from '@mui/x-date-pickers/internals/demo';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-
 import api from '../services/api';
 
 
@@ -87,6 +79,12 @@ function CardEvent({ establishment, event, local, showStart, showEnd, id, establ
   };
 
   const [open, setOpen] = React.useState(false);
+  
+  const navigate = useNavigate();
+  const handleNavigation = useCallback(() => {
+    navigate(`/events/${id}`)
+  }, [navigate, id])
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -132,7 +130,7 @@ function CardEvent({ establishment, event, local, showStart, showEnd, id, establ
             <Button
               variant="outlined"
               color="inherit"
-              onClick={handleOpen}
+              onClick={handleNavigation}
               sx={{
                 mt: 1,
                 mr: 3,
@@ -149,176 +147,6 @@ function CardEvent({ establishment, event, local, showStart, showEnd, id, establ
               Atualizar
             </Button>
           </div>
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={style} spacing={2}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Atualizar seu Evento
-              </Typography>
-              <Box
-                component="form"
-                sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-                noValidate
-                autoComplete="off"
-              >
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    label="Nome do Evento"
-                    id="filled-size-normal"
-                    name="establishmentName"
-                    fullWidth
-                  />
-
-                </Grid>
-                <Grid item xs={12} >
-                  <Autocomplete
-                    fullWidth
-                    id="combo-box-demo"
-                    options={estabelecimentosExemplo}
-                    renderInput={(params) => <TextField {...params} label="Nome do Estabelecimento" />}
-                  />
-                </Grid>
-
-                <Grid item xs={12} >
-                  <Autocomplete
-                    fullWidth
-                    id="combo-box-demo"
-                    options={topEstilosMusicais}
-                    renderInput={(params) => <TextField {...params} label="Gênero Musical" />}
-                  />
-                </Grid>
-                <Grid container spacing={2}>
-                  <Grid item xs={6}>
-                    <FormControl fullWidth>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['TimePicker', 'DateTimePicker']}>
-                          <DemoItem label="Data de fim">
-                            <DateTimePicker defaultValue={fiveAM} minTime={nineAM} />
-                          </DemoItem>
-                        </DemoContainer>
-                      </LocalizationProvider>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <FormControl fullWidth>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['TimePicker', 'DateTimePicker']}>
-                          <DemoItem label="Data de fim">
-                            <DateTimePicker defaultValue={fiveAM} minTime={nineAM} />
-                          </DemoItem>
-                        </DemoContainer>
-                      </LocalizationProvider>
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <FormControl fullWidth>
-                      <InputLabel htmlFor="outlined-adornment-amount">Valor Proposto</InputLabel>
-                      <OutlinedInput
-                        id="outlined-adornment-amount"
-                        startAdornment={<InputAdornment position="start">R$</InputAdornment>}
-                        label="Valor Proposto"
-                        onChange={(event) => {
-                          let { value } = event.target;
-                          value = value.replace(/\D/g, '');
-                          if (value) {
-                            value = parseFloat(value) / 100;
-                            event.target.value = value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                          } else {
-                            event.target.value = value;
-                          }
-                        }}
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={6}>
-                    <FormControl fullWidth>
-                      <InputLabel htmlFor="outlined-adornment-amount">Taxa de Couvert Artístico</InputLabel>
-                      <OutlinedInput
-                        id="outlined-adornment-amount"
-                        startAdornment={<InputAdornment position="start">R$</InputAdornment>}
-                        label="Taxa de Couvert Artístico"
-                        onChange={(event) => {
-                          let { value } = event.target;
-                          value = value.replace(/\D/g, '');
-                          if (value) {
-                            value = parseFloat(value) / 100;
-                            event.target.value = value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-                          } else {
-                            event.target.value = value;
-                          }
-                        }}
-                      />
-                    </FormControl>
-                  </Grid>
-                </Grid>
-                <Grid item xs={12} sx={{ display: "flex", flexDirection: "row" }}>
-                  <div style={{ width: '50%' }}>
-                    <TextField
-                      id="outlined-multiline-static"
-                      label="Descrição do Evento"
-                      multiline
-                      rows={4}
-                      fullWidth
-                    />
-                  </div>
-                  <div style={{ width: '50%', marginLeft: 25 }}>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      id="upload-button"
-                      style={{ display: 'none' }}
-                      onChange={handleFileChange}
-                    />
-                    <label htmlFor="upload-button">
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        component="span"
-                        startIcon={<CloudUploadIcon />}
-                        fullWidth
-                        style={{ padding: '13px', fontSize: '1.0rem' }}
-                      >
-                        Upload de Imagem
-                      </Button>
-                    </label>
-                    <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        size="medium"
-                        disabled={!selectedFile}
-                        onClick={handleUpload}
-                        fullWidth
-                        sx={{
-                          marginTop: 'auto',
-                          borderColor: 'black',
-                          backgroundColor: 'red',
-                          color: 'white',
-                          marginTop: 2,
-                          height: 53,
-                        }}
-                      >
-                        Enviar Imagem
-                      </Button>
-                    </div>
-                  </div>
-                </Grid>
-                <Grid sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-                  <Button variant="contained" color="success" style={{ width: "auto", height: "auto" }}>
-                    Atualizar Evento
-                  </Button>
-                  <Button variant="contained" color="error" style={{ width: "auto", height: "auto" }}
-                    onClick={handleClose}>
-                    Cancelar
-                  </Button>
-                </Grid>
-              </Box>
-            </Box>
-          </Modal>
 
         </CardContent>
       </Card>

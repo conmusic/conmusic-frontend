@@ -17,6 +17,7 @@ import ProposalDetails from './pages/authenticated/ProposalDetails';
 import Proposals from './pages/authenticated/Proposals';
 import MakeProposal from './pages/authenticated/MakeProposal';
 import BI from './pages/authenticated/BI';
+import EventDetail from './pages/authenticated/EventDetail/Index'
 import Events from './pages/authenticated/Event/Index'
 import NotFound from './pages/NotFoundPage';
 import Forbiden from './pages/ForbidenPage';
@@ -32,6 +33,7 @@ export default function MainRoutes() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/BI" element={<BI />} />
         <Route path="/events" element={<Events />} />
+        <Route path="/events/:eventId" element={<EventDetail />} />
         <Route path="/explore" element={<Explore />} /> 
         <Route path="/explore/:exploreId" element={<ExploreDetails />} /> 
         <Route path="/establishments" element={<ManageEstablishment />} /> //TODO: change to establishments

@@ -94,13 +94,13 @@ export default function Events(onUpload) {
 
                 var card = response.data
                     .map(establishment => {
-
                         return {
                             id: establishment.id,
                             local: establishment.establishment.address,
                             establishment: establishment.establishment.establishmentName,
                             event: establishment.name,
                             genero: establishment.genre.name,
+                            establishmentId: establishment.establishment.id,
                         }
                     })
                 setCardData(card);
@@ -136,6 +136,24 @@ export default function Events(onUpload) {
         }
     };
 
+    const getYourEstablishments = async () => {
+        try {
+            const token = localStorage.getItem('@conmusic:token');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` },
+            };
+            const response = await api.get(`/establishments/manager/${userId}`, config);
+            var establishmentData = response.data.map(establishment => {
+                return {
+                    id: establishment.id,
+                    name: establishment.establishmentName,
+                }
+            });
+        } catch (error) {
+            console.error('Erro ao buscar os estabelecimentos:', error);
+            console.error('Mensagem de erro do servidor:', error.response.data);
+        }
+    }
     return (
         <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             <Grid sx={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 2 }}>
@@ -170,8 +188,6 @@ export default function Events(onUpload) {
                         local={item.local}
                         genero={item.genero}
                         establishmentId={item.establishmentId}
-                    // showStart={item.showStart}
-                    // showEnd={item.showEnd}
                     />
                 ))
             }
@@ -203,6 +219,14 @@ export default function Events(onUpload) {
                                 fullWidth
                             />
 
+                        </Grid>
+                        <Grid item xs={12} >
+                            <Autocomplete
+                                fullWidth
+                                id="combo-box-demo"
+                                options={estabelecimentosExemplo}
+                                renderInput={(params) => <TextField {...params} label="Nome do Estabelecimento" />}
+                            />
                         </Grid>
                         <Grid item xs={12}>
                             <Autocomplete
@@ -240,15 +264,15 @@ export default function Events(onUpload) {
                             </Grid>
                         </Grid>
                         <Grid item xs={12} sx={{ display: "flex", flexDirection: "row" }}>
-                                <TextField
-                                    label="Descrição do Evento"
-                                    multiline
-                                    name="description"
-                                    rows={4}
-                                    fullWidth
-                                    value={eventData.description}
-                                    onChange={handleInputChange}
-                                />
+                            <TextField
+                                label="Descrição do Evento"
+                                multiline
+                                name="description"
+                                rows={4}
+                                fullWidth
+                                value={eventData.description}
+                                onChange={handleInputChange}
+                            />
                         </Grid>
                         <Grid sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                             <Button variant="contained"

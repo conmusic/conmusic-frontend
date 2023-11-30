@@ -160,77 +160,7 @@ function CardArtistNegotiation({ establishment, event, artist, showStart, showEn
             >
               Ir para o chat
             </Button>
-            {showConfirmationButton && (
-              <Button
-                variant="outlined"
-                color="inherit"
-                sx={{
-                  mt: 1,
-                  mr: 3,
-                  alignSelf: "center",
-                  borderColor: 'black',
-                  backgroundColor: 'green',
-                  color: 'white',
-                  '&:hover': {
-                    backgroundColor: 'white',
-                    color: 'black',
-                  },
-                  width: "147px",
-                  height: "auto"
-                }}
-                onClick={handleOpen}>
-                Avaliar
-              </Button>
-            )}
           </div>
-          <Modal
-            open={open}
-            onClose={handleClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={style}>
-              <style>
-                {`.custom-rating-icon {font-size: 4rem;}`}
-              </style>
-              <Box component="fieldset" mb={3} borderColor="transparent">
-                <Typography variant="h6" style={{ fontWeight: 'bold' }}>Avaliar Estabelecimento</Typography>
-                <Rating
-                  name="simple-controlled"
-                  value={value}
-                  classes={{ icon: 'custom-rating-icon' }}
-                  style={{ display: "flex", marginLeft: "-7px" }}
-                  onChange={(event, newValue) => {
-                    setValue(newValue);
-                  }}
-                />
-                <TextField
-                  id="outlined-multiline-static"
-                  label="Comentário"
-                  multiline
-                  rows={4}
-                  style={{ display: "flex", width: "auto", marginTop: 15 }}
-                />
-
-              </Box>
-
-              <div sx={styleButton}
-                style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                <Button variant="contained" color="success" style={{ width: '30%' }}
-                  onClick={handleClick}>
-                  Avaliar
-                </Button>
-                <Button variant="contained" color="error" style={{ width: '30%' }} onClick={handleClose}>
-                  Sair
-                </Button>
-              </div>
-            </Box>
-          </Modal>
-          <Snackbar open={openToast} autoHideDuration={6000} onClose={handleCloseToast}>
-            <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-              Avaliação enviada!
-            </Alert>
-          </Snackbar>
         </CardContent>
       </Card>
     </Grid>
